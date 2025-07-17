@@ -154,3 +154,85 @@ export const getHookDependencies = (hookName: HookName): string[] => {
 // Re-export existing hooks for compatibility
 export { useDraggable } from './useDraggable';
 export { useResizable } from './useResizable';
+
+// ============================================================================
+// 🌌 UNIVERSALFILE (.UD) FORMAT INTEGRATION
+// ============================================================================
+
+// UniversalFile Core Components
+export * from './UDFormat';
+export * from './UDDocument';
+export * from './UDMinimapIntegration';
+
+// Default exports for convenience
+export { default as UDDocument } from './UDDocument';
+export { default as UDMinimapAdapter } from './UDMinimapIntegration';
+
+// Import for unified API
+import { 
+  BaguaUtils, 
+  BaguaPresets, 
+  UDItemType, 
+  UD_CONSTANTS 
+} from './UDFormat';
+
+import UDDocument from './UDDocument';
+import UDMinimapAdapter from './UDMinimapIntegration';
+
+// UniversalFile Unified API
+export const UniversalFile = {
+  // Core classes
+  Document: UDDocument,
+  MinimapAdapter: UDMinimapAdapter,
+  
+  // Utilities
+  Bagua: BaguaUtils,
+  Presets: BaguaPresets,
+  
+  // Types and constants
+  ItemType: UDItemType,
+  Constants: UD_CONSTANTS,
+  
+  // Factory functions
+  createDocument: () => new UDDocument(),
+  createMinimapAdapter: (doc: UDDocument) => new UDMinimapAdapter(doc),
+  
+  // Quick start functions
+  quickNote: (content: string, position?: [number, number, number]) => {
+    const doc = new UDDocument();
+    doc.addItem({
+      position: position || [0, 0, 0],
+      dimensions: [300, 200],
+      type: UDItemType.NOTIZZETTEL,
+      content
+    });
+    return doc;
+  },
+  
+  quickDatabase: (data: any, position?: [number, number, number]) => {
+    const doc = new UDDocument();
+    doc.addItem({
+      position: position || [0, 0, 0],
+      dimensions: [400, 300],
+      type: UDItemType.DATABASE,
+      content: JSON.stringify(data, null, 2)
+    });
+    return doc;
+  }
+};
+
+// UniversalFile Metadata
+export const UDMetadata = {
+  version: '1.0.0',
+  author: 'tux-sourceish',
+  description: 'Revolutionary spatial document format with Bagua-based metadata',
+  homepage: 'https://github.com/tux-sourceish/UniversalFile',
+  features: [
+    'bagua-metadata',
+    'hyperdimensional-vectors',
+    'spatial-computing',
+    'minimap-integration',
+    'ai-enhanced',
+    'real-time-sync'
+  ]
+};
