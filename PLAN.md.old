@@ -1,0 +1,155 @@
+# LiteLLM Integration für UniversalDesktop
+
+## Kontext
+Wir haben einen funktionierenden UniversalDesktop (React/TypeScript) und möchten ihn mit unserem lokalen LiteLLM-Server verbinden, um KI-Funktionalität zu integrieren. Für Test- und spätere Produktivzwecke soll an jeder Stelle, an der ein KI-Call gemacht wird eingestellt werden können, mit welchem Modell
+
+## Aktueller Stand
+- UniversalDesktop läuft und funktioniert
+- LiteLLM läuft auf `192.168.69.1:4001` mit API-Key `test123`
+- Verfügbare Modelle: (das war unser Vorspiel =))
+
+## PHASE 1: LiteLLM Client Service
+
+### Aufgabe 1: Erstelle LiteLLM Service
+Erweitere oder erstelle die Datei `src/services/litellmClient.ts` neuum folgende Funktionalitäten zu erreichen:
+
+1. **Basis-Client Klasse** mit:
+   - Konfiguration (apiUrl, apiKey, defaultModel)
+   - `chat()` Methode für normale Konversationen
+   - `generateTUI()` Methode für Terminal-UI Generierung
+   - `generateCode()` Methode für Code-Generierung
+   - Proper TypeScript types für alle Interfaces
+
+2. **React Hook** `useLiteLLM`:
+   - Loading states
+   - Error handling
+   - Alle Client-Methoden als Hook-Functions
+
+3. **Umgebungsvariablen** in `.env`:
+   ```
+   VITE_LITELLM_URL=http://192.168.69.1:4001/v1
+   VITE_LITELLM_KEY=test123
+   ```
+
+### Erwartete Dateien:
+- `src/services/litellmClient.ts` (Service + Hook)
+- `.env` (falls nicht vorhanden)
+- `.env.example` (Update mit neuen Variablen)
+
+## PHASE 2: TUI Window Component (20 Min)
+
+### Aufgabe 2: Terminal UI Window
+Erstelle `src/components/TuiWindow.tsx`:
+
+1. **Component Features**:
+   - Monospace textarea (80x25 Standard)
+   - Read-only und Edit-Modus
+   - Styling wie echtes Terminal (grüner Text auf schwarz)
+   - Status-Bar mit Cursor-Position
+
+2. **Integration** in `DesktopItem.tsx`:
+   - Neuer Window-Type: `'tui'`
+   - Render TuiWindow wenn `item.type === 'tui'`
+
+3. **CSS** für Terminal-Look:
+   - Font: 'Courier New' oder 'Consolas'
+   - Classic Terminal-Farben (grün/amber/weiß)
+   - Box-Shadow für CRT-Effekt (optional)
+
+### Erwartete Dateien:
+- `src/components/TuiWindow.tsx`
+- `src/components/TuiWindow.css`
+- `src/components/DesktopItem.tsx` (Update)
+
+## PHASE 3: AI Panel Integration (15 Min)
+
+### Aufgabe 3: Erweitere das AI Panel
+Update `src/components/AIPanel.tsx` (oder wie es heißt):
+
+1. **Mode-Selector** hinzufügen:
+   - Chat-Modus (Standard)
+   - TUI-Design-Modus
+   - Code-Modus
+
+2. **Integration** mit LiteLLM:
+   - Nutze `useLiteLLM` Hook
+   - Je nach Modus verschiedene Prompts
+   - Callbacks für generierte Inhalte
+
+3. **TUI-Generierung**:
+   - Bei TUI-Modus: Erstelle automatisch neues TUI-Window
+   - Fülle es mit generiertem ASCII-Content
+
+### Erwartete Updates:
+- AI Panel Component
+- Desktop Page (für Window-Erstellung)
+
+## PHASE 4: Testing & Demo
+
+### Test-Szenarios:
+1. **Test LiteLLM Verbindung**:
+   ```
+   npm run dev
+   F12 → Console → Keine Fehler bei API calls
+   ```
+
+2. **Test TUI-Generierung**:
+   - AI Panel öffnen
+   - TUI-Modus wählen
+   - Prompt: "Erstelle eine Login-Maske für Terminal"
+   - Neues TUI-Window sollte erscheinen
+
+3. **Test Code-Generierung**:
+   - Code-Modus wählen
+   - Prompt: "Python-Funktion zum Sortieren einer Liste"
+   - Code sollte in Code-Window erscheinen
+
+## Wichtige Hinweise
+
+### System-Prompts für TUI-Generierung:
+```
+Du bist ein Experte für Terminal User Interfaces (TUI).
+Erstelle zeichenbasierte UIs mit Box-Drawing-Charakteren.
+Nutze nur ASCII/CP437 Zeichen.
+Ausgabe muss genau 80 Zeichen breit und 25 Zeilen hoch sein.
+Box-Drawing: ─ │ ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼ ═ ║ ╔ ╗ ╚ ╝
+```
+
+### Fehlerbehandlung:
+- Zeige Fehler in der UI, nicht nur Console
+- Fallback auf Demo-Modus wenn LiteLLM nicht erreichbar
+- Retry-Logic für fehlgeschlagene Requests
+
+### Performance:
+- Debounce Input im AI Panel (500ms)
+- Max Token Limits setzen (1000 für UI, 2000 für Code)
+- Loading-States während API-Calls
+
+## Erfolgs-Kriterien
+
+✅ LiteLLM Service verbindet sich erfolgreich
+✅ TUI-Windows können erstellt werden
+✅ AI Panel hat Mode-Selector
+✅ Generierte TUIs werden korrekt angezeigt
+✅ Keine TypeScript-Fehler
+✅ Error-Handling funktioniert
+
+## Sollte-Vorgaben
+
+1. Die Implementierung des Terminals sollte unter dem 'Security-First'-Prinzip erfolgen. Erstelle initial nur eine 'lesende' Brücke, die Befehle wie ls oder docker ps erlaubt. Eine schreibende Funktionalität (rm, mv) sollte explizit durch eine Whitelist und eine zusätzliche Bestätigung des Nutzers abgesichert werden.
+2. Implementiere ein 'Feedback'-Widget im Universal Desktop. Dieses soll es einem Test-Benutzer (z.B. André) ermöglichen, mit einem Klick einen Screenshot und einen Kommentar direkt an eine definierte Supabase-Tabelle zu senden. <- Könnte auch für unsere KI-Interaktion als Kontext mitgegeben werden bzw. später dafür erweitert werden eben den richtigen Kontext in eine KI-Anfrage zu packen.
+
+## Zusatz-Bonus-Aufgaben (Optional)
+
+Falls Zeit übrig:
+1. **TUI-Templates** als Beispiele siehe (./tui-Formate.jpg)
+2. **Syntax-Highlighting** für Code-Windows
+3. **Copy-Button** für generierten Content
+4. **Persist** AI-Konversationen in localStorage
+
+---
+
+**WICHTIG**:
+- Fokussiere dich auf Funktionalität vor Schönheit
+- Teste nach jeder Phase
+- Committe funktionierende Zwischenstände

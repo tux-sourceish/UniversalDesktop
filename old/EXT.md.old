@@ -1,0 +1,54 @@
+1. **PHASE 1 - Katalogisierung**: 
+   - Scanne ALLE Dateien unterhalb der aufgeführten Ordner im aktuellen Projektverzeichnis ./ (Dateien des aktuellen Projektordners, wenn folgende Unterordner noch nicht existieren müssen sie angelegt werden)
+         - in ./test/* -> befinden sich momentan mehr oder weniger gut laufende Konzepte oder Konzepte die in Arbeit sind
+         - in ./prod/* -> befinden sich die für den produktionsbetrieb freigegebenen Elemente
+         - in ./aisrc/* -> befinden sich die auf Nutzbarkeit zu analysierenden Elemente. Sollen am Ende des Durchlaufs gelöscht sein weil die Essenz in ./test/ geschrieben wurde.
+         - in ./git/ -> befinden sich lokale Kopien von github-Repositories, welche für unser Projekt nützlich sind und sein könnten
+         - in ./html/ -> ('ls -ltrR ./ >> ./html/index.html') Link zu jeder Datei des Projektes, von wo aus einzelne Dateien und Projekte zugänglich sein sollen, öffentlich zugängliche Eingänge ins System (mit Benutzerauthentifizierung gegen Samba AD)
+   - Erstelle eine Übersichtstabelle in /test/table.md mit:
+     - Dateiname
+     - Hauptkonzept (z.B. "Informationsbeschaffung, -austausch, -speicherung, -strukturierung", "Dark Mode Terminal", "Glassmorphism", etc. ...)
+     - Verwendete Technologien (CSS Framework, JS Libraries, ...)
+     - Besondere Features (Animationen, Layouts, Interaktionen, Nutzbarkeit, Effizienz, Produktivität)
+
+   2. **PHASE 2 - Pattern-Extraktion**:
+   - Identifiziere wiederkehrende Patterns
+   - Extrahiere die besten Klassen und Utilities
+   - Finde innovative Funktionen
+   - Sammle interessante Layout-Strukturen
+
+3. **PHASE 3 - Modulare Komponenten-Bibliothek**:
+   Erstelle eine neue Datei `singular-universe-components.html`
+   UND Erstelle eine neue Datei `singular-universe-components.py` mit:
+
+   - Den besten Komponenten als wiederverwendbare Module
+   - Einem Style-Guide mit allen extrahierten Patterns
+   - Utilities als einzelne Funktionen
+   - Beispiele für die Kombination der Module
+
+4. **PHASE 4 - Integration Blueprint**:
+   Erstelle `integration-guide.md` mit:
+   - Mapping: Welche Komponente passt zu welchem Teil unseres SingularUniverse-Konzepts
+   - Code-Snippets für die Integration in unsere bestehende Struktur (in ./prod/ und ./test/)
+   - Empfehlungen für die beste Kombination der Module, Elemente oder Patterns
+
+**Kontext unseres Projekts:**
+- Wir bauen den Teilbereich "UniversalDesktop" aus dem Projekt "SingularUniverse" - eine lokale, "endlos" skalierbare Eingabemaske für Organisation und Effizienzsteigerung im Umgang mit EDV. Integrierte KI-Eingabemaske mit Kontextübertragung über LiteLLM API)
+- Wir sammeln und indexieren eine Vielzahl von interessanten und vielversprechenden git Repositories, von denen wir clones lokal pflegen in ./git/
+- Vier-Bereich-Layout: Universal-Bereich (links, einfahrbar) + KI-gestützter-Singulär-Bereich (Mitte, einfahrbar) + Header-Bereich (oben, toggelt zwischen kleiner und großer Ansicht, enthält Buttons zur Layout-Einstellung (toggle für andere Elemente))
+- Soll mit lokaler LiteLLM API kommunizieren und interagieren
+- Soll mit lokaler Supabase DB kommunizieren und interagieren
+- Soll Kontext-Daten die in der Datenbank gespeichert werden oder über LiteLLM API übertragen werden verschlüsseln können. 
+- Soll gegen öffentlich erreichbaren Samba-AD-Domaincontroller (z.B. https://server.local) authentifizieren können
+- Soll ein OpenwebUI-Plugin ermöglichen und integrieren (z.B. Open WebUI Instanz auf http://localhost:8080)
+- Soll modular und erweiterbar sein für weitere Lösungen
+- Bevorzugt: Keine externen Dependencies, reines HTML/CSS/JS ...?
+
+**Output-Format:**
+Strukturiere deine Findings und Kreationen als klare, sofort nutzbare Module die ich in unser bestehendes Projekt einbauen kann. Dein erstes Finding wird in /test/table.ai/
+#"Zukunftsmusik"#
+#Unendlich skalierbarer Hauptbereich inspiriert von infinitechess (https://www.infinitechess.org/play und https://github.com/Infinite-Chess/infinitechess.org
+#Tabellen-Fenster: neue Zeilen und Spalten sollen über kleine Buttons unten links für Zeilen und oben rechts (+ und - Symbol als Buttonbeschriftung reicht aus.) Kopfzeile muss bearbeitbar sein (Spaltenbeschriftung durch Texteingabe und Datentyp soll wählbar sein wenn man die Maustaste lange gedrückt hält
+#Zwischenablage: Nutzbarmachung über Kontextmenü (Weitere Felder nach "KI-Hilfe")
+#Kontext-Übertragung an "KI-Hilfe" realisieren, sichern und verschlüsseln. KI darf und kann nur auf übertragene Kontext Informationen wie Mauszeigerposition, Inhalt der Zwischenablage, zuvor geänderte Fenster zugreifen wenn sie über den Schlüssel verfügt.)
+#Die Brücke von der Ausgabe im Browser zur Ausgabe in der bash muss angegangen werden. Analyse von ./aisrc/*.jpg oder ./aisrc/*.png

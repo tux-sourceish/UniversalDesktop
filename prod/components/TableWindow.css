@@ -1,0 +1,307 @@
+/* Table Window Styles */
+.table-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--glass-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-toolbar-group {
+  display: flex;
+  gap: 8px;
+}
+
+.table-btn {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: var(--text-light);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.table-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-blue);
+}
+
+.table-btn.danger {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.table-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.table-container {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+}
+
+.interactive-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+.table-row {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.table-row.selected {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.table-row.header-row {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+}
+
+.table-controls {
+  width: 80px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.row-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.row-number {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.row-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.row-btn {
+  padding: 2px 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  color: var(--text-light);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.row-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-blue);
+}
+
+.row-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.row-btn.danger {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.row-btn.danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.table-cell {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  position: relative;
+}
+
+.table-cell:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-blue);
+}
+
+.table-cell.editing {
+  background: rgba(74, 144, 226, 0.1);
+  border-color: var(--accent-blue);
+}
+
+.cell-content {
+  display: block;
+  min-height: 1.2em;
+  word-break: break-word;
+}
+
+.cell-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--accent-blue);
+  border-radius: 2px;
+  padding: 4px;
+  color: var(--text-light);
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+.cell-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.column-controls {
+  display: flex;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.col-btn {
+  padding: 2px 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  color: var(--text-light);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.col-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-blue);
+}
+
+.col-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.col-btn.danger {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.col-btn.danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.table-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.table-info {
+  font-weight: bold;
+}
+
+.table-mode {
+  padding: 2px 6px;
+  background: rgba(74, 144, 226, 0.2);
+  border-radius: 2px;
+  color: var(--accent-blue);
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .table-controls {
+    width: 60px;
+  }
+  
+  .table-cell {
+    padding: 6px 8px;
+    min-width: 60px;
+  }
+  
+  .row-actions {
+    flex-direction: column;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .table-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .table-cell {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .cell-input {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: var(--accent-blue);
+  }
+}
+
+/* Animation for data changes */
+@keyframes cell-flash {
+  0% { background: rgba(74, 144, 226, 0.3); }
+  100% { background: transparent; }
+}
+
+.table-cell.flash {
+  animation: cell-flash 0.5s ease;
+}
+
+/* Empty state */
+.table-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.table-empty::before {
+  content: '📊';
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}

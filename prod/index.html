@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ULLRICHBAU Branding -->
+    <title>UniversalDesktop - ULLRICHBAU Digital Universe</title>
+    <meta name="description" content="Revolutionary spatial computing desktop environment by ULLRICHBAU. Quality is our standard!" />
+    <meta name="keywords" content="spatial computing, desktop environment, ULLRICHBAU, digital universe, productivity" />
+    <meta name="author" content="ULLRICHBAU Development Team" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="UniversalDesktop - ULLRICHBAU Digital Universe" />
+    <meta property="og:description" content="Revolutionary spatial computing desktop environment. Experience the future of digital workspaces." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ullrichbau.app" />
+    <meta property="og:image" content="https://ullrichbau.app/assets/preview.png" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UniversalDesktop - ULLRICHBAU" />
+    <meta name="twitter:description" content="Revolutionary spatial computing desktop environment" />
+    <meta name="twitter:image" content="https://ullrichbau.app/assets/preview.png" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#1a7f56" />
+    <meta name="msapplication-TileColor" content="#1a7f56" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- CSP for Security -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob: https:;
+      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com;
+      worker-src 'self' blob:;
+    " />
+    
+    <!-- Performance Optimization -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    
+    <!-- Loading Animation Styles -->
+    <style>
+      .initial-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, #1a7f56 0%, #0f5132 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        z-index: 10000;
+      }
+      
+      .loading-logo {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .loading-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+      }
+      
+      .loading-progress {
+        width: 300px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      
+      .loading-bar {
+        height: 100%;
+        background: white;
+        border-radius: 2px;
+        animation: loading 3s ease-in-out infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      
+      @keyframes loading {
+        0% { width: 0%; }
+        50% { width: 70%; }
+        100% { width: 100%; }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- Initial Loading Screen -->
+    <div id="initial-loading" class="initial-loading">
+      <div class="loading-logo">🏗️</div>
+      <div class="loading-title">ULLRICHBAU</div>
+      <div class="loading-subtitle">Quality is our standard</div>
+      <div class="loading-progress">
+        <div class="loading-bar"></div>
+      </div>
+    </div>
+    
+    <!-- React App Mount Point -->
+    <div id="root"></div>
+    
+    <!-- Remove Loading Screen -->
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loading = document.getElementById('initial-loading');
+          if (loading) {
+            loading.style.opacity = '0';
+            loading.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => loading.remove(), 500);
+          }
+        }, 2000);
+      });
+    </script>
+    
+    <!-- Main Application Script -->
+    <script type="module" src="/main.tsx"></script>
+    
+    <!-- Production Analytics (placeholder) -->
+    <script>
+      // ULLRICHBAU Analytics integration would go here
+      if (window.location.hostname === 'ullrichbau.app') {
+        console.log('🏗️ ULLRICHBAU Production Environment');
+      }
+    </script>
+  </body>
+</html>

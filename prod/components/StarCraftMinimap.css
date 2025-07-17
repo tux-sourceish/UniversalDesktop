@@ -1,0 +1,378 @@
+/* StarCraft-inspired Minimap Styles */
+
+.starcraft-minimap-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 240px;
+  background: linear-gradient(135deg, #1a2d3a 0%, #0f1b24 100%);
+  border: 2px solid #2d4a5a;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 20px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  font-family: 'Courier New', monospace;
+  user-select: none;
+  backdrop-filter: blur(10px);
+}
+
+.starcraft-minimap-toggle {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.sc-minimap-toggle-btn {
+  background: linear-gradient(135deg, #1a2d3a 0%, #0f1b24 100%);
+  border: 2px solid #2d4a5a;
+  border-radius: 8px;
+  color: #00ff88;
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.sc-minimap-toggle-btn:hover {
+  background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3a 100%);
+  border-color: #00ff88;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 255, 136, 0.3);
+}
+
+/* Header */
+.sc-minimap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #2d4a5a 0%, #1a2d3a 100%);
+  border-bottom: 1px solid #4a6b7a;
+  border-radius: 6px 6px 0 0;
+}
+
+.sc-minimap-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sc-title-text {
+  color: #00ff88;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 4px rgba(0, 255, 136, 0.5);
+}
+
+.sc-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.sc-stat {
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.sc-stat-label {
+  color: #888;
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.sc-zoom-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.sc-zoom-value {
+  color: #00ff88;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 1;
+  text-shadow: 0 0 4px rgba(0, 255, 136, 0.5);
+}
+
+.sc-zoom-label {
+  color: #888;
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.sc-minimap-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.sc-control-btn {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #4a6b7a;
+  border-radius: 3px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-control-btn:hover {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: #00ff88;
+  color: #00ff88;
+  transform: scale(1.1);
+}
+
+/* Minimap Frame */
+.sc-minimap-frame {
+  position: relative;
+  margin: 8px;
+  border: 2px solid #4a6b7a;
+  border-radius: 4px;
+  background: #0a0a0a;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.8),
+    0 0 8px rgba(0, 255, 136, 0.1);
+}
+
+.sc-minimap-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.sc-minimap-canvas:hover {
+  filter: brightness(1.1);
+}
+
+/* Legend */
+.sc-minimap-legend {
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #0f1b24 0%, #1a2d3a 100%);
+  border-top: 1px solid #4a6b7a;
+  border-radius: 0 0 6px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sc-legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.sc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  color: #cccccc;
+  font-weight: bold;
+}
+
+.sc-color-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
+  flex-shrink: 0;
+}
+
+.sc-control-hint {
+  font-size: 0.5rem;
+  color: #888;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+
+/* Animations */
+@keyframes scGlow {
+  0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+}
+
+.starcraft-minimap-container:hover {
+  animation: scGlow 2s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .starcraft-minimap-container {
+    width: 180px;
+    top: 60px;
+    right: 10px;
+  }
+  
+  .sc-minimap-frame {
+    margin: 6px;
+  }
+  
+  .sc-minimap-header {
+    padding: 6px 8px;
+  }
+  
+  .sc-title-text {
+    font-size: 0.65rem;
+  }
+  
+  .sc-legend-item {
+    font-size: 0.55rem;
+  }
+  
+  .sc-control-hint {
+    font-size: 0.45rem;
+  }
+}
+
+/* Z-Level Indicator (4D Navigation) */
+.sc-z-level-indicator {
+  position: absolute;
+  top: 50px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.sc-z-current {
+  font-size: 0.6rem;
+  font-weight: bold;
+  text-shadow: 0 0 4px currentColor;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sc-z-dots {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+
+.sc-z-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: #333;
+}
+
+.sc-z-dot:hover {
+  transform: scale(1.2);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 6px currentColor;
+}
+
+.sc-z-dot.active {
+  transform: scale(1.3);
+  border-color: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Z-Level indicator responsive */
+@media (max-width: 768px) {
+  .sc-z-level-indicator {
+    top: 40px;
+    left: 8px;
+    gap: 4px;
+  }
+  
+  .sc-z-current {
+    font-size: 0.55rem;
+    padding: 1px 3px;
+  }
+  
+  .sc-z-dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .starcraft-minimap-container {
+    border: 3px solid #ffffff;
+    background: #000000;
+  }
+  
+  .sc-minimap-frame {
+    border: 2px solid #ffffff;
+  }
+  
+  .sc-title-text {
+    color: #ffffff;
+  }
+  
+  .sc-control-btn {
+    border: 2px solid #ffffff;
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .starcraft-minimap-container {
+    animation: none !important;
+  }
+  
+  .sc-minimap-toggle-btn,
+  .sc-control-btn {
+    transition: none !important;
+  }
+}
+
+/* Theme variations */
+.starcraft-minimap-container.theme-terran {
+  border-color: #4a90e2;
+}
+
+.starcraft-minimap-container.theme-terran .sc-title-text {
+  color: #4a90e2;
+  text-shadow: 0 0 4px rgba(74, 144, 226, 0.5);
+}
+
+.starcraft-minimap-container.theme-protoss {
+  border-color: #9013fe;
+}
+
+.starcraft-minimap-container.theme-protoss .sc-title-text {
+  color: #9013fe;
+  text-shadow: 0 0 4px rgba(144, 19, 254, 0.5);
+}
+
+.starcraft-minimap-container.theme-zerg {
+  border-color: #ff6b6b;
+}
+
+.starcraft-minimap-container.theme-zerg .sc-title-text {
+  color: #ff6b6b;
+  text-shadow: 0 0 4px rgba(255, 107, 107, 0.5);
+}
