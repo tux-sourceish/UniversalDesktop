@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import './StarCraftMinimap.css';
+import '../styles/StarCraftMinimap.css';
 import ImHexContextMenu from './ImHexContextMenu';
 import ContextMenuActions from './ContextMenuActions';
 

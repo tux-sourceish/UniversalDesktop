@@ -1,23 +1,14 @@
 import { useState, useCallback, useMemo } from 'react';
+import type { DesktopItemData } from '../types';
 
 interface ContextItem {
   id: string;
   title: string;
-  type: 'window' | 'selection' | 'document';
+  type: 'file' | 'window' | 'selection';
   content: string;
   metadata?: Record<string, any>;
   tokenEstimate?: number;
   priority?: 'high' | 'medium' | 'low';
-}
-
-interface DesktopItemData {
-  id: string;
-  type: string;
-  title: string;
-  position: { x: number; y: number; z: number };
-  content: any;
-  is_contextual?: boolean;
-  metadata?: Record<string, any>;
 }
 
 interface TokenUsage {
@@ -282,7 +273,7 @@ export const useContextManager = (
   }, [contextHistory, activeContextItems, updateItemCallback]);
 
   // Get context summary for AI prompts
-  const getContextSummary = useCallback() => {
+  const getContextSummary = useCallback(() => {
     if (activeContextItems.length === 0) return '';
     
     let summary = '=== CONTEXT ===\n';

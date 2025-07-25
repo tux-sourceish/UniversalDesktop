@@ -1,33 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '../hooks/useDraggable';
 import { useResizable } from '../hooks/useResizable';
+import type { DesktopItemData } from '../types';
 import TuiWindow from './TuiWindow';
 import TableWindow from './TableWindow';
 import NoteWindow from './NoteWindow';
-import './DesktopItem.css';
+import '../styles/DesktopItem.css';
 
-interface Position {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface DesktopItemData {
-  id: string;
-  type: 'notizzettel' | 'tabelle' | 'code' | 'browser' | 'terminal' | 'tui' | 'media' | 'chart' | 'calendar';
-  title: string;
-  position: Position;
-  content: any;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-  metadata?: Record<string, any>;
-  width?: number;
-  height?: number;
-  is_contextual?: boolean;
-}
-
-interface DesktopItemProps {
+export interface DesktopItemProps {
   item: DesktopItemData;
   onUpdate: (id: string, updates: Partial<DesktopItemData>) => void;
   onDelete: (id: string) => void;
@@ -48,6 +28,11 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   onToggleContext,
   isInContext
 }) => {
+  // Defensive Programmierung: Prüfe, ob item vollständig ist
+  if (!item || !item.position) {
+    console.warn('⚠️ DesktopItem: Incomplete item data:', item);
+    return null; // Rendere nichts, bis item vollständig ist
+  }
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(item.title);
 
@@ -297,9 +282,9 @@ $ `}
       ref={itemRef}
       className={`desktop-item ${item.type} ${isInContext ? 'in-context' : ''} ${getWindowSoulClass()}`}
       style={{
-        left: item.position.x,
-        top: item.position.y,
-        zIndex: item.position.z,
+        left: item.position?.x || 0,
+        top: item.position?.y || 0,
+        zIndex: item.position?.z || 10,
         width: item.width || 250,
         height: item.height || 200
       }}

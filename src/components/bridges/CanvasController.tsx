@@ -3,7 +3,9 @@ import { useCanvasNavigation } from '../../hooks/useCanvasNavigation';
 
 interface CanvasControllerProps {
   children: React.ReactNode;
+  canvasState?: any; // Optional external canvas state
   onNavigationChange?: (state: any) => void;
+  onKeyboardNavigation?: (e: KeyboardEvent) => void; // For external keyboard handling
   enableKeyboardShortcuts?: boolean;
   enableMouseInteraction?: boolean;
   className?: string;
@@ -18,7 +20,9 @@ interface CanvasControllerProps {
  */
 export const CanvasController: React.FC<CanvasControllerProps> = ({
   children,
+  canvasState: externalCanvasState,
   onNavigationChange,
+  onKeyboardNavigation,
   enableKeyboardShortcuts = true,
   enableMouseInteraction = true,
   className = '',
@@ -26,49 +30,103 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   
-  // Hook Integration
-  const canvas = useCanvasNavigation();
+  // Hook Integration: Externe State hat Priorität, sonst eigener Hook als Fallback
+  const canvas = externalCanvasState ? null : useCanvasNavigation();
+  const activeCanvasState = externalCanvasState || canvas?.canvasState || { 
+    position: { x: 0, y: 0, z: 0 }, 
+    scale: 1, 
+    velocity: { x: 0, y: 0, z: 0 }, 
+    isDragging: false, 
+    momentum: { x: 0, y: 0 } 
+  };
   
   // Auto-notify parent component of navigation changes
   useEffect(() => {
-    onNavigationChange?.(canvas.canvasState);
-  }, [canvas.canvasState, onNavigationChange]);
+    if (!externalCanvasState && canvas && onNavigationChange) {
+      onNavigationChange(canvas.canvasState);
+    }
+  }, [canvas?.canvasState, onNavigationChange, externalCanvasState]);
 
   // Keyboard event integration
   useEffect(() => {
     if (!enableKeyboardShortcuts) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Delegate to hook's keyboard handler
-      canvas.handleKeyboardNavigation(e);
-      
-      // Additional shortcuts specific to canvas
-      if (e.ctrlKey) {
-        switch (e.key) {
-          case 'h':
-            e.preventDefault();
-            canvas.resetPosition();
-            break;
-          case 'r':
-            e.preventDefault(); 
-            canvas.resetZoom();
-            break;
-          case '1':
-          case '2':
-          case '3':
-          case '4':
-          case '5':
-            e.preventDefault();
-            const levels = ['GALAXY', 'SYSTEM', 'PLANET', 'SURFACE', 'MICROSCOPE'];
-            canvas.navigateToZoomLevel(levels[parseInt(e.key) - 1] as any);
-            break;
+      // Delegate to external handler if available, otherwise use internal hook
+      if (externalCanvasState && onKeyboardNavigation) {
+        onKeyboardNavigation(e);
+      } else if (canvas) {
+        canvas.handleKeyboardNavigation(e);
+        
+        // Additional shortcuts specific to canvas
+        if (e.ctrlKey) {
+          switch (e.key) {
+            case 'h':
+              e.preventDefault();
+              canvas.resetPosition();
+              break;
+            case 'r':
+              e.preventDefault(); 
+              canvas.resetZoom();
+              break;
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+              e.preventDefault();
+              const levels = ['GALAXY', 'SYSTEM', 'PLANET', 'SURFACE', 'MICROSCOPE'];
+              canvas.navigateToZoomLevel(levels[parseInt(e.key) - 1] as any);
+              break;
+          }
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [enableKeyboardShortcuts, canvas]);
+  }, [enableKeyboardShortcuts, canvas, externalCanvasState, onKeyboardNavigation]);
+
+  // Mouse interaction for panning
+  const handleMouseEvents = useCallback(() => {
+    if (!enableMouseInteraction || !canvas) return;
+    
+    const element = canvasRef.current;
+    if (!element) return;
+
+    // Pan functionality
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 0) { // Left mouse button
+        // TODO: Restore dragging methods when canvas hook is updated
+        // canvas.startDragging({ x: e.clientX, y: e.clientY, z: 0 });
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // TODO: Restore dragging methods when canvas hook is updated
+      // canvas.updateDragging({ x: e.clientX, y: e.clientY, z: 0 });
+    };
+
+    const handleMouseUp = () => {
+      // TODO: Restore dragging methods when canvas hook is updated
+      // canvas.stopDragging();
+    };
+
+    element.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      element.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [enableMouseInteraction, canvas]);
+
+  useEffect(() => {
+    const cleanup = handleMouseEvents();
+    return cleanup;
+  }, [handleMouseEvents]);
 
   // Mouse wheel integration
   const handleWheel = useCallback((e: React.WheelEvent) => {
@@ -85,18 +143,22 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    // Note: Canvas zoom is now handled by minimap only
-    // This maintains the design decision from the main component
-  }, [enableMouseInteraction]);
+    // Zoom via mousewheel wenn kein externes State da ist
+    if (!externalCanvasState && canvas) {
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      const currentZoom = canvas.canvasState.scale;
+      const newZoom = Math.max(0.1, Math.min(5.0, currentZoom * delta));
+      canvas.setZoomLevel?.(newZoom);
+    }
+  }, [enableMouseInteraction, canvas, externalCanvasState]);
 
-  // CSS Transform integration
+  // CSS Transform integration - use external state for rendering
   const canvasStyle: React.CSSProperties = {
     ...style,
-    transform: `translate(${canvas.canvasState.position.x}px, ${canvas.canvasState.position.y}px) scale(${canvas.canvasState.scale})`,
+    transform: `translate(${activeCanvasState.position.x}px, ${activeCanvasState.position.y}px) scale(${activeCanvasState.scale})`,
     transformOrigin: '0 0',
-    transition: canvas.canvasState.isDragging ? 'none' : 'transform 0.3s ease-out',
-    willChange: 'transform',
-    ...style
+    transition: activeCanvasState.isDragging ? 'none' : 'transform 0.3s ease-out',
+    willChange: 'transform'
   };
 
   // Navigation info overlay
@@ -114,9 +176,9 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
       pointerEvents: 'none',
       zIndex: 1000
     }}>
-      <div>🌌 {canvas.ZoomLevels[canvas.currentZoomLevel as keyof typeof canvas.ZoomLevels]?.name}</div>
-      <div>📍 X: {Math.round(canvas.canvasState.position.x)}, Y: {Math.round(canvas.canvasState.position.y)}</div>
-      <div>🔍 {Math.round(canvas.canvasState.scale * 100)}%</div>
+      <div>🌌 {canvas?.ZoomLevels[canvas?.currentZoomLevel as keyof typeof canvas.ZoomLevels]?.name || 'External'}</div>
+      <div>📍 X: {Math.round(activeCanvasState.position.x)}, Y: {Math.round(activeCanvasState.position.y)}</div>
+      <div>🔍 {Math.round(activeCanvasState.scale * 100)}%</div>
     </div>
   );
 
@@ -156,7 +218,7 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
         fontSize: '11px',
         fontWeight: 'bold'
       }}>
-        {canvas.ZoomLevels[canvas.currentZoomLevel as keyof typeof canvas.ZoomLevels]?.name}
+        {canvas?.ZoomLevels[canvas?.currentZoomLevel as keyof typeof canvas.ZoomLevels]?.name || 'External'}
       </div>
     </div>
   );

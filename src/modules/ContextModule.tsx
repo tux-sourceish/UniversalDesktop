@@ -103,11 +103,7 @@ export const ContextModule: React.FC<ContextModuleProps> = ({
         />
       )}
 
-      {/* Context Menu Actions */}
-      <ContextMenuActions
-        onItemCreate={handleItemCreate}
-        onItemAction={handleItemAction}
-      />
+      {/* Context Menu Actions - Handled by context menus themselves */}
     </>
   );
 };

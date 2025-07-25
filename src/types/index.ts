@@ -42,6 +42,8 @@ export interface DesktopItemData {
   metadata?: Record<string, any>;
   width?: number;
   height?: number;
+  dimensions?: { width: number; height: number; };
+  bagua_descriptor?: number;
   is_contextual?: boolean;
 }
 
@@ -82,3 +84,26 @@ export interface UniversalDesktopSession {
   session: any;
   user: any;
 }
+
+// µ3_ Navigation types - Following Bagua system
+export interface UDPosition {
+  x: number;
+  y: number; 
+  z: number;
+}
+
+// Context types for AI system
+export interface ContextItem {
+  type: 'file' | 'window' | 'selection';
+  id: string;
+  content: any;
+}
+
+// Zoom levels for canvas navigation
+export const ZoomLevels = {
+  SURFACE: 'surface',
+  GALAXY: 'galaxy', 
+  SYSTEM: 'system',
+  PLANET: 'planet',
+  MICROSCOPE: 'microscope'
+} as const;

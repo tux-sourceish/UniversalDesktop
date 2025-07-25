@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './ContextMenu.css';
+import '../styles/ContextMenu.css';
 
 interface ContextMenuProps {
   visible: boolean;

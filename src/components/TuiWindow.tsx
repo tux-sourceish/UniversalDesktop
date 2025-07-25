@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './TuiWindow.css';
+import '../styles/TuiWindow.css';
 
 interface TuiWindowProps {
   content: string;

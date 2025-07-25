@@ -417,14 +417,33 @@ export const useTerritoryManager = (
     }) || null;
   }, [territories]);
 
-  // Auto-update territories when items change
+  // Auto-update territories when items change (fixed infinite loop)
   useEffect(() => {
     const updateTimeout = setTimeout(() => {
-      updateTerritories();
+      if (!autoGroupingEnabled || items.length === 0) {
+        setTerritories([]);
+        return;
+      }
+      
+      const clusteringResult = calculateDBSCAN(items);
+      const newTerritories = clusteringResult.clusters.map((cluster, index) => 
+        generateTerritoryFromCluster(cluster, index)
+      );
+      
+      setTerritories(newTerritories);
+
+      if (import.meta.env.DEV) {
+        console.log('🏛️ Territories Updated:', {
+          territories: newTerritories.length,
+          totalItems: items.length,
+          noise: clusteringResult.noise.length,
+          efficiency: Math.round(clusteringResult.metrics.clusteringEfficiency * 100) + '%'
+        });
+      }
     }, 300); // Debounce updates
 
     return () => clearTimeout(updateTimeout);
-  }, [updateTerritories]);
+  }, [items, autoGroupingEnabled, calculateDBSCAN, generateTerritoryFromCluster]);
 
   // Memoized territory analytics for performance
   const analytics = useMemo(() => getTerritoryAnalytics(), [getTerritoryAnalytics]);

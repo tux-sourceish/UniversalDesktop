@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ImHexContextMenu.css';
+import '../styles/ImHexContextMenu.css';
 
 export interface ContextMenuItem {
   id: string;

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { PanelSidebar } from '../components/bridges/PanelSidebar';
-import { MinimapWidget } from '../components/bridges/MinimapWidget';
+import { µ2_Minimap } from './µ2_Minimap';
 import ContextManager from '../components/ContextManager';
 import type { DesktopItemData, CanvasState, PanelState } from '../types';
 
@@ -46,6 +46,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         allowResize={true}
         showToggleButtons={true}
         className={className}
+        onCreateItem={onItemCreate}
       >
         {/* Context Manager Panel */}
         {panelState.territory && (
@@ -61,17 +62,36 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         )}
       </PanelSidebar>
 
-      {/* Minimap Widget */}
+      {/* µ2_Minimap - StarCraft Minimap mit Bagua-Power */}
       {panelState.minimap && (
-        <MinimapWidget
-          items={visibleItems}
-          canvasState={canvasState}
-          onNavigationChange={onNavigationChange}
-          onZoomChange={onZoomChange}
-          showControls={true}
-          showStats={false}
-          size={{ width: 300, height: 200 }}
-        />
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 1000
+        }}>
+          <µ2_Minimap
+            items={visibleItems}
+            canvasState={canvasState}
+            onNavigate={(position) => {
+              // Verbesserte UX: Smooth navigation mit korrektem Canvas-State
+              onNavigationChange?.({
+                ...canvasState,
+                position,
+                velocity: { x: 0, y: 0, z: 0 },
+                isDragging: false
+              });
+            }}
+            onZoomChange={(zoomLevel) => {
+              console.log('🔍 µ2_Minimap Zoom Change:', zoomLevel);
+              onZoomChange?.(zoomLevel);
+            }}
+            onItemSelect={(itemId) => {
+              console.log('🎯 Item selected:', itemId);
+              // TODO: Add item selection logic
+            }}
+          />
+        </div>
       )}
     </>
   );

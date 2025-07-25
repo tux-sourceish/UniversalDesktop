@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './UnifiedContextMenu.css';
+import '../styles/UnifiedContextMenu.css';
 
 interface Position {
   x: number;

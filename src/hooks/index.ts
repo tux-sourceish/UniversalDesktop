@@ -1,21 +1,44 @@
-// 🚀 UniversalDesktop Custom Hooks - Unified Export
-// Phase 2 Hook-System Revolution - Complete Architecture
+// 🚀 UniversalDesktop Custom Hooks - Campus-Modell v2.1 
+// µX_ Prefix System - Raimunds Bagua-Architektur
 
-// Phase 1: Foundation Hooks
-export { useCanvasNavigation } from './useCanvasNavigation';
-export { usePanelManager } from './usePanelManager';
-export { useMinimap } from './useMinimap';
+// µ1_ HIMMEL (☰) - Templates/Classes - Strukturelle Grundlagen
+import { µ1_useUniversalDocument } from './µ1_useUniversalDocument';
+import { µ1_useWorkspace } from './µ1_useWorkspace';
+
+// µ2_ WIND (☴) - UI/View Hooks
+import { µ2_useMinimap } from './µ2_useMinimap';
+import { µ2_useBaguaColors } from './µ2_useBaguaColors';
+
+// µ3_ WASSER (☵) - Flow/Navigation Hooks  
+import { µ3_useNavigation } from './µ3_useNavigation';
+
+// Legacy Hooks (Phase-out planned)
+import { useCanvasNavigation } from './useCanvasNavigation';
+import { usePanelManager } from './usePanelManager';
+import { useMinimap } from './useMinimap';
 
 // Phase 2: Core Features
-export { useContextManager } from './useContextManager';
-export { useWindowManager } from './useWindowManager';
-export { useKeyboardShortcuts } from './useKeyboardShortcuts';
+import { useContextManager } from './useContextManager';
+import { useWindowManager } from './useWindowManager'; 
+import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 
 // Phase 3: Advanced Features
-export { useAIAgent } from './useAIAgent';
-export { useTerritoryManager } from './useTerritoryManager';
-export { useClipboardManager } from './useClipboardManager';
-export { useFileManager } from './useFileManager';
+import { useAIAgent } from './useAIAgent';
+import { useTerritoryManager } from './useTerritoryManager';
+import { useClipboardManager } from './useClipboardManager';
+import { useFileManager } from './useFileManager';
+
+// µX_ Campus-Modell Exports - PRIMARY (Bagua-powered)
+export { 
+  µ1_useUniversalDocument, 
+  µ1_useWorkspace,
+  µ2_useMinimap, 
+  µ2_useBaguaColors, 
+  µ3_useNavigation 
+};
+
+// Legacy exports - DEPRECATED (for backward compatibility)  
+export { useCanvasNavigation, usePanelManager, useMinimap, useContextManager, useWindowManager, useKeyboardShortcuts, useAIAgent, useTerritoryManager, useClipboardManager, useFileManager };
 
 // Hook Categories for organized imports
 export const NavigationHooks = {

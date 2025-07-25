@@ -49,7 +49,7 @@ export const AuthModule: React.FC<AuthModuleProps> = ({
   }
 
   if (!session) {
-    return <LoginPage />;
+    return <LoginPage onLogin={() => {}} />;
   }
 
   return <>{children({ session, user: session.user })}</>;

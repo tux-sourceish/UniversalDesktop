@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { usePanelManager } from '../../hooks/usePanelManager';
+import { UDFormat } from '../../core/UDFormat';
 
 interface PanelSidebarProps {
   position?: 'left' | 'right' | 'top' | 'bottom';
@@ -11,6 +12,8 @@ interface PanelSidebarProps {
   children?: React.ReactNode;
   showToggleButtons?: boolean;
   compactMode?: boolean;
+  // µ1_ Campus-Model Integration
+  onCreateItem?: (type: string, position: {x: number, y: number, z: number}, content: any) => void;
 }
 
 interface PanelContentProps {
@@ -37,13 +40,130 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
   style = {},
   children,
   showToggleButtons = true,
-  compactMode = false
+  compactMode = false,
+  onCreateItem
 }) => {
   const panels = usePanelManager();
   const [dimensions, setDimensions] = useState({
     width: defaultWidth,
     height: defaultHeight
   });
+
+  // µ1_ Campus-Model Item-Creation Handlers
+  const µ1_createNotizzettel = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('notizzettel', position, { text: "Deine Gedanken hier..." });
+  }, [onCreateItem]);
+
+  const µ1_createTabelle = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('tabelle', position, {
+      headers: ['Spalte 1', 'Spalte 2'],
+      rows: [['Daten', 'Hier']]
+    });
+  }, [onCreateItem]);
+
+  const µ1_createCode = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('code', position, {
+      code: '// Neuer Code\nfunction µ1_create() {\n  // Campus-Model Magic!\n}',
+      language: 'typescript'
+    });
+  }, [onCreateItem]);
+
+  const µ1_createBrowser = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('browser', position, { 
+      url: 'https://universaldesktop.ai',
+      title: 'Universal Browser'
+    });
+  }, [onCreateItem]);
+
+  const µ1_createTerminal = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('terminal', position, { 
+      command: 'echo "UniversalDesktop v2.1 ready!"',
+      history: []
+    });
+  }, [onCreateItem]);
+
+  const µ1_createCalendar = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('calendar', position, { 
+      date: new Date().toISOString().split('T')[0],
+      events: []
+    });
+  }, [onCreateItem]);
+
+  const µ1_createMedia = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('media', position, { 
+      type: 'video',
+      src: '',
+      title: 'Neues Media Item'
+    });
+  }, [onCreateItem]);
+
+  const µ1_createChart = useCallback(() => {
+    if (!onCreateItem) return;
+    const position = {
+      x: Math.random() * 800 + 100,
+      y: Math.random() * 600 + 100,
+      z: Date.now()
+    };
+    onCreateItem('chart', position, {
+      type: 'bar',
+      data: [{ name: 'A', value: 10 }, { name: 'B', value: 20 }],
+      title: 'Neues Diagramm'
+    });
+  }, [onCreateItem]);
+
+  // µ1_ Button-Handler Mapping (Campus-Model konform)
+  const µ1_buttonHandlers = useMemo(() => ({
+    'notizzettel': µ1_createNotizzettel,
+    'tabelle': µ1_createTabelle,
+    'code': µ1_createCode,
+    'browser': µ1_createBrowser,
+    'terminal': µ1_createTerminal,
+    'calendar': µ1_createCalendar,
+    'media': µ1_createMedia,
+    'chart': µ1_createChart
+  }), [µ1_createNotizzettel, µ1_createTabelle, µ1_createCode, µ1_createBrowser, µ1_createTerminal, µ1_createCalendar, µ1_createMedia, µ1_createChart]);
 
   // Get panels for this position
   const positionPanels = useMemo(() => 
@@ -64,12 +184,18 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
       content: (
         <div className="tools-panel-content">
           <div className="tool-grid">
-            {['notizzettel', 'tabelle', 'code', 'browser', 'terminal', 'calendar', 'media', 'chart'].map(tool => (
-              <button
-                key={tool}
-                className={`tool-button ${tool}`}
-                onClick={() => console.log(`Create ${tool}`)}
-              >
+            {['notizzettel', 'tabelle', 'code', 'browser', 'terminal', 'calendar', 'media', 'chart'].map(tool => {
+              // Raimunds algebraischer Transistor für Button-State
+              const canCreateItems = true; // TODO: Logik für Button-Verfügbarkeit
+              const buttonEnabled = UDFormat.transistor(canCreateItems);
+              
+              return (
+                <button
+                  key={tool}
+                  className={`tool-button ${tool}`}
+                  onClick={() => µ1_buttonHandlers[tool as keyof typeof µ1_buttonHandlers]?.()}
+                  style={{ opacity: 0.5 + 0.5 * buttonEnabled }}
+                >
                 <span className="tool-icon">
                   {tool === 'notizzettel' && '📝'}
                   {tool === 'tabelle' && '📊'}
@@ -80,9 +206,10 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
                   {tool === 'media' && '🎬'}
                   {tool === 'chart' && '📈'}
                 </span>
-                <span className="tool-label">{tool}</span>
-              </button>
-            ))}
+                  <span className="tool-label">{tool}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )

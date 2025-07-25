@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './NoteWindow.css';
+import '../styles/NoteWindow.css';
 
 interface NoteWindowProps {
   content: string;

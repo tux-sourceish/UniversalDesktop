@@ -56,8 +56,8 @@ export const useDraggable = (
     const onMouseMove = (e: MouseEvent) => {
       if (!isDraggingRef.current || !itemRef.current) return;
       
-      // Simplified dragging - get canvas transform from CSS variables or data attributes
-      const canvas = document.querySelector('.infinite-canvas') as HTMLElement;
+      // Verbesserte UX: Finde den Canvas-Container richtig
+      const canvas = document.querySelector('.canvas-content') as HTMLElement;
       if (!canvas) return;
       
       const canvasRect = canvas.getBoundingClientRect();

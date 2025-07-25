@@ -12,9 +12,14 @@ interface CanvasModuleProps {
   items: DesktopItemData[];
   canvasState: CanvasState;
   onNavigationChange?: (state: CanvasState) => void;
-  onItemUpdate?: (item: DesktopItemData) => void;
+  onKeyboardNavigation?: (e: KeyboardEvent) => void;
+  onItemUpdate?: (id: string, updates: Partial<DesktopItemData>) => void;
   onItemDelete?: (id: string) => void;
+  onItemRename?: (id: string, newTitle: string) => void;
   onContextMenu?: (e: React.MouseEvent, itemId?: string) => void;
+  onTitleBarClick?: (e: React.MouseEvent, itemId: string) => void;
+  onToggleContext?: (item: DesktopItemData) => void;
+  isInContext?: (itemId: string) => boolean;
   className?: string;
 }
 
@@ -22,31 +27,16 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
   items,
   canvasState,
   onNavigationChange,
+  onKeyboardNavigation,
   onItemUpdate,
   onItemDelete,
+  onItemRename,
   onContextMenu,
+  onTitleBarClick,
+  onToggleContext,
+  isInContext,
   className = ''
 }) => {
-  const handleItemPositionChange = (id: string, position: { x: number; y: number; z: number }) => {
-    const item = items.find(i => i.id === id);
-    if (item && onItemUpdate) {
-      onItemUpdate({ ...item, position });
-    }
-  };
-
-  const handleItemContentChange = (id: string, content: any) => {
-    const item = items.find(i => i.id === id);
-    if (item && onItemUpdate) {
-      onItemUpdate({ ...item, content });
-    }
-  };
-
-  const handleItemSizeChange = (id: string, width: number, height: number) => {
-    const item = items.find(i => i.id === id);
-    if (item && onItemUpdate) {
-      onItemUpdate({ ...item, width, height });
-    }
-  };
 
   const handleCanvasContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,7 +45,9 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
 
   return (
     <CanvasController
+      canvasState={canvasState}
       onNavigationChange={onNavigationChange}
+      onKeyboardNavigation={onKeyboardNavigation}
       className={className}
     >
       <div 
@@ -71,11 +63,13 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
           <DesktopItem
             key={item.id}
             item={item}
-            onPositionChange={(position) => handleItemPositionChange(item.id, position)}
-            onContentChange={(content) => handleItemContentChange(item.id, content)}
-            onSizeChange={(width, height) => handleItemSizeChange(item.id, width, height)}
-            onDelete={() => onItemDelete?.(item.id)}
-            onContextMenu={(e) => onContextMenu?.(e, item.id)}
+            onUpdate={onItemUpdate || (() => {})}
+            onDelete={onItemDelete || (() => {})}
+            onRename={onItemRename || (() => {})}
+            onContextMenu={(e, itemId) => onContextMenu?.(e, itemId)}
+            onTitleBarClick={onTitleBarClick || (() => {})}
+            onToggleContext={onToggleContext || (() => {})}
+            isInContext={isInContext?.(item.id) || false}
           />
         ))}
       </div>

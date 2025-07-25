@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './TableWindow.css';
+import '../styles/TableWindow.css';
 
 interface TableWindowProps {
   content: any[][];

@@ -1,5 +1,5 @@
 import React from 'react';
-import './ContextManager.css';
+import '../styles/ContextManager.css';
 
 export interface ContextItem {
   id: string;

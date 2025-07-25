@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/supabaseClient';
-import './LoginPage.css';
+import '../styles/LoginPage.css';
 
 interface LoginPageProps {
   onLogin: (session: any) => void;

@@ -170,6 +170,12 @@ export const useCanvasNavigation = () => {
     };
   }, []);
 
+  // µ1_ Zoom-Level Setter für Header-Integration
+  const setZoomLevel = useCallback((newZoom: number) => {
+    const clampedZoom = Math.max(0.1, Math.min(5.0, newZoom));
+    setCanvasState(prev => ({ ...prev, scale: clampedZoom }));
+  }, []);
+
   return {
     canvasState,
     setCanvasState,
@@ -180,6 +186,9 @@ export const useCanvasNavigation = () => {
     handleKeyboardNavigation,
     resetPosition,
     resetZoom,
-    getZoomLevelFromScale
+    getZoomLevelFromScale,
+    // µ1_ Header-kompatible Eigenschaften
+    zoomLevel: canvasState.scale,
+    setZoomLevel
   };
 };

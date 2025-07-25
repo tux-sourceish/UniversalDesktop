@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UniversalDesktop - Prototype</title>
-    <meta name="description" content="Infinite intelligent desktop workspace with AI integration" />
+    <title>UniversalDesktop v2.1 - µ2_Minimap Edition</title>
+    <meta name="description" content="Infinite intelligent desktop workspace with µ2_Minimap and Bagua-Power" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
         /* Loading screen */
@@ -52,6 +52,17 @@
             font-size: 0.9rem;
             color: #b0b0b0;
         }
+        
+        .bagua-indicator {
+            margin-top: 15px;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -59,8 +70,9 @@
         <div class="loading-screen">
             <div class="loading-content">
                 <div class="loading-spinner"></div>
-                <div class="loading-text">🌌 UniversalDesktop</div>
-                <div class="loading-subtitle">Infinite intelligent workspace loading...</div>
+                <div class="loading-text">🌌 UniversalDesktop v2.1</div>
+                <div class="loading-subtitle">µ2_Minimap mit Raimunds Bagua-Power loading...</div>
+                <div class="bagua-indicator">☴ ☰ ☵ ☲ ☳ ☷ ☶ ☱</div>
             </div>
         </div>
     </div>

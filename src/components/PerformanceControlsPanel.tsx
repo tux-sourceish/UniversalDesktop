@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './PerformanceControlsPanel.css';
+import '../styles/PerformanceControlsPanel.css';
 
 // Performance settings interface
 interface PerformanceSettings {

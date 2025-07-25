@@ -1,0 +1,189 @@
+/* Global CSS Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #1a1a1d;
+  color: #f4f4f4;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+/* CSS Variables - Glass/Glassmorphism Design System */
+:root {
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(10px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Border Radius */
+  --border-radius: 12px;
+  
+  /* Text Colors */
+  --text-light: #f4f4f4;
+  --text-medium: #cccccc;
+  --text-dark: #999999;
+  
+  /* Background Colors */
+  --bg-dark: #1a1a1d;
+  --bg-medium: #2d2d32;
+  --bg-light: #404047;
+  
+  /* Accent Colors */
+  --accent-blue: #4a90e2;
+  --accent-green: #22c55e;
+  --accent-yellow: #f5d56e;
+  --accent-orange: #f97316;
+  --accent-red: #e35050;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-pink: #ec4899;
+  --accent-gray: #6b7280;
+  
+  /* Transitions */
+  --transition-fast: 0.15s;
+  --transition-medium: 0.3s;
+  --transition-slow: 0.6s;
+  
+  /* Easing */
+  --ease-natural: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* UniversalDesktop v2 Main Layout */
+.universal-desktop-v2 {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-dark);
+}
+
+.universal-desktop-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-dark);
+}
+
+.loading-content {
+  text-align: center;
+  color: var(--text-light);
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.loading-subtext {
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+/* Canvas and Modules */
+.main-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.canvas-workspace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(74, 144, 226, 0.3);
+  color: #f4f4f4;
+}
+
+::-moz-selection {
+  background: rgba(74, 144, 226, 0.3);
+  color: #f4f4f4;
+}
+
+/* Focus styles */
+:focus {
+  outline: 2px solid rgba(74, 144, 226, 0.5);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --text-light: #ffffff;
+    --text-medium: #cccccc;
+  }
+}
