@@ -26,7 +26,7 @@ import { μ7_useResizable } from './μ7_useResizable';
 
 // Legacy Hooks (still exist as files)
 import { usePanelManager } from './μ8_usePanelManager';
-import { useMinimap } from './useMinimap';
+import { useMinimap } from './μ2_useMinimap_legacy';
 import { useContextManager } from './useContextManager';
 import { μ7_useClipboardManager } from './μ7_useClipboardManager';
 import { useFileManager } from './useFileManager';
@@ -210,11 +210,11 @@ export { μ7_useResizable as useResizable } from './μ7_useResizable';
 // UniversalFile Core Components
 export * from './UDFormat';
 export * from './UDDocument';
-export * from './UDMinimapIntegration';
+export * from './μ2_UDMinimapIntegration';
 
 // Default exports for convenience
 export { default as UDDocument } from './UDDocument';
-export { default as UDMinimapAdapter } from './UDMinimapIntegration';
+export { default as UDMinimapAdapter } from './μ2_UDMinimapIntegration';
 
 // Import for unified API
 import { 
@@ -225,7 +225,7 @@ import {
 } from './UDFormat';
 
 import UDDocument from './UDDocument';
-import UDMinimapAdapter from './UDMinimapIntegration';
+import UDMinimapAdapter from './μ2_UDMinimapIntegration';
 
 // UniversalFile Unified API
 export const UniversalFile = {
