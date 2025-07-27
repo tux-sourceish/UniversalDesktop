@@ -28,7 +28,7 @@ import { μ7_useResizable } from './μ7_useResizable';
 import { usePanelManager } from './μ8_usePanelManager';
 import { useMinimap } from './useMinimap';
 import { useContextManager } from './useContextManager';
-import { useClipboardManager } from './useClipboardManager';
+import { μ7_useClipboardManager } from './μ7_useClipboardManager';
 import { useFileManager } from './useFileManager';
 
 // μ6_ FEUER (☲) - Functions/Context Management
@@ -52,7 +52,7 @@ export {
 };
 
 // Legacy exports - DEPRECATED (for backward compatibility)  
-export { usePanelManager, useMinimap, useContextManager, useClipboardManager, useFileManager };
+export { usePanelManager, useMinimap, useContextManager, μ7_useClipboardManager, useFileManager };
 
 // μ6_ Context Management exports
 export { μ6_useContextManager };
@@ -63,6 +63,7 @@ export { μ1_useWindowManager as useWindowManager };
 export { μ7_useKeyboardShortcuts as useKeyboardShortcuts };
 export { μ6_useAIAgent as useAIAgent };
 export { μ5_useTerritoryManager as useTerritoryManager };
+export { μ7_useClipboardManager as useClipboardManager };
 
 // Hook Categories for organized imports  
 export const NavigationHooks = {
@@ -80,7 +81,7 @@ export const UIManagementHooks = {
 export const AdvancedFeatureHooks = {
   useAIAgent: μ6_useAIAgent,
   useTerritoryManager: μ5_useTerritoryManager,
-  useClipboardManager
+  useClipboardManager: μ7_useClipboardManager
 } as const;
 
 // Complete Hook Suite for full UniversalDesktop functionality
@@ -166,10 +167,10 @@ export const UsagePatterns = {
   standard: ['useCanvasNavigation', 'usePanelManager', 'useMinimap', 'useContextManager', 'useWindowManager', 'useKeyboardShortcuts'],
   
   // Advanced setup with all features
-  advanced: ['useCanvasNavigation', 'usePanelManager', 'useMinimap', 'useContextManager', 'useWindowManager', 'useKeyboardShortcuts', 'useAIAgent', 'useTerritoryManager', 'useClipboardManager'],
+  advanced: ['useCanvasNavigation', 'usePanelManager', 'useMinimap', 'useContextManager', 'useWindowManager', 'useKeyboardShortcuts', 'useAIAgent', 'useTerritoryManager', 'μ7_useClipboardManager'],
   
   // AI-focused setup
-  aiWorkflow: ['useContextManager', 'useAIAgent', 'useClipboardManager'],
+  aiWorkflow: ['useContextManager', 'useAIAgent', 'μ7_useClipboardManager'],
   
   // Spatial computing setup
   spatialComputing: ['useCanvasNavigation', 'useMinimap', 'useTerritoryManager']

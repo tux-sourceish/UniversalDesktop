@@ -194,6 +194,7 @@ export class μ1_WindowFactory {
     const hasTable = typeof content === 'object' && (content.headers || content.rows);
     const hasTui = typeof content === 'object' && (content.tui_content || content.tui_width);
     const isText = typeof content === 'string' || (typeof content === 'object' && content.text);
+    void isText; // Acknowledge for future use
     
     // AI Agent influence on type selection
     const coderWeight = UDFormat.transistor(agents.includes('coder'));

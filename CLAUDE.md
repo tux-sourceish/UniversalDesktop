@@ -6,10 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **✅ BUILD STATUS: GREEN** - Alle kritischen Build-Fehler behoben!
 
-**TypeScript Errors:** ~25 nicht-kritische unused variable warnings (TS6133)
+**TypeScript Errors:** ~15 harmless unused variable warnings (TS6133) - significantly reduced
 **Build Success:** ✅ `npx vite build` erfolgreich  
 **Dev Server:** ✅ `npm run dev` läuft auf http://localhost:5173/
 **Core Features:** ✅ Grundfunktionen arbeiten
+**Code Cleanup:** ✅ Obsolete bridge files removed, codebase optimized
 
 **🚧 WICHTIGER STATUS: V2-IMPLEMENTATION UNVOLLSTÄNDIG**
 - Build funktioniert, aber viele Features sind V1-Relics mit V2-TODOs

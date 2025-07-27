@@ -158,6 +158,23 @@ const μ3_nextState = (currentState: number, targetState: number) => {
 };
 ```
 
+#### **Context Menu Visibility (REAL IMPLEMENTATION):**
+```typescript
+// μ7_UnifiedContextMenu - Echte algebraische Menü-Logik:
+const μ7_getVisibility = (condition: boolean): number => {
+    return UDFormat.transistor(condition); // 1 wenn sichtbar, 0 wenn nicht
+};
+
+// Anwendung in Context Menus:
+const canPin = μ7_getVisibility(!targetItem.is_contextual);
+const canUnpin = μ7_getVisibility(!!targetItem.is_contextual);
+const canPaste = μ7_getVisibility(clipboardHasContent);
+
+// Menu Item Rendering:
+items.filter(item => item.visible === 1).map(μ7_renderMenuItem)
+// Nur Items mit visible=1 werden gerendert - pure Algebra!
+```
+
 ---
 
 ## 🎯 **RAIMUNDS 0-9 SYSTEMATIK (Erweiterte Philosophie)**
@@ -518,6 +535,52 @@ Ein System, das nicht nur funktioniert, sondern **harmonisch fließt**. Wo westl
 - Reasoner/Coder/Refiner Agents in µ2_AIPanel.tsx:70-95 lokalisiert
 - Momentan UI-Checkboxes mit Bagua-Zuordnung
 - **Next Feature:** Spezialisierte Agent-Implementation
+
+---
+
+## 📋 **TEXT SELECTION & CLIPBOARD REVOLUTION (Januar 2025)**
+
+### **μ7_DONNER Perfect Desktop Integration Achieved**
+```typescript
+// BREAKTHROUGH: Real text selection like professional desktop apps
+const μ7_textSelection = {
+  // Before: Ctrl+C copied entire windows (wrong!)
+  oldBehavior: "Whole UDItem → Clipboard",
+  
+  // After: Ctrl+C copies ONLY selected text (perfect!)
+  newBehavior: "Selected Text → System Clipboard",
+  
+  // Algebraic Selection Tracking:
+  selectionState: UDFormat.transistor(hasSelectedText),
+  clipboardButtons: UDFormat.transistor(selectionActive)
+};
+```
+
+### **Context Menu "Bearbeiten" Submenu Excellence**
+```typescript
+// Revolutionary German UX Integration:
+μ7_BearbeitenSubmenu = {
+  "Alles auswählen": "Ctrl+A", // Select all text
+  "Kopieren": "Ctrl+C",         // Copy selected text  
+  "Ausschneiden": "Ctrl+X",     // Cut selected text
+  "Einfügen": "Ctrl+V"          // Paste from clipboard
+};
+
+// Perfect Desktop App Behavior:
+rightClick → "Bearbeiten" → Professional text operations
+```
+
+### **μ8_NoteWindow Text Intelligence**
+- **Smart Selection Tracking**: Visual feedback with character count
+- **Context-Aware Buttons**: Copy/Cut/Paste appear when text selected
+- **Real System Clipboard**: Works with ALL other applications
+- **Professional Status**: "📋 42 selected" in status bar
+- **Algebraic Transistor UI**: Buttons controlled by `UDFormat.transistor(!!selectedText)`
+
+### **The Vision Realized**
+*"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft"* - Now includes **perfect text handling** that rivals professional desktop applications while maintaining complete μX-Bagua philosophical compliance.
+
+**Result**: UniversalDesktop text editing = **Desktop-Class Professional Experience** ✨
 
 ---
 

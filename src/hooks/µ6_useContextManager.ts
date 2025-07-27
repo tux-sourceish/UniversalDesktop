@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { UDFormat } from '../core/UDFormat';
 
 /**
@@ -50,6 +50,7 @@ export const μ6_useContextManager = (
   maxTokens: number = 100000,
   updateItemCallback?: (id: string, updates: Partial<μ6_DesktopItemData>) => void
 ) => {
+
   
   // μ6_ Context State (FEUER-Pattern: Function/Processing State)
   const [μ6_activeContextItems, setμ6_ActiveContextItems] = useState<μ6_ContextItem[]>([]);
@@ -160,11 +161,6 @@ export const μ6_useContextManager = (
       // Save to history für Undo
       setμ6_ContextHistory(prevHistory => [...prevHistory.slice(-10), prev]);
       
-      console.log('✅ μ6 Context item added to state:', {
-        itemId: item.id,
-        newCount: newItems.length,
-        allIds: newItems.map(ci => ci.id)
-      });
       
       return newItems;
     });
@@ -172,13 +168,6 @@ export const μ6_useContextManager = (
     // Update database
     updateItemCallback?.(item.id, { is_contextual: true });
     
-    console.log('📌 μ6 Added to Context:', {
-      id: item.id,
-      title: item.title,
-      tokens: tokenEstimate,
-      priority,
-      bagua: item.bagua_descriptor
-    });
   }, [μ6_activeContextItems, μ6_tokenUsage, maxTokens, μ6_autoOptimize, μ6_estimateTokens, updateItemCallback]);
 
   // μ6_ Map Item Type to Context Type (Bagua-aware)
@@ -337,19 +326,11 @@ export const μ6_useContextManager = (
 
   // μ6_ Get Context Summary für AI-Prompts (ESSENTIELL!)
   const μ6_getContextSummary = useCallback(() => {
-    console.log('🔍 μ6_getContextSummary called:', {
-      activeContextItemsCount: μ6_activeContextItems.length,
-      activeContextItems: μ6_activeContextItems.map(item => ({ id: item.id, title: item.title }))
-    });
-    
     // Algebraischer Transistor für Empty-Check (FIXED!)
     const isEmpty = UDFormat.transistor(μ6_activeContextItems.length === 0);
     if (isEmpty === 1) {
-      console.log('🔍 μ6_getContextSummary: Empty context (transistor result:', isEmpty, ')');
       return ''; // Kein Context
     }
-    
-    console.log('✅ μ6_getContextSummary: Building context from', μ6_activeContextItems.length, 'items');
     let summary = '=== μ6 CONTEXT (Bagua-Structured) ===\n';
     
     μ6_activeContextItems
@@ -456,7 +437,8 @@ export const μ6_useContextManager = (
     };
   }, [μ6_activeContextItems, μ6_tokenUsage]);
 
-  return {
+  // DEBUG: Return object with state verification
+  const returnObject = {
     // State
     activeContextItems: μ6_activeContextItems,
     tokenUsage: μ6_tokenUsage,
@@ -483,4 +465,7 @@ export const μ6_useContextManager = (
     // Settings
     setAutoOptimize: setμ6_AutoOptimize
   };
+
+
+  return returnObject;
 };

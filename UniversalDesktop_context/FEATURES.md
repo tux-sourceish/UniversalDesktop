@@ -1,8 +1,10 @@
 # 🌟 UniversalDesktop v2.1 - Feature Status & Roadmap
 
-**Build Status:** ✅ **GREEN** - `npm run build` erfolgreich  
+**Build Status:** ✅ **GREEN** - `npx vite build` erfolgreich (460.67 kB gzipped)  
 **Development:** ✅ **ACTIVE** - `npm run dev` auf http://localhost:5173/  
 **Architecture:** ✅ **V2 STABLE** - Campus-Modell mit μX-Bagua System
+**AI Integration:** ✅ **WORKING** - Context Manager fixed, 6 models functional
+**Code Cleanup:** ✅ **COMPLETE** - Debug spam removed, production-ready logging
 
 ---
 
@@ -21,15 +23,24 @@
 | Window Type | Status | Component | Features | AI Integration |
 |-------------|--------|-----------|----------|----------------|
 | **μ8_NoteWindow** | ✅ COMPLETE | 458 LOC | Text/Markdown, Context 📌, Auto-Save | ✅ Perfect |
-| **μ2_TuiWindow** | ✅ COMPLETE | 680 LOC | 15 Terminal Presets, Historical Themes | ✅ Perfect |
+| **μ2_TuiWindow** | ✅ COMPLETE | 680 LOC | 15 Terminal Presets, 16+ Color Themes, Smart State Management | ✅ Perfect |
 | **μ2_TableWindow** | ✅ COMPLETE | 754 LOC | Interactive Tables, CSV Export | ✅ Perfect |
 | **μ1_WindowFactory** | ✅ COMPLETE | 377 LOC | **Unity Bridge** - Same windows for Human+AI | ✅ Revolutionary |
+
+### **🖱️ μ7_UnifiedContextMenu (Revolutionary UX)**
+| Context Type | Status | Actions Available | Integration | Performance |
+|--------------|--------|-------------------|-------------|-------------|
+| **Canvas Right-Click** | ✅ COMPLETE | Create (Note,Table,Terminal,TUI,Code), AI Help, Navigation | μ1_WindowFactory | ⚡ Instant |
+| **Window Right-Click** | ✅ COMPLETE | Pin/Unpin Context 📌, Rename, Delete, AI Workflows | μ6_ContextManager | ⚡ Smart Detection |
+| **Content Right-Click** | ✅ COMPLETE | Cut/Copy/Paste, AI Actions, Auto-Format | Clipboard System | ⚡ Context-Aware |
+| **Algebraic Visibility** | ✅ COMPLETE | `UDFormat.transistor()` für Menu Items | V2 Bagua Logic | ⚡ Branch-free |
 
 ### **🤖 AI Communication System**
 | Feature | Status | Models | Integration | Performance |
 |---------|--------|--------|-------------|-------------|
-| **LiteLLM Integration** | ✅ COMPLETE | 6 Models | reasoning/fast/premium/vision/local/super | 🚀 Multi-Model |
-| **Context Manager** | ✅ COMPLETE | μ6_useContextManager | 📌 Pin items for AI context | 🧠 Intelligent |
+| **LiteLLM Integration** | ✅ COMPLETE | 6 Models | reasoning/fast/premium/vision/local | 🚀 Multi-Model |
+| **Context Manager** | ✅ COMPLETE | μ6_useContextManager | 📌 Pin items for AI context (FIXED) | 🧠 Intelligent |
+| **Context-Aware Prompts** | ✅ COMPLETE | hasContext: true | Enhanced prompts with pinned items | 🚀 Smart Integration |
 | **Model Selection** | ✅ COMPLETE | Dropdown | Dynamic model switching | ⚡ Real-time |
 | **Response Processing** | ✅ COMPLETE | Type Detection | AI chooses optimal window type | 🎯 Smart |
 

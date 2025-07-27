@@ -279,7 +279,7 @@ export interface UDMetadata {
 export class UniversalDocument {
   
   /** Current format version */
-  private static readonly VERSION = "2.1.0-raimund"; // Version 2.1.0 "Raimund"
+  private static readonly _VERSION = "2.1.0-raimund"; // Version 2.1.0 "Raimund"
   /** Binary magic number for file identification */
   private static readonly MAGIC = 0x55444152; // "UDAR" in hex
   

@@ -208,7 +208,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
         return (
           <μ2_TableWindow
             udItem={tableUDItem}
-            onUDItemChange={(updatedItem, description) => {
+            onUDItemChange={(updatedItem, _description) => {
               onUpdate(item.id, { content: updatedItem.content });
             }}
             readOnly={item.metadata?.readOnly || false}
@@ -270,7 +270,7 @@ $ `,
               updated_at: Date.now(),
               transformation_history: []
             }}
-            onUDItemChange={(updatedItem: any, description: string) => {
+            onUDItemChange={(updatedItem: any, _description: string) => {
               onUpdate(item.id, { 
                 content: updatedItem.content.text,
                 metadata: { ...item.metadata, tuiTheme: updatedItem.content.tui_preset }
@@ -299,7 +299,7 @@ $ `,
               updated_at: Date.now(),
               transformation_history: []
             }}
-            onUDItemChange={(updatedItem: any, description: string) => {
+            onUDItemChange={(updatedItem: any, _description: string) => {
               onUpdate(item.id, { 
                 content: updatedItem.content.text,
                 metadata: { ...item.metadata, tuiTheme: updatedItem.content.tui_preset }
@@ -325,7 +325,7 @@ $ `,
               updated_at: Date.now(),
               transformation_history: []
             }}
-            onUDItemChange={(updatedItem: any, description: string) => {
+            onUDItemChange={(updatedItem: any, _description: string) => {
               onUpdate(item.id, { content: updatedItem.content });
             }}
             readOnly={item.metadata?.readOnly || false}

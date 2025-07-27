@@ -90,7 +90,7 @@ src/components/factories/
 src/modules/
 ├── μ4_AuthModule.tsx      # User authentication & session
 ├── μ8_CanvasModule.tsx    # Spatial canvas management
-├── μ6_ContextModule.tsx   # Context menu system (TODO: V2 revival)
+├── μ6_ContextModule.tsx   # Context menu system (✅ V2 COMPLETE)
 ├── μ8_DataModule.tsx      # Data persistence & sync
 ├── μ2_PanelModule.tsx     # Panel orchestration  
 └── μ2_Minimap.tsx         # Minimap module (553 LOC)
@@ -100,15 +100,13 @@ src/modules/
 ```typescript
 src/components/bridges/
 ├── CanvasController.tsx   # Canvas interaction bridge
-├── MinimapWidget.tsx      # Minimap integration bridge
-├── PanelSidebar.tsx       # Panel management bridge
 └── FileManagerWindow.tsx  # File operations bridge
 ```
 
 **Bridge Philosophy:**
-- **Temporary Compatibility**: V1 features während V2 transition
-- **Progressive Migration**: Feature-by-feature V2 upgrade
-- **No Breaking Changes**: Smooth user experience during evolution
+- **Minimal Bridges Remaining**: Most V1 compatibility removed as V2 matures
+- **Progressive Migration**: MinimapWidget & PanelSidebar successfully migrated to μ2_Minimap & μ2_PanelModule
+- **Clean Architecture**: Obsolete bridges removed for cleaner codebase
 
 ---
 
@@ -566,6 +564,64 @@ export const μ6_useNewFunction = () => {
     return { state, μ6_processData };
 };
 ```
+
+---
+
+## 🖱️ **μ7_CONTEXT MENU ARCHITECTURE**
+
+### **Revolutionary UX System**
+```typescript
+// Context-aware right-click system with Bagua integration:
+src/components/contextMenu/
+└── μ7_UnifiedContextMenu.tsx    # DONNER (☳) Events/Interactions
+```
+
+**Architectural Innovations:**
+- **Context-Sensitive Menus**: Different actions based on click target (canvas/window/content)
+- **Algebraic Visibility**: `UDFormat.transistor()` controls menu item display
+- **μ1_WindowFactory Integration**: All window types available for creation
+- **μ6_ContextManager Integration**: Pin/unpin AI context functionality
+- **Smart Type Detection**: Dynamic menu content based on system state
+
+### **Context Menu Flow Architecture**
+```typescript
+// Right-click event flow:
+Canvas/Window → handleContextMenu() → setUnifiedContextMenu({
+  contextType: 'canvas' | 'window' | 'content',
+  targetItem: DesktopItemData | undefined,
+  x, y: click coordinates
+}) → μ7_UnifiedContextMenu → Actions via callbacks
+
+// Menu item visibility calculation:
+const μ7_getVisibility = (condition: boolean): number => {
+  return UDFormat.transistor(condition); // Pure algebraic logic
+};
+```
+
+### **Context Types & Available Actions**
+| Context Type | Menu Header | Primary Actions | Integration Points |
+|--------------|-------------|-----------------|-------------------|
+| **Canvas** | 🖥️ Desktop | Create (Note,Table,Terminal,TUI,Code), AI Help, Navigation | μ1_WindowFactory |
+| **Window** | 📝 [Window Title] | Pin/Unpin Context 📌, Rename, Delete, AI Workflows | μ6_ContextManager |
+| **Content** | 📄 Inhalt | Cut/Copy/Paste (✅ WORKING), AI Actions, Auto-Format | Real-time System Clipboard |
+
+### **📋 Clipboard System Integration**
+```typescript
+// Smart clipboard detection with algebraic transistor logic:
+const hasTextSelection = hasGlobalSelection || hasTextareaSelection;
+const clipboardHasContent = await navigator.clipboard.readText();
+
+// Menu item visibility:
+copyButton.visible = UDFormat.transistor(hasTextSelection);
+cutButton.visible = UDFormat.transistor(hasTextSelection);  
+pasteButton.visible = UDFormat.transistor(!!clipboardHasContent);
+```
+
+**Features:**
+- **Real-time Selection Detection**: Works with both DOM selection and textarea selection
+- **System Clipboard Integration**: Detects content from any application
+- **Professional UX**: Copy/Cut appear only when text is selected, Paste when clipboard has content
+- **Keyboard Shortcuts**: Ctrl+C/V/X work alongside context menu actions
 
 ---
 

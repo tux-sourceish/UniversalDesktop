@@ -114,10 +114,33 @@ export const µ1_useWorkspace = (userId: string) => {
           syncError: null
         });
 
+        // ENHANCED DEBUG: Deep data pipeline inspection
+        const itemCount = udDocument.documentState.items.length;
         console.log('✅ µ1_loadWorkspace completed:', {
           workspaceId: workspace!.id,
-          itemCount: udDocument.documentState.items.length
+          itemCount,
+          documentLoaded: true,
+          workspaceData: {
+            name: workspace!.name,
+            udDocumentSize: workspace!.ud_document ? workspace!.ud_document.length : 'no binary',
+            itemCount: workspace!.item_count || 0
+          },
+          firstItemsPreview: udDocument.documentState.items.slice(0, 3).map(item => ({
+            id: item.id,
+            title: item.title,
+            type: item.type,
+            position: item.position
+          }))
         });
+
+        // CRITICAL: Verify binary data was properly processed
+        if (itemCount === 0 && workspace!.item_count > 0) {
+          console.warn('🚨 POTENTIAL BUG: Workspace claims to have items but document has none!', {
+            dbItemCount: workspace!.item_count,
+            documentItemCount: itemCount,
+            binarySize: workspace!.ud_document ? workspace!.ud_document.length : 0
+          });
+        }
 
         return workspace;
       }

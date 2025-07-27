@@ -34,10 +34,20 @@
 | **Build Status** | ✅ Build successful - only harmless TS6133 warnings | COMPLETED | Teil 03 |
 | **Context Manager** | ✅ AI Integration working (`promptLength: 52 → 790`) | COMPLETED | Teil 02 |
 | **TypeScript Types** | ✅ Type compatibility issues resolved | COMPLETED | Teil 03 |
+| **Bridge Cleanup** | ✅ MinimapWidget.tsx & PanelSidebar.tsx removed (obsolete) | COMPLETED | 2025-01-27 |
+| **Code Quality** | ✅ Major unused variable warnings addressed | COMPLETED | 2025-01-27 |
+
+### **🚨 CRITICAL PRODUCTION ISSUES (2025-01-27):**
+| Issue | Description | Impact | Priority | Status |
+|-------|-------------|--------|----------|--------|
+| **Data Loss Bug** | Windows disappear after server restart despite Supabase save | 🔴 CRITICAL | URGENT | 🚧 IN PROGRESS |
+| **Data Pipeline Break** | 13 items loaded from DB but 0 displayed (documentState disconnect) | 🔴 CRITICAL | URGENT | 🔍 INVESTIGATING |
+| **Source Map Errors** | Persistent Vite source map warnings after cache clear | 🟡 MEDIUM | HIGH | 🔧 FIXING |
 
 ### **🚧 REMAINING HIGH PRIORITY:**
 | File | Line | Description | Type | Effort |
 |------|------|-------------|------|--------|
+| `µ1_useWorkspace.ts` | 101 | Fix data flow from workspace load to documentState | Critical Bug | Quick Fix |
 | `UniversalDesktopv2.tsx` | 46 | Revive ContextItem with v2 Bagua logic | Integration | Session |
 | `UniversalDesktopv2.tsx` | 80 | Revive window management with v2 Campus-Model | Architecture | Multi-Session |
 | `UniversalDesktopv2.tsx` | 169 | Revive AI agent system with v2 Bagua logic | Feature | Session |
@@ -107,9 +117,14 @@
 3. ✅ **Build System** (Green status achieved) - COMPLETED in Teil 03
 4. ✅ **Context Manager Integration** (AI Context working) - COMPLETED in Teil 02
 
-### **🚧 Phase 1.5: Remaining Critical Items (Current Priority)**
-1. **Revive Context Menus** (`μ6_ContextModule.tsx` all TODOs) - Core UX
-2. **Align Canvas Interfaces** (`UniversalDesktopv2.tsx:404`) - Type safety
+### **🚧 Phase 1.5: Production Issues RESOLVED (2025-01-27)**
+1. ✅ **Context Manager State Bug** - Items now properly transferred to AI prompts - COMPLETED
+2. ✅ **Debug Spam Cleanup** - Production-ready logging implemented - COMPLETED  
+3. ✅ **AI Integration Verified** - 6 models working with context-aware prompts - COMPLETED
+
+### **🎯 Phase 2: Next Critical Items (Current Priority)**
+1. **Specialized AI Agents** (`μ2_AIPanel.tsx`) - Implement Reasoner/Coder/Refiner functionality
+2. **Territory Integration** (`μ5_useTerritoryManager.ts`) - Connect with canvas navigation
 
 ### **Phase 2: Core System Integration (2-3 Sessions)**
 1. **Revive Window Management** (`UniversalDesktopv2.tsx:80`) - Architecture
@@ -223,9 +238,10 @@ AuthModule.tsx           → μ4_AuthModule.tsx      ✅
 
 ### **🎯 NEXT SESSION PRIORITIES:**
 1. **Specialized AI Agents** - Implement Reasoner/Coder/Refiner as actual agents
-2. **Context Menu Revival** - Restore V1 UX features  
+2. ✅ **Context Menu Revival** - Restore V1 UX features (COMPLETED)
 3. **Window Management V2** - Campus-Model integration
 4. **Territory System** - Spatial computing features
+5. **Keyboard Shortcuts** - Global Ctrl+C/V/X implementation
 
 ### **📈 PROJECT STATUS:**
 **UniversalDesktop v2.1 is now PRODUCTION-READY for core features!**

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 import { μ1_WindowFactory } from '../factories/μ1_WindowFactory';
+import { liteLLMClient } from '../../services/μ6_litellmClient';
 
 /**
  * μ2_AIPanel - WIND (☴) Views/UI - KI-Assistent Panel
@@ -45,7 +46,7 @@ interface μ2_AgentConfig {
 }
 
 export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
-  position = 'right',
+  position: _position = 'right',
   width = 320,
   visible,
   onToggle,
@@ -262,26 +263,12 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
           try {
             // Use contextManager prop directly - clean integration!
             if (!contextManager || !contextManager.getContextSummary) {
-              console.log('🔍 μ6 No contextManager available, using plain prompt');
               return userPrompt;
             }
             
-            // Debug: Check contextManager state before calling getContextSummary
-            console.log('🔍 μ6 ContextManager debug:', {
-              hasGetContextSummary: !!contextManager.getContextSummary,
-              activeContextItemsCount: contextManager.activeContextItems?.length || 0,
-              activeContextItemsIds: contextManager.activeContextItems?.map(item => item.id) || []
-            });
             
-            // Get model name first for vision detection
-            const modelMap = {
-              'reasoning': 'nexus-online/claude-sonnet-4',
-              'fast': 'kira-local/llama3.1-8b',
-              'premium': 'kira-online/gemini-2.5-pro',
-              'super': 'nexus-online/claude-sonnet-4',
-              'vision': 'kira-local/llava-vision',
-              'local': 'kira-local/llama3.1-8b'
-            };
+            // Get model name from LiteLLM client (no duplication)
+            const modelMap = liteLLMClient.getRecommendedModels();
             const actualModelName = modelMap[μ2_selectedModel] || modelMap['reasoning'];
             
             // Check if this is a vision-capable model for enhanced context
@@ -291,7 +278,6 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
             const contextSummary = contextManager.getContextSummary();
             
             if (!contextSummary || contextSummary.trim() === '') {
-              console.log('🔍 μ6 No context items pinned, using plain prompt');
               return userPrompt;
             }
             
@@ -302,12 +288,6 @@ ${userPrompt}
 
 **INSTRUCTIONS:** Use the pinned context items above for more relevant and context-aware responses.${isVisionModel ? ' If there are images in the context, analyze them in detail.' : ''}`;
 
-            console.log('✅ μ6 Context-Aware Prompt built:', {
-              originalPromptLength: userPrompt.length,
-              contextLength: contextSummary.length,
-              totalLength: enhancedPrompt.length,
-              contextItems: contextManager.activeContextItems?.length || 0
-            });
             
             return enhancedPrompt;
           } catch (error) {

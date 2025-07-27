@@ -62,6 +62,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
 
   const [μ8_hasUnsavedChanges, setμ8_HasUnsavedChanges] = useState(false);
   const [μ8_isInContext, setμ8_IsInContext] = useState(udItem.is_contextual || false);
+  const [μ8_selectedText, setμ8_SelectedText] = useState<string>('');
+  const [μ8_selectionRange, setμ8_SelectionRange] = useState<{start: number, end: number}>({start: 0, end: 0});
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // μ8_ Initialize Content from UDItem
@@ -226,9 +228,166 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     return symbols.join('') || '○';
   }, [udItem.bagua_descriptor]);
 
+  // μ8_ Text Selection Tracking
+  const μ8_handleSelection = useCallback(() => {
+    if (!textareaRef.current) return;
+    
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    
+    setμ8_SelectedText(selectedText);
+    setμ8_SelectionRange({ start, end });
+  }, []);
+
+  // μ8_ Copy Selected Text (Ctrl+C behavior)
+  const μ8_copySelectedText = useCallback(async () => {
+    if (!μ8_selectedText) return false;
+    
+    try {
+      await navigator.clipboard.writeText(μ8_selectedText);
+      console.log('📋 μ8 Text copied to clipboard:', μ8_selectedText.length, 'characters');
+      return true;
+    } catch (error) {
+      console.error('❌ μ8 Copy failed:', error);
+      return false;
+    }
+  }, [μ8_selectedText]);
+
+  // μ8_ Cut Selected Text (Ctrl+X behavior)
+  const μ8_cutSelectedText = useCallback(async () => {
+    if (!μ8_selectedText || readOnly) return false;
+    
+    try {
+      await navigator.clipboard.writeText(μ8_selectedText);
+      
+      // Remove selected text from content
+      const newText = μ8_contentState.text.substring(0, μ8_selectionRange.start) + 
+                      μ8_contentState.text.substring(μ8_selectionRange.end);
+      
+      μ8_handleContentChange(newText);
+      
+      // Reset selection
+      setμ8_SelectedText('');
+      setμ8_SelectionRange({ start: μ8_selectionRange.start, end: μ8_selectionRange.start });
+      
+      console.log('✂️ μ8 Text cut to clipboard:', μ8_selectedText.length, 'characters');
+      return true;
+    } catch (error) {
+      console.error('❌ μ8 Cut failed:', error);
+      return false;
+    }
+  }, [μ8_selectedText, μ8_selectionRange, μ8_contentState.text, μ8_handleContentChange, readOnly]);
+
+  // μ8_ Paste Text (Ctrl+V behavior)
+  const μ8_pasteText = useCallback(async () => {
+    if (readOnly || !textareaRef.current) return false;
+    
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      if (!clipboardText) return false;
+      
+      const textarea = textareaRef.current;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      
+      // Insert clipboard text at cursor position
+      const newText = μ8_contentState.text.substring(0, start) + 
+                      clipboardText + 
+                      μ8_contentState.text.substring(end);
+      
+      μ8_handleContentChange(newText);
+      
+      // Position cursor after pasted text
+      setTimeout(() => {
+        const newCursorPos = start + clipboardText.length;
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+        textarea.focus();
+      }, 0);
+      
+      console.log('📄 μ8 Text pasted from clipboard:', clipboardText.length, 'characters');
+      return true;
+    } catch (error) {
+      console.error('❌ μ8 Paste failed:', error);
+      return false;
+    }
+  }, [μ8_contentState.text, μ8_handleContentChange, readOnly]);
+
+  // μ8_ Keyboard Shortcuts Handler
+  const μ8_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key) {
+        case 'c':
+          e.preventDefault();
+          μ8_copySelectedText();
+          break;
+        case 'x':
+          e.preventDefault();
+          μ8_cutSelectedText();
+          break;
+        case 'v':
+          e.preventDefault();
+          μ8_pasteText();
+          break;
+        case 'a':
+          e.preventDefault();
+          // Select all text
+          if (textareaRef.current) {
+            textareaRef.current.select();
+            μ8_handleSelection();
+          }
+          break;
+      }
+    }
+  }, [μ8_copySelectedText, μ8_cutSelectedText, μ8_pasteText, μ8_handleSelection]);
+
+  // μ8_ Universal Event Listeners for Context Menu Actions
+  useEffect(() => {
+    const handleSelectAll = (e: CustomEvent) => {
+      if (e.detail.itemId === udItem.id && textareaRef.current) {
+        textareaRef.current.select();
+        μ8_handleSelection();
+      }
+    };
+
+    const handleCopyText = (e: CustomEvent) => {
+      if (e.detail.itemId === udItem.id) {
+        μ8_copySelectedText();
+      }
+    };
+
+    const handleCutText = (e: CustomEvent) => {
+      if (e.detail.itemId === udItem.id) {
+        μ8_cutSelectedText();
+      }
+    };
+
+    const handlePasteText = (e: CustomEvent) => {
+      if (e.detail.itemId === udItem.id) {
+        μ8_pasteText();
+      }
+    };
+
+    // Add event listeners
+    document.addEventListener('universal-select-all', handleSelectAll as EventListener);
+    document.addEventListener('universal-copy-text', handleCopyText as EventListener);
+    document.addEventListener('universal-cut-text', handleCutText as EventListener);
+    document.addEventListener('universal-paste-text', handlePasteText as EventListener);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('universal-select-all', handleSelectAll as EventListener);
+      document.removeEventListener('universal-copy-text', handleCopyText as EventListener);
+      document.removeEventListener('universal-cut-text', handleCutText as EventListener);
+      document.removeEventListener('universal-paste-text', handlePasteText as EventListener);
+    };
+  }, [udItem.id, μ8_handleSelection, μ8_copySelectedText, μ8_cutSelectedText, μ8_pasteText]);
+
   // Raimunds algebraischer Transistor für Conditional Rendering
   const μ8_showToolbar = UDFormat.transistor(!readOnly);
   const μ8_showContextButton = UDFormat.transistor(!!onAddToContext);
+  const μ8_showCopyPaste = UDFormat.transistor(!!μ8_selectedText); // Show copy/paste when text selected
   const μ8_themeClass = μ8_getBaguaTheme();
 
   // Window Styling basierend auf Bagua Theme
@@ -305,6 +464,49 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
               {μ8_getBaguaInfo()}
             </span>
 
+            {/* Text Selection Clipboard Buttons */}
+            {μ8_showCopyPaste === 1 && (
+              <>
+                <button
+                  onClick={μ8_copySelectedText}
+                  title={`Copy "${μ8_selectedText.substring(0, 20)}${μ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+C)`}
+                  style={{
+                    ...toolButtonStyle,
+                    backgroundColor: '#10b981',
+                    color: 'white'
+                  }}
+                >
+                  📋
+                </button>
+                {!readOnly && (
+                  <>
+                    <button
+                      onClick={μ8_cutSelectedText}
+                      title={`Cut "${μ8_selectedText.substring(0, 20)}${μ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+X)`}
+                      style={{
+                        ...toolButtonStyle,
+                        backgroundColor: '#f59e0b',
+                        color: 'white'
+                      }}
+                    >
+                      ✂️
+                    </button>
+                    <button
+                      onClick={μ8_pasteText}
+                      title="Paste from clipboard (Ctrl+V)"
+                      style={{
+                        ...toolButtonStyle,
+                        backgroundColor: '#3b82f6',
+                        color: 'white'
+                      }}
+                    >
+                      📄
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+
             {/* Context Button */}
             {μ8_showContextButton === 1 && (
               <button
@@ -346,6 +548,10 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
           ref={textareaRef}
           value={μ8_contentState.text}
           onChange={(e) => μ8_handleContentChange(e.target.value)}
+          onSelect={μ8_handleSelection}
+          onMouseUp={μ8_handleSelection}
+          onKeyUp={μ8_handleSelection}
+          onKeyDown={μ8_handleKeyDown}
           placeholder={readOnly ? 'No content' : 'Start typing your note...'}
           readOnly={readOnly}
           spellCheck={true}
@@ -401,6 +607,18 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
           <span>{μ8_contentState.wordCount} words</span>
           <span>{μ8_contentState.charCount} chars</span>
           <span>{μ8_contentState.lineCount} lines</span>
+          {μ8_selectedText && (
+            <span style={{ 
+              color: '#10b981', 
+              fontWeight: '600',
+              backgroundColor: '#f0fdf4',
+              padding: '2px 6px',
+              borderRadius: '3px',
+              border: '1px solid #10b981'
+            }}>
+              📋 {μ8_selectedText.length} selected
+            </span>
+          )}
         </div>
 
         {/* Center: UDItem Info */}

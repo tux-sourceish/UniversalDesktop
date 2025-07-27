@@ -38,8 +38,10 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
   className = ''
 }) => {
 
+
   const handleCanvasContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     onContextMenu?.(e);
   };
 
@@ -56,6 +58,8 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
         style={{
           width: '100%',
           height: '100%',
+          minWidth: '100vw',
+          minHeight: '100vh',
           position: 'relative'
         }}
       >

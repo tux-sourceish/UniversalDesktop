@@ -51,30 +51,33 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   // μ2_ Tool Configuration from μ1_WindowFactory Registry (UNIFIED!)
   const μ2_toolConfigs = useMemo(() => {
     // Get primary window types from factory registry  
-    const primaryTypes = ['notizzettel', 'tabelle', 'terminal', 'code'];
+    const primaryTypes = ['notizzettel', 'tabelle', 'terminal', 'tui', 'code'];
     
-    return primaryTypes.map(typeId => {
-      const registryConfig = μ1_WINDOW_REGISTRY[typeId];
-      if (!registryConfig) return null;
-      
-      // Color mapping for UI consistency
-      const colorMap: Record<string, string> = {
-        'notizzettel': '#4ade80',
-        'tabelle': '#60a5fa', 
-        'terminal': '#1f2937',
-        'code': '#a78bfa'
-      };
-      
-      return {
-        id: registryConfig.id,
-        icon: registryConfig.icon,
-        label: registryConfig.displayName,
-        handler: () => μ2_createWindow(registryConfig.id),
-        bagua: registryConfig.defaultBagua,
-        color: colorMap[registryConfig.id] || '#6b7280',
-        category: registryConfig.category
-      };
-    }).filter(Boolean);
+    return primaryTypes
+      .map(typeId => {
+        const registryConfig = μ1_WINDOW_REGISTRY[typeId];
+        if (!registryConfig) return null;
+        
+        // Color mapping for UI consistency
+        const colorMap: Record<string, string> = {
+          'notizzettel': '#4ade80',
+          'tabelle': '#60a5fa', 
+          'terminal': '#1f2937',
+          'tui': '#10b981',
+          'code': '#a78bfa'
+        };
+        
+        return {
+          id: registryConfig.id,
+          icon: registryConfig.icon,
+          label: registryConfig.displayName,
+          handler: () => μ2_createWindow(registryConfig.id),
+          bagua: registryConfig.defaultBagua,
+          color: colorMap[registryConfig.id] || '#6b7280',
+          category: registryConfig.category
+        };
+      })
+      .filter((tool): tool is NonNullable<typeof tool> => tool !== null);
   }, [μ2_createWindow]);
 
   // Raimunds algebraischer Transistor für Panel-Sichtbarkeit

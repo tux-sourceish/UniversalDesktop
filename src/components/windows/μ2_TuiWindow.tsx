@@ -145,7 +145,7 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
   const [μ2_showPresetSelector, setμ2_ShowPresetSelector] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // μ2_ Initialize TUI State from UDItem
+  // μ2_ Initialize TUI State from UDItem (Smart Update - Avoids Theme Reset Loop)
   useEffect(() => {
     // Extract content
     const contentText = typeof udItem.content === 'string' 
@@ -166,7 +166,7 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       if (matchingPreset) selectedPreset = matchingPreset;
     }
 
-    // Determine theme
+    // Determine theme (SMART: Don't override if user just changed it)
     let selectedTheme = μ2_terminalThemes[selectedPreset.defaultTheme] || μ2_terminalThemes.green;
     if (forceBaguaTheme) {
       selectedTheme = μ2_terminalThemes[forceBaguaTheme] || selectedTheme;
@@ -184,14 +184,25 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     // Determine codepage
     const codepage = udItem.content?.tui_codepage || selectedPreset.codepage;
 
-    setμ2_TuiState(prev => ({
-      ...prev,
-      content: contentText,
-      preset: selectedPreset,
-      theme: selectedTheme,
-      codepage: codepage,
-      lastModified: udItem.updated_at
-    }));
+    // SMART UPDATE: Only update if actually different (prevents reset loops)
+    setμ2_TuiState(prev => {
+      const shouldUpdateContent = prev.content !== contentText;
+      const shouldUpdatePreset = prev.preset.id !== selectedPreset.id;
+      const shouldUpdateTheme = prev.theme !== selectedTheme && !prev.hasUnsavedChanges;
+      const shouldUpdateCodepage = prev.codepage !== codepage;
+      
+      if (shouldUpdateContent || shouldUpdatePreset || shouldUpdateTheme || shouldUpdateCodepage) {
+        return {
+          ...prev,
+          content: contentText,
+          preset: selectedPreset,
+          theme: shouldUpdateTheme ? selectedTheme : prev.theme, // Preserve user's theme choice
+          codepage: codepage,
+          lastModified: udItem.updated_at
+        };
+      }
+      return prev;
+    });
 
     setμ2_IsInContext(udItem.is_contextual || false);
   }, [udItem, forcePreset, forceBaguaTheme]);
@@ -586,26 +597,32 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
           <span>{readOnly ? 'VIEW' : 'EDIT'}</span>
           <span style={{ opacity: 0.8 }}>{μ2_tuiState.codepage.toUpperCase()}</span>
           
-          {/* Theme Selector */}
+          {/* Theme Selector - All Available Themes */}
           {μ2_isEditable === 1 && (
-            <div style={{ display: 'flex', gap: '2px' }}>
-              {Object.entries(μ2_terminalThemes).slice(0, 6).map(([key, theme]) => (
-                <button
-                  key={key}
-                  onClick={() => μ2_changeTheme(key)}
-                  title={theme.name}
-                  style={{
-                    background: 'none',
-                    border: μ2_tuiState.theme === theme ? `1px solid ${μ2_tuiState.theme.textColor}` : '1px solid transparent',
-                    borderRadius: '2px',
-                    cursor: 'pointer',
-                    fontSize: '9px',
-                    padding: '1px'
-                  }}
-                >
-                  {theme.symbol}
-                </button>
-              ))}
+            <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap' }}>
+              {Object.entries(μ2_terminalThemes).map(([key, theme]) => {
+                const isActive = μ2_tuiState.theme === theme;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => μ2_changeTheme(key)}
+                    title={`${theme.name}${theme.historicalSystem ? ` (${theme.historicalSystem})` : ''}`}
+                    style={{
+                      background: isActive ? theme.backgroundColor : 'none',
+                      color: isActive ? theme.textColor : μ2_tuiState.theme.textColor,
+                      border: isActive ? `1px solid ${theme.textColor}` : '1px solid transparent',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      fontSize: '10px',
+                      padding: '2px 4px',
+                      transition: 'all 0.2s ease',
+                      minWidth: '20px'
+                    }}
+                  >
+                    {theme.symbol}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>

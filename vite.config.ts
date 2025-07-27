@@ -17,5 +17,10 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  // Fix source map errors
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+    exclude: []
   }
 })

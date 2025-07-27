@@ -29,7 +29,7 @@ interface μ5_Territory {
 }
 
 export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
-  position = 'right',
+  position: _position = 'right',
   width = 300,
   visible,
   onToggle,

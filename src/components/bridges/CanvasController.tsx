@@ -158,19 +158,11 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
     transform: `translate(${activeCanvasState.position.x}px, ${activeCanvasState.position.y}px) scale(${activeCanvasState.scale})`,
     transformOrigin: '0 0',
     transition: activeCanvasState.isDragging ? 'none' : 'transform 0.3s ease-out',
-    willChange: 'transform'
+    willChange: activeCanvasState.isDragging ? 'transform' : 'auto' // Only during drag
   };
 
   // DEBUG: Log CSS transform vs canvasState (only during navigation changes)
-  React.useEffect(() => {
-    if (import.meta.env.DEV && externalCanvasState) {
-      console.log('🎨 CSS Transform Update:', {
-        cssTransform: `translate(${activeCanvasState.position.x}px, ${activeCanvasState.position.y}px) scale(${activeCanvasState.scale})`,
-        position: activeCanvasState.position,
-        scale: activeCanvasState.scale
-      });
-    }
-  }, [activeCanvasState.position.x, activeCanvasState.position.y, activeCanvasState.scale, externalCanvasState]);
+  // Canvas transform updates are now silent for performance
 
   // Navigation info overlay
   const NavigationInfo = () => (

@@ -259,14 +259,30 @@ export class µ1_SupabaseUDService {
 
   // µ1_ Base64 zu ArrayBuffer konvertieren
   static µ1_base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binaryString = atob(base64);
-    const bytes = new Uint8Array(binaryString.length);
-    
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+    try {
+      console.log('🔄 µ1_base64ToArrayBuffer converting:', {
+        base64Length: base64.length,
+        base64Preview: base64.slice(0, 50) + '...'
+      });
+
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      
+      console.log('✅ µ1_base64ToArrayBuffer completed:', {
+        inputBase64Length: base64.length,
+        outputBufferSize: bytes.buffer.byteLength,
+        firstBytes: Array.from(bytes.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ')
+      });
+      
+      return bytes.buffer;
+    } catch (error) {
+      console.error('💥 µ1_base64ToArrayBuffer failed:', error);
+      throw error;
     }
-    
-    return bytes.buffer;
   }
 
   // µ1_ Workspace Access Time aktualisieren

@@ -43,7 +43,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
   onClearAll,
   onOptimize,
   onUndo,
-  position = 'right',
+  position: _position = 'right',
   width = 350,
   visible,
   onToggle,

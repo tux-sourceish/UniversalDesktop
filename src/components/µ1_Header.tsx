@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { μ8_usePanelLayout, μ8_PanelState, μ8_PanelConfig } from '../hooks/µ8_usePanelLayout';
+import { μ8_PanelState, μ8_PanelConfig } from '../hooks/µ8_usePanelLayout';
 import { UDFormat } from '../core/UDFormat';
 
 /**

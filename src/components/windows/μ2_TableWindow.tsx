@@ -116,7 +116,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
   }, [udItem]);
 
   // μ2_ Detect Column Types automatically
-  const μ2_detectColumnType = useCallback((columnIndex: number): 'text' | 'number' | 'date' => {
+  const _μ2_detectColumnType = useCallback((columnIndex: number): 'text' | 'number' | 'date' => {
     const columnValues = μ2_tableData.rows.map(row => row[columnIndex]).filter(val => val != null && val !== '');
     
     if (columnValues.length === 0) return 'text';

@@ -43,7 +43,7 @@ interface ClipboardCapabilities {
   supportedFormats: string[];
 }
 
-export const useClipboardManager = () => {
+export const μ7_useClipboardManager = () => {
   const [clipboardHistory, setClipboardHistory] = useState<ClipboardHistory[]>([]);
   const [operationHistory, setOperationHistory] = useState<ClipboardOperation[]>([]);
   const [capabilities, setCapabilities] = useState<ClipboardCapabilities>({
@@ -453,6 +453,21 @@ export const useClipboardManager = () => {
     return clipboardHistory[0] || null;
   }, [clipboardHistory]);
 
+  // μ7_ Get latest clipboard item (algebraic approach)
+  const getLatest = useCallback(() => {
+    const latest = clipboardHistory[0];
+    return latest ? {
+      type: latest.sourceType,
+      content: latest.content,
+      timestamp: latest.timestamp
+    } : null;
+  }, [clipboardHistory]);
+
+  // μ7_ Check if clipboard has content (algebraic transistor)
+  const hasContent = useCallback(() => {
+    return clipboardHistory.length > 0;
+  }, [clipboardHistory]);
+
   // Initialize on mount
   React.useEffect(() => {
     initializeCapabilities();
@@ -477,6 +492,8 @@ export const useClipboardManager = () => {
     // Utilities
     clearHistory,
     getLastClipboardItem,
+    getLatest, // μ7_ Bagua method for context menu
+    hasContent, // μ7_ Bagua method for algebraic transistor
     initializeCapabilities,
 
     // Getters

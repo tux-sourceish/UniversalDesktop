@@ -19,7 +19,7 @@
   z-index: 10;
   /* Erweiterte Positionierung für unendlichen Canvas */
   contain: none; /* Verhindert CSS Containment */
-  will-change: transform; /* Optimiert für häufige Transformationen */
+  /* will-change: transform removed - only apply during actual transforms to avoid memory issues */
 }
 
 .desktop-item:hover {

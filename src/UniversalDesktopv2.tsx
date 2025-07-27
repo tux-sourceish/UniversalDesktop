@@ -19,6 +19,7 @@ import { CanvasModule } from './modules/μ8_CanvasModule';
 import { PanelModule } from './modules/μ2_PanelModule';
 import { ContextModule } from './modules/μ6_ContextModule';
 import { µ1_Header } from './components/µ1_Header';
+import { UDFormat } from './core/UDFormat';
 
 // µX_ Campus-Modell Hook imports - Bagua-powered architecture
 import {
@@ -31,7 +32,7 @@ import {
   μ1_useWindowManager,
   μ7_useKeyboardShortcuts,
   μ6_useAIAgent,
-  useClipboardManager
+  μ7_useClipboardManager
 } from './hooks';
 
 // Import μ6_useContextManager directly (not from index.ts)
@@ -58,9 +59,7 @@ import './styles/index.css';
 const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({ 
   sessionData 
 }) => {
-  console.log('🏠 DesktopWorkspace rendering with sessionData:', sessionData);
   const { user, logout } = sessionData;
-  console.log('🏠 User extracted:', user?.id);
 
   // 🌌 µ1_ Campus-Modell Workspace Management (Bagua-powered)
   const workspace = µ1_useWorkspace(user?.id || '');
@@ -135,6 +134,48 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     });
   }, [documentState.items, user?.id, baguaColors]);
   
+  // CRITICAL DEBUG: Check data flow
+  React.useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('🔍 DEBUG - Data Flow Check:', {
+        workspaceLoaded: !!workspaceState.currentWorkspace,
+        workspaceId: workspaceState.currentWorkspace?.id,
+        documentStateItems: documentState.items?.length || 0,
+        renderedItems: items.length,
+        isLoading: workspaceState.isLoading,
+        syncStatus: {
+          lastSyncedAt: workspaceState.lastSyncedAt,
+          isSaving: workspaceState.isSaving,
+          syncError: workspaceState.syncError
+        }
+      });
+    }
+  }, [workspaceState.currentWorkspace, documentState.items, items.length, workspaceState.isLoading]);
+
+  // STATE RELIABILITY CHECK: Detect when items should be there but aren't
+  React.useEffect(() => {
+    if (!workspaceState.isLoading && workspaceState.currentWorkspace) {
+      const dbItemCount = workspaceState.currentWorkspace.item_count || 0;
+      const actualItemCount = items.length;
+      
+      if (dbItemCount > 0 && actualItemCount === 0) {
+        console.warn('🚨 STATE SYNC ISSUE DETECTED:', {
+          expected: dbItemCount,
+          actual: actualItemCount,
+          workspaceId: workspaceState.currentWorkspace.id,
+          documentItems: documentState.items.length,
+          possibleCause: 'Binary deserialization or state mapping issue'
+        });
+        
+        // Trigger a reload attempt after a short delay
+        setTimeout(() => {
+          console.log('🔄 Attempting automatic state recovery...');
+          workspace.µ1_loadWorkspace();
+        }, 1000);
+      }
+    }
+  }, [workspaceState.isLoading, workspaceState.currentWorkspace, items.length, documentState.items.length]);
+  
   const dataLoading = workspaceState.isLoading;
 
   // (Canvas already declared above for hook dependencies)
@@ -175,8 +216,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   // TODO: Revive territory management for v2 when ready
   // useTerritoryManager(items);
 
-  // 📋 Clipboard Management Hook - Professional clipboard operations
-  const clipboard = useClipboardManager();
+  // 📋 Clipboard Management Hook - μ7_ DONNER Events/Interactions
+  const clipboard = μ7_useClipboardManager();
 
   // 💾 Auto-hide state for sync status
   const [showSyncStatus, setShowSyncStatus] = React.useState(true);
@@ -260,13 +301,11 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     });
 
     if (udItem && import.meta.env.DEV) {
-      console.log('🌌 Item created:', { id: udItem.id, position: udItem.position });
     }
   }, [workspace]);
 
   // 🔥 NEW: µ1_WindowFactory Unity Bridge Handler
   const handleCreateUDItem = useCallback((udItem: any) => {
-    console.log('🌌 μ1_WindowFactory UDItem created:', { id: udItem.id, type: udItem.type, origin: udItem.origin?.tool });
     
     try {
       // Convert UDItem back to µ1_addItem parameters
@@ -284,7 +323,6 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       const addedItem = workspace.µ1_addItem(createOptions, udItem.origin);
       
       if (addedItem && import.meta.env.DEV) {
-        console.log('✅ UDItem added to workspace:', addedItem.id);
       }
     } catch (error) {
       console.error('❌ Failed to add UDItem to workspace:', error);
@@ -294,7 +332,6 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   const handleItemUpdate = useCallback(async (id: string, updates: Partial<DesktopItemData>) => {
     // Reduced debug logging to prevent spam
     if (updates.position && import.meta.env.DEV) {
-      console.log('🔧 Position Update:', { id, position: updates.position });
     }
     
     // µ1_ Campus-Modell: Transform item with algebraic description
@@ -322,25 +359,17 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     }, transformData);
     
     if (success) {
-      console.log('🔄 µ1_Item transformed with Bagua power:', id);
     }
   }, [workspace]);
 
   const handleItemDelete = useCallback(async (id: string) => {
     // Debug: Check what we're trying to delete
     const itemToDelete = items.find(item => item.id === id);
-    console.log('🗑️ Attempting to delete item:', { 
-      id, 
-      found: !!itemToDelete, 
-      title: itemToDelete?.title,
-      totalItems: items.length 
-    });
 
     // µ1_ Campus-Modell: Pure removal with auto-save
     const success = workspace.µ1_removeItem(id);
     
     if (success) {
-      console.log('✅ µ1_Item removed successfully:', id);
     } else {
       console.error('❌ µ1_Item removal failed:', id);
     }
@@ -357,14 +386,15 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     });
     
     if (success && import.meta.env.DEV) {
-      console.log('✏️ Item renamed:', { id, newTitle });
     }
   }, [workspace]);
 
   const handleContextMenu = useCallback((e: React.MouseEvent, itemId?: string) => {
     e.preventDefault();
+    e.stopPropagation();
     
     if (itemId) {
+      // Window/Item context menu
       const item = items.find(i => i.id === itemId);
       setUnifiedContextMenu({
         visible: true,
@@ -374,31 +404,27 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         contextType: 'window'
       });
     } else {
-      setContextMenu({
+      // Canvas context menu
+      setUnifiedContextMenu({
         visible: true,
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
+        targetItem: undefined,
+        contextType: 'canvas'
       });
     }
   }, [items]);
 
   const handleZoomChange = useCallback((zoomLevel: number) => {
     // Synchronisiere Minimap-Zoom mit Canvas und Header
-    console.log('🔍 Zoom Change from Minimap:', { 
-      zoomLevel, 
-      hasSetZoomLevel: !!canvas.setZoomLevel,
-      currentCanvasZoom: canvas.canvasState.scale 
-    });
     
     // NUR setZoomLevel verwenden - das ist die offizielle API
     if (canvas.setZoomLevel) {
       canvas.setZoomLevel(zoomLevel);
-      console.log('✅ Canvas zoom updated via setZoomLevel:', zoomLevel);
     } else {
       console.error('❌ canvas.setZoomLevel is undefined!');
       // Fallback: Direkte Canvas-State Aktualisierung
       canvas.setCanvasState(prev => ({ ...prev, scale: zoomLevel }));
-      console.log('⚠️ Fallback: Canvas zoom updated via setCanvasState:', zoomLevel);
     }
   }, [canvas]);
 
@@ -411,36 +437,20 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         ...prev, 
         position: { x: state.x, y: state.y, z: state.z || prev.position.z }
       }));
-      // console.log('🎮 Navigation Change (coords):', state);
     } else {
       // State object from other sources
       canvas.setCanvasState(prev => ({ ...prev, ...state }));
-      // console.log('🎮 Navigation Change (state):', state);
     }
   }, [canvas]);
 
   // 📌 Context Toggle Handler - Connect Pin Button to Context Manager
   const handleToggleContext = useCallback((item: DesktopItemData) => {
-    console.log('📌 μ6 Context Toggle:', { 
-      itemId: item.id, 
-      title: item.title, 
-      currentlyInContext: context.isInContext(item.id),
-      activeContextItems: context.activeContextItems.length,
-      contextItemIds: context.activeContextItems.map(ci => ci.id)
-    });
+    // Context toggle debug info removed for performance
     
     // Use μ6_useContextManager's toggleItemContext function
     context.toggleItemContext(item, 'medium');
     
-    // Debug: Check state after toggle
-    setTimeout(() => {
-      console.log('📌 μ6 Context After Toggle:', {
-        itemId: item.id,
-        nowInContext: context.isInContext(item.id),
-        activeCount: context.activeContextItems.length,
-        contextItemIds: context.activeContextItems.map(ci => ci.id)
-      });
-    }, 100);
+    // Context state updates automatically via hooks
   }, [context]);
 
   const handleKeyboardNavigation = useCallback((e: KeyboardEvent) => {
@@ -460,7 +470,31 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   const handleItemAction = useCallback((action: string, item?: DesktopItemData) => {
     switch (action) {
       case 'copy':
-        if (item) clipboard.copy(item);
+        if (item) {
+          clipboard.copy(item);
+        }
+        break;
+      case 'cut':
+        if (item) {
+          clipboard.copy(item);
+          handleItemDelete(item.id);
+        }
+        break;
+      case 'paste':
+        // μ7_ Paste functionality with algebraic transistor logic
+        const clipboardData = clipboard.getLatest();
+        if (clipboardData) {
+          const pastePosition = {
+            x: unifiedContextMenu.x - 200,
+            y: unifiedContextMenu.y - 100,
+            z: 10
+          };
+          // Use algebraic transistor to determine if we should paste
+          const shouldPaste = UDFormat.transistor(!!clipboardData);
+          if (shouldPaste) {
+            handleItemCreate(clipboardData.type, pastePosition);
+          }
+        }
         break;
       case 'delete':
         if (item) handleItemDelete(item.id);
@@ -478,10 +512,62 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       case 'add_to_context':
         if (item) context.addToContext(item);
         break;
+      // μ7_ AI Workflow Actions
+      case 'ai-reasoner':
+        if (item) {
+          // TODO: Integrate with AI Panel reasoner agent
+        }
+        break;
+      case 'ai-coder':
+        if (item) {
+          // TODO: Integrate with AI Panel coder agent
+        }
+        break;
+      case 'ai-refiner':
+        if (item) {
+          // TODO: Integrate with AI Panel refiner agent
+        }
+        break;
+      // μ7_ Text Editing Actions (from Bearbeiten submenu)
+      case 'select-all':
+        if (item) {
+          // Trigger select all in the focused window
+          document.dispatchEvent(new CustomEvent('universal-select-all', { detail: { itemId: item.id } }));
+        }
+        break;
+      case 'copy-text':
+        if (item) {
+          // Trigger copy text in the focused window
+          document.dispatchEvent(new CustomEvent('universal-copy-text', { detail: { itemId: item.id } }));
+        }
+        break;
+      case 'cut-text':
+        if (item) {
+          // Trigger cut text in the focused window
+          document.dispatchEvent(new CustomEvent('universal-cut-text', { detail: { itemId: item.id } }));
+        }
+        break;
+      case 'paste-text':
+        if (item) {
+          // Trigger paste text in the focused window
+          document.dispatchEvent(new CustomEvent('universal-paste-text', { detail: { itemId: item.id } }));
+        }
+        break;
+      // μ7_ Navigation Actions
+      case 'zoom-to-fit':
+        // Use existing zoom functionality
+        if (canvas.setZoomLevel) {
+          canvas.setZoomLevel(1.0);
+        }
+        break;
+      case 'center-view':
+        // Use existing navigation to center view
+        canvas.setCanvasState(prev => ({ ...prev, x: 0, y: 0 }));
+        break;
       default:
-        console.log('Unhandled action:', action);
+        // Unhandled action - could be logged in DEV mode if needed
     }
-  }, [clipboard, handleItemDelete, handleItemCreate, context]);
+  }, [clipboard, handleItemDelete, handleItemCreate, context, unifiedContextMenu, canvas]);
 
   // 📱 Loading State
   if (dataLoading) {
@@ -552,6 +638,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onUnifiedContextMenuClose={closeAllContextMenus}
         onItemCreate={handleItemCreate}
         onItemAction={handleItemAction}
+        clipboard={clipboard}
       />
 
       {/* Auto-Save Status Indicator */}
@@ -667,12 +754,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
  * Pure orchestration with authentication wrapper
  */
 const UniversalDesktopv2: React.FC = () => {
-  console.log('🚀 UniversalDesktopv2 component started rendering');
-  
-  // Add error boundary for debugging
-  React.useEffect(() => {
-    console.log('🚀 UniversalDesktopv2 useEffect fired - component mounted');
-  }, []);
+  // Component ready for production
   return (
     <AuthModule>
       {(sessionData) => <DesktopWorkspace sessionData={sessionData} />}

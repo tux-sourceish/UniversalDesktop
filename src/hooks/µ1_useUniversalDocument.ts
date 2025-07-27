@@ -65,6 +65,11 @@ export const µ1_useUniversalDocument = () => {
     setDocumentState(prev => ({ ...prev, isLoading: true }));
 
     try {
+      console.log('📥 µ1_loadFromWorkspaceSnapshot starting:', {
+        binarySize: binaryData.byteLength,
+        hasData: binaryData.byteLength > 0
+      });
+
       const doc = UniversalDocument.fromWorkspaceSnapshot(binaryData);
       const items = [...doc.allItems]; // Convert readonly to mutable array
 
@@ -76,10 +81,30 @@ export const µ1_useUniversalDocument = () => {
         lastSaved: Date.now()
       });
 
+      // ENHANCED DEBUG: Detailed load analysis
       console.log('📥 µ1_Document loaded from workspace snapshot:', {
         itemCount: items.length,
-        version: doc.metadata.format_version
+        version: doc.metadata.format_version,
+        binaryAnalysis: {
+          inputSize: binaryData.byteLength,
+          processedItems: items.length,
+          firstItemsTypes: items.slice(0, 5).map(item => ({
+            id: item.id.slice(0, 8),
+            type: item.type,
+            title: item.title.slice(0, 20)
+          }))
+        },
+        documentMetadata: doc.metadata
       });
+
+      // CRITICAL: Check for deserialization issues
+      if (binaryData.byteLength > 1000 && items.length === 0) {
+        console.warn('🚨 POTENTIAL DESERIALIZATION BUG: Large binary but no items extracted!', {
+          binarySize: binaryData.byteLength,
+          expectedItems: 'unknown',
+          actualItems: 0
+        });
+      }
       
       return true;
     } catch (error) {
