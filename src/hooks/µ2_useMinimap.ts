@@ -49,50 +49,78 @@ export const µ2_useMinimap = () => {
     setMinimapBounds({ width, height });
   }, []);
 
-  // µ2_ Minimap-Skalierung berechnen
-  const µ2_calculateMinimapScale = useCallback((items: any[]): µ2_MinimapScale => {
+  // µ2_ Minimap-Skalierung - EINFACH aber zoom-responsive
+  const µ2_calculateMinimapScale = useCallback((items: any[], canvasState?: any): µ2_MinimapScale => {
     // Algebraischer Transistor für Items-Check
     const hasItems = UDFormat.transistor(items.length > 0);
     
-    // Sichere Bounds-Berechnung - verhindert NaN bei leeren Arrays
-    const bounds = hasItems ? {
-      minX: Math.min(...items.map(item => item.position.x)),
-      maxX: Math.max(...items.map(item => item.position.x + (item.dimensions?.width || 300))),
-      minY: Math.min(...items.map(item => item.position.y)),
-      maxY: Math.max(...items.map(item => item.position.y + (item.dimensions?.height || 200)))
-    } : {
-      minX: 0,
-      maxX: minimapBounds.width,
-      minY: 0,
-      maxY: minimapBounds.height
-    };
-
-    // Algebraische Berechnung ohne if-else
-    const worldWidth = hasItems * (bounds.maxX - bounds.minX) + (1 - hasItems) * minimapBounds.width;
-    const worldHeight = hasItems * (bounds.maxY - bounds.minY) + (1 - hasItems) * minimapBounds.height;
+    // ZOOM-RESPONSIVE: Scale basiert auf Canvas-Zoom
+    const zoomLevel = canvasState?.scale || 1.0;
     
-    const scaleX = minimapBounds.width / worldWidth;
-    const scaleY = minimapBounds.height / worldHeight;
-    const scale = Math.min(scaleX, scaleY, 0.1);
+    // Basis-Bounds: Entweder Items oder feste Welt-Größe
+    let bounds;
+    if (hasItems) {
+      // ZOOM-RESPONSIVE: Aggressiveres Padding basiert auf Zoom-Level
+      // Bei hohem Zoom (z.B. 4x) → sehr kleines Padding (25px)
+      // Bei niedrigem Zoom (z.B. 0.1x) → sehr großes Padding (4000px)
+      const basePadding = 400;
+      const zoomResponsivePadding = basePadding / Math.max(zoomLevel, 0.1);
+      
+      bounds = {
+        minX: Math.min(...items.map(item => item.position.x)) - zoomResponsivePadding,
+        maxX: Math.max(...items.map(item => item.position.x + (item.width || 250))) + zoomResponsivePadding,
+        minY: Math.min(...items.map(item => item.position.y)) - zoomResponsivePadding,
+        maxY: Math.max(...items.map(item => item.position.y + (item.height || 200))) + zoomResponsivePadding
+      };
+      // console.log('🗺️ Minimap Scale (with items):', { itemCount: items.length, zoomLevel, padding: zoomResponsivePadding, bounds });
+    } else {
+      // ZOOM-EFFECT: Bei höherem Zoom kleinere Welt-Bounds in Minimap
+      const worldSize = 2000 / Math.max(zoomLevel, 0.5); // Zoom-responsive world size
+      bounds = {
+        minX: -worldSize,
+        maxX: worldSize,
+        minY: -worldSize,
+        maxY: worldSize
+      };
+      // console.log('🗺️ Minimap Scale (no items):', { zoomLevel, worldSize, bounds });
+    }
 
-    const offsetX = hasItems * (-bounds.minX * scale + (minimapBounds.width - worldWidth * scale) / 2);
-    const offsetY = hasItems * (-bounds.minY * scale + (minimapBounds.height - worldHeight * scale) / 2);
+    const worldWidth = bounds.maxX - bounds.minX;
+    const worldHeight = bounds.maxY - bounds.minY;
+    
+    // Minimap-Skalierung berechnen
+    const scaleX = minimapBounds.width / Math.max(worldWidth, 100);
+    const scaleY = minimapBounds.height / Math.max(worldHeight, 100);
+    const scale = Math.min(scaleX, scaleY, 1.0);
 
+    // Offsets für korrekte Koordinaten-Konvertierung
+    const offsetX = -bounds.minX * scale + (minimapBounds.width - worldWidth * scale) / 2;
+    const offsetY = -bounds.minY * scale + (minimapBounds.height - worldHeight * scale) / 2;
+
+    // console.log('🗺️ Minimap Scale Result:', { scale, offsetX, offsetY, minimapBounds, worldWidth, worldHeight });
     return { scale, offsetX, offsetY };
   }, [minimapBounds]);
 
-  // µ2_ Koordinaten-Konvertierung (Minimap → World)
+  // µ2_ Koordinaten-Konvertierung - KOMPATIBEL mit Original MinimapWidget
   const µ2_convertMinimapToWorld = useCallback((
     clickX: number, 
     clickY: number, 
     scale: µ2_MinimapScale,
-    items: any[]
+    items: any[],
+    canvasState?: any
   ) => {
-    const hasItems = UDFormat.transistor(items.length > 0);
+    void items; // Nicht benötigt für Koordinaten-Konvertierung
+    void canvasState; // Canvas-State bereits in scale berücksichtigt
     
-    const worldX = hasItems * ((clickX - scale.offsetX) / scale.scale);
-    const worldY = hasItems * ((clickY - scale.offsetY) / scale.scale);
+    // Feste Canvas-Größe wie im Original (Line 83 in MinimapWidget)
+    const CANVAS_SIZE = 4000;
+    
+    // Rückkonvertierung: Minimap-Klick → Welt-Koordinaten
+    // Entspricht der inversen Logik von: (item.position.x + CANVAS_SIZE/2) * transform.scale
+    const worldX = (clickX / scale.scale) - CANVAS_SIZE / 2;
+    const worldY = (clickY / scale.scale) - CANVAS_SIZE / 2;
 
+    // Canvas-Position ist invertiert zu Welt-Koordinaten
     return { x: -worldX, y: -worldY, z: 0 };
   }, []);
 
@@ -103,6 +131,71 @@ export const µ2_useMinimap = () => {
     return () => window.removeEventListener('resize', µ2_updateMinimapSize);
   }, [µ2_updateMinimapSize]);
 
+  // V1 Compatibility layer - TODO V2: Remove when MinimapWidget is fully modernized
+  const [minimapVisible, setMinimapVisible] = useState(true);
+  const [currentContextZones] = useState<any[]>([]);
+
+  const getMinimapTransform = useCallback((items: any[] = [], canvasState?: any) => {
+    const minimapScale = µ2_calculateMinimapScale(items, canvasState);
+    
+    // Calculate viewport dimensions based on canvas state
+    const viewportScale = canvasState?.scale || 1.0;
+    const viewportWidth = minimapBounds.width / viewportScale;
+    const viewportHeight = minimapBounds.height / viewportScale;
+    
+    // Calculate viewport position
+    const viewportX = canvasState?.position ? 
+      (-canvasState.position.x * minimapScale.scale + minimapScale.offsetX - viewportWidth/2) : 0;
+    const viewportY = canvasState?.position ? 
+      (-canvasState.position.y * minimapScale.scale + minimapScale.offsetY - viewportHeight/2) : 0;
+    
+    return {
+      scale: minimapScale.scale,
+      offsetX: minimapScale.offsetX,
+      offsetY: minimapScale.offsetY,
+      viewportX,
+      viewportY,
+      viewportWidth,
+      viewportHeight
+    };
+  }, [minimapBounds, µ2_calculateMinimapScale]);
+
+  const toggleVisibility = useCallback(() => {
+    setMinimapVisible(prev => !prev);
+  }, []);
+
+  const shouldUpdateMinimap = useCallback(() => true, []);
+
+  const calculateCoverage = useCallback((items: any[] = []) => {
+    const hasItems = UDFormat.transistor(items.length > 0);
+    
+    if (!hasItems) {
+      return { coverage: 0, ratio: 0 };
+    }
+    
+    // Calculate actual item bounds
+    const bounds = {
+      minX: Math.min(...items.map(item => item.position.x)),
+      maxX: Math.max(...items.map(item => item.position.x + (item.width || 250))),
+      minY: Math.min(...items.map(item => item.position.y)),
+      maxY: Math.max(...items.map(item => item.position.y + (item.height || 200)))
+    };
+    
+    const worldWidth = bounds.maxX - bounds.minX;
+    const worldHeight = bounds.maxY - bounds.minY;
+    const worldArea = worldWidth * worldHeight;
+    
+    // Canvas area (total available space)
+    const canvasWidth = 4000; // TODO: Make dynamic based on actual canvas bounds
+    const canvasHeight = 4000;
+    const canvasArea = canvasWidth * canvasHeight;
+    
+    const coverage = worldArea;
+    const ratio = UDFormat.transistor(canvasArea > 0) * (worldArea / canvasArea);
+    
+    return { coverage, ratio };
+  }, []);
+
   return {
     // State
     minimapBounds,
@@ -110,6 +203,14 @@ export const µ2_useMinimap = () => {
     // µ2_ Campus-Modell Funktionen - NUR Minimap-Logik
     µ2_updateMinimapSize,
     µ2_calculateMinimapScale,
-    µ2_convertMinimapToWorld
+    µ2_convertMinimapToWorld,
+    
+    // V1 Compatibility Layer - TODO V2: Remove when bridge components are modernized
+    minimapVisible,
+    currentContextZones,
+    getMinimapTransform,
+    toggleVisibility,
+    shouldUpdateMinimap,
+    calculateCoverage
   };
 };

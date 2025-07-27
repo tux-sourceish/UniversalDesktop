@@ -150,6 +150,7 @@ export const µ1_useWorkspace = (userId: string) => {
 
     if (!shouldSave) {
       console.log('ℹ️ µ1_saveWorkspace: No changes to save');
+      // Don't update lastSyncedAt if nothing was actually saved
       return true;
     }
 
@@ -179,6 +180,9 @@ export const µ1_useWorkspace = (userId: string) => {
       const saveSuccess = UDFormat.transistor(success);
 
       if (saveSuccess) {
+        // Reset hasChanges after successful save
+        udDocument.µ1_markAsSaved();
+        
         setWorkspaceState(prev => ({
           ...prev,
           isSaving: false,

@@ -373,24 +373,6 @@ export class UniversalDocument {
     };
   }
   
-  private createDefaultMetadata(): UDMetadata {
-    return {
-      format_version: UniversalDocument.VERSION,
-      creator: "UniversalDesktop von SingularUniverse",
-      created_at: new Date().toISOString(),
-      canvas_bounds: { x: -16000, y: -16000, width: 32000, height: 32000 },
-      item_count: 0,
-      // Füllt die Presets basierend auf deinem Screenshot
-      presets: {
-        tui_formats: {
-          "Standard": { width: 80, height: 25, codepage: 437 },
-          "Commodore64": { width: 40, height: 25 },
-          "ZXSpectrum": { width: 32, height: 24 },
-          "VT100": { width: 80, height: 24 }
-        }
-      }
-    };
-  }
 
   // ====================================================================
   // KERN-API (mit transformativer Logik)
@@ -951,8 +933,8 @@ export class UniversalDocument {
             is_contextual: itemData.is_contextual || false,
             created_at: itemData.created_at || new Date().toISOString(),
             updated_at: itemData.updated_at || new Date().toISOString(),
-            origins: new Map(), // Origins not stored in snapshots
-            transformations: [], // Transformations not stored in snapshots
+            origin: undefined, // Origins not stored in snapshots
+            bagua_descriptor: doc.getDefaultBagua(itemData.type || 0),
             transformation_history: [] // Required by µ1_documentMetadata
           };
           
@@ -1102,7 +1084,17 @@ export class UniversalDocument {
     const version = view.getUint16(4, true);
     const contentOffset = view.getUint32(6, true);
     const contentLength = view.getUint32(10, true);
-    const signature = view.getUint16(14, true); // Should be "DU"
+    const signature = view.getUint16(14, true); // Should be "UD"
+    
+    // Basic format validation (expandable for future versions)
+    if (signature !== 0x5544) { // "UD" signature
+      console.warn('⚠️ Binary signature mismatch - file may be corrupted');
+    }
+    
+    // Version compatibility check (can be expanded later)
+    if (version < 0x0210) { // Earlier than v2.1.0
+      console.info(`📦 Loading older format version: ${version.toString(16)}`);
+    }
     
     // Read UD content
     const contentArray = new Uint8Array(buffer, contentOffset, contentLength);

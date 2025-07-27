@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { useMinimap } from '../../hooks/useMinimap';
+import { µ2_useMinimap } from '../../hooks/µ2_useMinimap';
 
 interface DesktopItemData {
   id: string;
@@ -52,20 +52,24 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInteracting, setIsInteracting] = useState(false);
   
-  // Hook Integration
-  const minimap = useMinimap(items, canvasState);
+  // Hook Integration - µ2_ Bagua Minimap System
+  const minimap = µ2_useMinimap();
 
-  // Handle navigation changes
+  // Handle navigation changes - TODO V2: Implement with µ2_ Bagua system
   const handleNavigationChange = useCallback((position: { x: number; y: number; z: number }) => {
-    const adjustedPosition = minimap.handleViewportChange(position, 'medium');
-    onNavigationChange?.(adjustedPosition);
-  }, [minimap, onNavigationChange]);
+    // TODO V2: Implement viewport change handling with µ2_ minimap system
+    // const adjustedPosition = minimap.handleViewportChange(position, 'medium');
+    onNavigationChange?.(position); // Direct passthrough for now
+  }, [onNavigationChange]);
 
-  // Handle zoom changes  
+  // Handle zoom changes - TODO V2: Implement with µ2_ Bagua system
   const handleZoomChange = useCallback((zoomDelta: number, ctrlKey = false) => {
-    const newScale = minimap.handleMinimapZoom(zoomDelta, ctrlKey);
-    onZoomChange?.(newScale);
-  }, [minimap, onZoomChange]);
+    // TODO V2: Implement zoom handling with µ2_ minimap system
+    // const newScale = minimap.handleMinimapZoom(zoomDelta, ctrlKey);
+    void zoomDelta; // Acknowledge parameter
+    void ctrlKey; // Acknowledge parameter
+    onZoomChange?.(1.0); // Default scale for now
+  }, [onZoomChange]);
 
   // Canvas rendering
   const renderMinimap = useCallback(() => {
@@ -76,34 +80,45 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
     if (!ctx) return;
 
     const { width, height } = size;
-    const canvasSize = { width: 4000, height: 4000 };
     
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
     
-    // Calculate minimap transform
-    const transform = minimap.getMinimapTransform();
+    // Calculate minimap transform using µ2_ Bagua system with proper parameters
+    const transform = minimap.getMinimapTransform(items, canvasState);
     
-    // Draw background grid
+    // Dynamic canvas size based on zoom level
+    const zoomLevel = canvasState?.scale || 1.0;
+    const baseCanvasSize = 4000;
+    const visibleCanvasSize = baseCanvasSize / Math.max(zoomLevel, 0.1);
+    const canvasSize = { width: visibleCanvasSize, height: visibleCanvasSize };
+    
+    // Draw zoom-responsive background grid
     ctx.strokeStyle = 'rgba(26, 127, 86, 0.1)';
     ctx.lineWidth = 1;
-    const gridSize = 20;
     
-    for (let x = 0; x < width; x += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-      ctx.stroke();
-    }
+    // Grid-Größe basierend auf Zoom - bei hohem Zoom größere Grid-Zellen
+    const baseGridSize = 500; // Welt-Grid-Größe in Canvas-Koordinaten
+    const gridSizeInMinimap = baseGridSize * transform.scale;
     
-    for (let y = 0; y < height; y += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
+    // Zeichne nur Grids, die groß genug sind (mindestens 5px)
+    if (gridSizeInMinimap > 5) {
+      for (let x = 0; x < width; x += gridSizeInMinimap) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      
+      for (let y = 0; y < height; y += gridSizeInMinimap) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
     }
 
-    // Draw items
+    // Draw items with zoom-responsive positioning
     items.forEach(item => {
       const itemX = (item.position.x + canvasSize.width/2) * transform.scale;
       const itemY = (item.position.y + canvasSize.height/2) * transform.scale;
@@ -141,8 +156,8 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
       }
     });
 
-    // Draw context zones
-    minimap.currentContextZones.forEach(zone => {
+    // Draw context zones using µ2_ Bagua territory system
+    minimap.currentContextZones.forEach((zone: any) => {
       const zoneX = (zone.bounds.x + canvasSize.width/2) * transform.scale;
       const zoneY = (zone.bounds.y + canvasSize.height/2) * transform.scale;
       const zoneW = zone.bounds.width * transform.scale;
@@ -169,7 +184,7 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
     ctx.fillStyle = 'rgba(26, 127, 86, 0.1)';
     ctx.fillRect(viewportX, viewportY, viewportW, viewportH);
 
-  }, [minimap, items, size, canvasState]);
+  }, [items, size, canvasState]);
 
   // Mouse interaction handlers
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -181,15 +196,12 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Convert minimap coordinates to canvas coordinates
-    const transform = minimap.getMinimapTransform();
-    const canvasSize = { width: 4000, height: 4000 };
+    // Convert minimap coordinates to canvas coordinates using µ2_ system
+    const transform = minimap.getMinimapTransform(items, canvasState);
+    const minimapScale = minimap.µ2_calculateMinimapScale(items, canvasState);
+    const newPosition = minimap.µ2_convertMinimapToWorld(x, y, minimapScale, items, canvasState);
     
-    const canvasX = (x / transform.scale) - canvasSize.width/2;
-    const canvasY = (y / transform.scale) - canvasSize.height/2;
-    
-    const precision = e.ctrlKey ? 'high' : 'medium';
-    const newPosition = { x: -canvasX, y: -canvasY, z: 0 };
+    void e.ctrlKey; // Acknowledge parameter - TODO V2: Implement precision levels
     
     handleNavigationChange(newPosition);
   }, [minimap, handleNavigationChange]);
@@ -224,10 +236,17 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
 
   // Render minimap when dependencies change
   useEffect(() => {
-    if (minimap.shouldUpdateMinimap()) {
-      requestAnimationFrame(renderMinimap);
-    }
-  }, [renderMinimap, minimap, items, canvasState]);
+    requestAnimationFrame(renderMinimap);
+  }, [items, canvasState.position.x, canvasState.position.y, canvasState.scale]);
+  
+  // µ2_renderMinimap trigger on coverage changes - REMOVED to prevent render loops
+  // useEffect(() => {
+  //   const coverage = minimap.calculateCoverage(items);
+  //   // Trigger re-render when coverage changes significantly
+  //   if (coverage.ratio > 0) {
+  //     requestAnimationFrame(renderMinimap);
+  //   }
+  // }, [items, renderMinimap, minimap]);
 
   // Control buttons
   const ControlButton = ({ icon, title, onClick, active = false }: {
@@ -260,7 +279,7 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
   const StatsOverlay = () => {
     if (!showStats) return null;
 
-    const coverage = minimap.calculateCoverage();
+    const coverage = minimap.calculateCoverage(items);
     const zones = minimap.currentContextZones;
 
     return (
@@ -405,6 +424,6 @@ export const MinimapWidget: React.FC<MinimapWidgetProps> = ({
   );
 };
 
-// Export hook for external access
-export const useMinimapWidgetHook = (items: DesktopItemData[], canvasState: CanvasState) => 
-  useMinimap(items, canvasState);
+// Export hook for external access - Updated for µ2_ Bagua System
+export const useMinimapWidgetHook = () => 
+  µ2_useMinimap();

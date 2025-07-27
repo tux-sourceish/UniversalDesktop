@@ -8,13 +8,13 @@
  * @version 2.1.0-raimund-algebra
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { UniversalDocument, UDItem, UDOrigin } from '../core/universalDocument';
 import { UDFormat } from '../core/UDFormat';
 
 export interface µ1_DocumentState {
   document: UniversalDocument | null;
-  items: UDItem[];
+  items: readonly UDItem[]; // Readonly for immutability
   isLoading: boolean;
   hasChanges: boolean;
   lastSaved: number | null;
@@ -26,7 +26,8 @@ export interface µ1_CreateItemOptions {
   position: { x: number; y: number; z: number };
   dimensions: { width: number; height: number };
   content: any;
-  is_contextual?: boolean;
+  is_contextual: boolean; // Required to match UDItem interface
+  bagua_descriptor?: number; // Optional Bagua metadata for µX_ system
 }
 
 /**
@@ -65,7 +66,7 @@ export const µ1_useUniversalDocument = () => {
 
     try {
       const doc = UniversalDocument.fromWorkspaceSnapshot(binaryData);
-      const items = doc.allItems;
+      const items = [...doc.allItems]; // Convert readonly to mutable array
 
       setDocumentState({
         document: doc,
@@ -98,7 +99,7 @@ export const µ1_useUniversalDocument = () => {
 
     try {
       const doc = UniversalDocument.fromBinary(binaryData);
-      const items = doc.allItems;
+      const items = [...doc.allItems]; // Convert readonly to mutable array
 
       setDocumentState({
         document: doc,
@@ -333,6 +334,15 @@ export const µ1_useUniversalDocument = () => {
     );
   }, [documentState.items]);
 
+  // µ1_ Mark document as saved (reset hasChanges)
+  const µ1_markAsSaved = useCallback(() => {
+    setDocumentState(prev => ({
+      ...prev,
+      hasChanges: false,
+      lastSaved: Date.now()
+    }));
+  }, []);
+
   // µ1_ Computed values mit useMemo für Performance
   const µ1_documentMetadata = useMemo(() => {
     const { document, items } = documentState;
@@ -368,6 +378,7 @@ export const µ1_useUniversalDocument = () => {
     µ1_addItem,
     µ1_transformItem,
     µ1_removeItem,
-    µ1_getItemsByBagua
+    µ1_getItemsByBagua,
+    µ1_markAsSaved
   };
 };

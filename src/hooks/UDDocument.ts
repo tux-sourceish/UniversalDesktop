@@ -361,12 +361,11 @@ export class UDDocument {
     return {
       header: this.header,
       metadata: this.metadata,
-      items: Array.from(this.items.entries()).map(([id, item]) => ({
-        id,
+      items: Array.from(this.items.entries()).map(([itemId, item]) => ({
         ...item,
         baguaDescription: BaguaUtils.describeDescriptor(item.bagua),
         baguaMatrix: BaguaUtils.renderMatrix(item.bagua),
-        content: this.getContent(id)
+        content: this.getContent(itemId)
       }))
     };
   }

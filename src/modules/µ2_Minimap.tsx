@@ -37,6 +37,7 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
   const [coverage, setCoverage] = React.useState(4); // Zoom coverage level
   const [isDraggingViewport, setIsDraggingViewport] = React.useState(false);
   const [dragOffset, setDragOffset] = React.useState({ x: 0, y: 0 });
+  const dragTimeoutRef = React.useRef<number | null>(null);
   
   // Campus-Modell Hooks - Jeder macht NUR eine Sache
   const minimap = µ2_useMinimap();
@@ -56,10 +57,10 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
     const newCoverage = µ2_calculateCoverage(canvasState.scale);
     if (Math.abs(newCoverage - coverage) > 0.1) { // Nur bei signifikanten Änderungen
       setCoverage(newCoverage);
-      console.log('🔗 µ2_Minimap synced with Canvas zoom:', { 
-        canvasScale: canvasState.scale, 
-        newCoverage 
-      });
+      // console.log('🔗 µ2_Minimap synced with Canvas zoom:', { 
+      //   canvasScale: canvasState.scale, 
+      //   newCoverage 
+      // });
     }
   }, [canvasState.scale, coverage, µ2_calculateCoverage]);
 
@@ -76,18 +77,18 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
     const canZoom = UDFormat.transistor(newZoom >= 0.1 && newZoom <= 5.0);
     if (canZoom) {
       onZoomChange(newZoom);
-      console.log('🎯 µ2_Minimap Wheel Zoom:', { 
-        from: currentZoom.toFixed(2), 
-        to: newZoom.toFixed(2),
-        coverage: µ2_calculateCoverage(newZoom).toFixed(1)
-      });
+      // console.log('🎯 µ2_Minimap Wheel Zoom:', { 
+      //   from: currentZoom.toFixed(2), 
+      //   to: newZoom.toFixed(2),
+      //   coverage: µ2_calculateCoverage(newZoom).toFixed(1)
+      // });
     }
   }, [canvasState.scale, onZoomChange, µ2_calculateCoverage]);
 
-  // µ2_ Campus-Modell: Minimap-Skalierung
+  // µ2_ Campus-Modell: Minimap-Skalierung mit Zoom-Awareness
   const µ2_getMinimapScale = useCallback(() => {
-    return minimap.µ2_calculateMinimapScale(items);
-  }, [items, minimap]);
+    return minimap.µ2_calculateMinimapScale(items, canvasState);
+  }, [items, minimap, canvasState]);
 
   // µ2_ FEATURE 3: Edge Indicators für Items außerhalb
   const µ2_isInMinimapBounds = useCallback((position: { x: number; y: number }) => {
@@ -200,11 +201,17 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
       }
     });
 
-    // Render Viewport Rectangle
+    // Render Viewport Rectangle - FIXED for zoom <100%
     const viewportX = -canvasState.position.x * scaleData.scale + offsetX;
     const viewportY = -canvasState.position.y * scaleData.scale + offsetY;
-    const viewportW = (window.innerWidth / canvasState.scale) * scaleData.scale;
-    const viewportH = (window.innerHeight / canvasState.scale) * scaleData.scale;
+    
+    // TRUE viewport size in world coordinates (what user actually sees)
+    const trueViewportWorldW = window.innerWidth / canvasState.scale;
+    const trueViewportWorldH = window.innerHeight / canvasState.scale;
+    
+    // Scale to minimap coordinates
+    const viewportW = trueViewportWorldW * scaleData.scale;
+    const viewportH = trueViewportWorldH * scaleData.scale;
 
     // Viewport background
     ctx.fillStyle = 'rgba(26, 127, 86, 0.1)';
@@ -223,17 +230,37 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
     // });
   }, [items, canvasState, minimap, µ2_getMinimapScale]);
 
-  // µ2_ FEATURE 2: Viewport Drag Detection
+  // µ2_ FEATURE 2: Viewport Drag Detection - FIXED with correct offsets
   const µ2_isInViewportRect = useCallback((x: number, y: number) => {
+    const { width, height } = minimap.minimapBounds;
     const scaleData = µ2_getMinimapScale();
-    const viewportX = -canvasState.position.x * scaleData.scale;
-    const viewportY = -canvasState.position.y * scaleData.scale;
-    const viewportW = (window.innerWidth / canvasState.scale) * scaleData.scale;
-    const viewportH = (window.innerHeight / canvasState.scale) * scaleData.scale;
+    
+    // Calculate world bounds and offsets EXACTLY like in render function
+    const worldBounds = items.length > 0 ? {
+      minX: Math.min(...items.map(item => item.position.x)),
+      maxX: Math.max(...items.map(item => item.position.x + (item.width || 300))),
+      minY: Math.min(...items.map(item => item.position.y)),
+      maxY: Math.max(...items.map(item => item.position.y + (item.height || 200)))
+    } : { minX: 0, maxX: width, minY: 0, maxY: height };
+
+    const offsetX = -worldBounds.minX * scaleData.scale + (width - (worldBounds.maxX - worldBounds.minX) * scaleData.scale) / 2;
+    const offsetY = -worldBounds.minY * scaleData.scale + (height - (worldBounds.maxY - worldBounds.minY) * scaleData.scale) / 2;
+    
+    // Calculate viewport rectangle with correct offsets - FIXED for zoom <100%
+    const viewportX = -canvasState.position.x * scaleData.scale + offsetX;
+    const viewportY = -canvasState.position.y * scaleData.scale + offsetY;
+    
+    // TRUE viewport size in world coordinates (what user actually sees)
+    const trueViewportWorldW = window.innerWidth / canvasState.scale;
+    const trueViewportWorldH = window.innerHeight / canvasState.scale;
+    
+    // Scale to minimap coordinates
+    const viewportW = trueViewportWorldW * scaleData.scale;
+    const viewportH = trueViewportWorldH * scaleData.scale;
     
     return x >= viewportX && x <= viewportX + viewportW && 
            y >= viewportY && y <= viewportY + viewportH;
-  }, [canvasState, µ2_getMinimapScale]);
+  }, [canvasState, µ2_getMinimapScale, minimap.minimapBounds, items]);
 
   // µ2_ FEATURE 2: Mouse Down Handler - Drag vs Click
   const µ2_handleMinimapMouseDown = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -249,26 +276,40 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
     const inViewport = UDFormat.transistor(µ2_isInViewportRect(x, y));
     
     if (inViewport) {
-      // Viewport Dragging initialisieren
+      // Viewport Dragging initialisieren mit korrekten Offsets
       setIsDraggingViewport(true);
-      const viewportX = -canvasState.position.x * scaleData.scale;
-      const viewportY = -canvasState.position.y * scaleData.scale;
+      
+      // Calculate world bounds and offsets EXACTLY like in µ2_isInViewportRect
+      const { width, height } = minimap.minimapBounds;
+      const worldBounds = items.length > 0 ? {
+        minX: Math.min(...items.map(item => item.position.x)),
+        maxX: Math.max(...items.map(item => item.position.x + (item.width || 300))),
+        minY: Math.min(...items.map(item => item.position.y)),
+        maxY: Math.max(...items.map(item => item.position.y + (item.height || 200)))
+      } : { minX: 0, maxX: width, minY: 0, maxY: height };
+
+      const offsetX = -worldBounds.minX * scaleData.scale + (width - (worldBounds.maxX - worldBounds.minX) * scaleData.scale) / 2;
+      const offsetY = -worldBounds.minY * scaleData.scale + (height - (worldBounds.maxY - worldBounds.minY) * scaleData.scale) / 2;
+      
+      const viewportX = -canvasState.position.x * scaleData.scale + offsetX;
+      const viewportY = -canvasState.position.y * scaleData.scale + offsetY;
+      
       setDragOffset({
         x: x - viewportX,
         y: y - viewportY
       });
-      console.log('🎯 µ2_Viewport Drag Started');
+      // console.log('🎯 µ2_Viewport Drag Started');
     } else {
       // Direkter Jump zu dieser Position
       const targetPosition = navigation.µ3_convertMinimapToCanvas(
         x, y, scaleData.scale, scaleData.offsetX, scaleData.offsetY, items.length > 0
       );
       onNavigate(navigation.µ3_createNavigationState(targetPosition).position);
-      console.log('🎯 µ2_Jump to Position:', targetPosition);
+      // console.log('🎯 µ2_Jump to Position:', targetPosition);
     }
   }, [canvasState, µ2_getMinimapScale, µ2_isInViewportRect, navigation, onNavigate, items]);
 
-  // µ2_ FEATURE 2: Mouse Move Handler - Dragging
+  // µ2_ FEATURE 2: Mouse Move Handler - Dragging with correct offsets
   const µ2_handleMinimapMouseMove = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDraggingViewport) return;
 
@@ -277,23 +318,105 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
 
     const rect = canvas.getBoundingClientRect();
     const scaleData = µ2_getMinimapScale();
-    const x = (event.clientX - rect.left) - dragOffset.x;
-    const y = (event.clientY - rect.top) - dragOffset.y;
+    
+    // Calculate world bounds and offsets EXACTLY like in drag start
+    const { width, height } = minimap.minimapBounds;
+    const worldBounds = items.length > 0 ? {
+      minX: Math.min(...items.map(item => item.position.x)),
+      maxX: Math.max(...items.map(item => item.position.x + (item.width || 300))),
+      minY: Math.min(...items.map(item => item.position.y)),
+      maxY: Math.max(...items.map(item => item.position.y + (item.height || 200)))
+    } : { minX: 0, maxX: width, minY: 0, maxY: height };
 
-    // Convert zurück zu Canvas-Koordinaten
-    const canvasX = -x / scaleData.scale;
-    const canvasY = -y / scaleData.scale;
+    const offsetX = -worldBounds.minX * scaleData.scale + (width - (worldBounds.maxX - worldBounds.minX) * scaleData.scale) / 2;
+    const offsetY = -worldBounds.minY * scaleData.scale + (height - (worldBounds.maxY - worldBounds.minY) * scaleData.scale) / 2;
+    
+    // Mouse position with drag offset
+    const mouseX = (event.clientX - rect.left) - dragOffset.x;
+    const mouseY = (event.clientY - rect.top) - dragOffset.y;
+    
+    // Convert back to canvas coordinates with correct offsets 
+    const canvasX = -(mouseX - offsetX) / scaleData.scale;
+    const canvasY = -(mouseY - offsetY) / scaleData.scale;
 
-    onNavigate({ x: canvasX, y: canvasY, z: canvasState.position.z });
-  }, [isDraggingViewport, dragOffset, µ2_getMinimapScale, onNavigate, canvasState.position.z]);
+    // Debounce navigation calls to prevent event loops
+    if (dragTimeoutRef.current) {
+      clearTimeout(dragTimeoutRef.current);
+    }
+    
+    dragTimeoutRef.current = window.setTimeout(() => {
+      onNavigate({ x: canvasX, y: canvasY, z: canvasState.position.z });
+    }, 16); // ~60fps throttling
+  }, [isDraggingViewport, dragOffset, µ2_getMinimapScale, onNavigate, canvasState.position.z, minimap.minimapBounds, items]);
 
   // µ2_ FEATURE 2: Mouse Up Handler - Stop Dragging
   const µ2_handleMinimapMouseUp = useCallback(() => {
     if (isDraggingViewport) {
       setIsDraggingViewport(false);
-      console.log('🎯 µ2_Viewport Drag Ended');
+      // console.log('🎯 µ2_Viewport Drag Ended');
     }
   }, [isDraggingViewport]);
+
+  // µ2_ Global Mouse Events während Drag (fixes drag outside canvas)
+  useEffect(() => {
+    if (!isDraggingViewport) return;
+
+    const handleGlobalMouseMove = (event: MouseEvent) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleData = µ2_getMinimapScale();
+      
+      // Calculate world bounds and offsets EXACTLY like in mouse move handler
+      const { width, height } = minimap.minimapBounds;
+      const worldBounds = items.length > 0 ? {
+        minX: Math.min(...items.map(item => item.position.x)),
+        maxX: Math.max(...items.map(item => item.position.x + (item.width || 300))),
+        minY: Math.min(...items.map(item => item.position.y)),
+        maxY: Math.max(...items.map(item => item.position.y + (item.height || 200)))
+      } : { minX: 0, maxX: width, minY: 0, maxY: height };
+
+      const offsetX = -worldBounds.minX * scaleData.scale + (width - (worldBounds.maxX - worldBounds.minX) * scaleData.scale) / 2;
+      const offsetY = -worldBounds.minY * scaleData.scale + (height - (worldBounds.maxY - worldBounds.minY) * scaleData.scale) / 2;
+      
+      // Mouse position with drag offset
+      const mouseX = (event.clientX - rect.left) - dragOffset.x;
+      const mouseY = (event.clientY - rect.top) - dragOffset.y;
+      
+      // Convert back to canvas coordinates with correct offsets
+      const canvasX = -(mouseX - offsetX) / scaleData.scale;
+      const canvasY = -(mouseY - offsetY) / scaleData.scale;
+
+      // Debounce navigation calls to prevent event loops
+      if (dragTimeoutRef.current) {
+        clearTimeout(dragTimeoutRef.current);
+      }
+      
+      dragTimeoutRef.current = window.setTimeout(() => {
+        if (onNavigate) {
+          onNavigate({ x: canvasX, y: canvasY, z: canvasState.position.z });
+        }
+      }, 16); // ~60fps throttling
+    };
+
+    const handleGlobalMouseUp = () => {
+      setIsDraggingViewport(false);
+      // console.log('🎯 µ2_Global Drag Ended');
+    };
+
+    // Register global events
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      if (dragTimeoutRef.current) {
+        clearTimeout(dragTimeoutRef.current);
+      }
+    };
+  }, [isDraggingViewport, dragOffset, µ2_getMinimapScale, onNavigate, canvasState.position.z, minimap.minimapBounds, items]);
 
   // µ2_ Initialize canvas - Campus-Modell
   useEffect(() => {

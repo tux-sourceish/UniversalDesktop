@@ -4,7 +4,7 @@
 
 export class UniversalDocumentV2 {
   private static readonly UD_MAGIC = 0x55440001; // "UD" + Version 1
-  private static readonly BAGUA_BITS = 9;
+  private static readonly _BAGUA_BITS = 9;
   private static readonly VERSION = 0x0100; // Version 1.0
   private static readonly MAX_ITEMS = 1000000; // Safety limit
   
@@ -205,13 +205,16 @@ export class UniversalDocumentV2 {
     return (descriptor >= 0) && (descriptor <= 0b111111111) && Number.isInteger(descriptor);
   }
 
+  // Pre-computed Set for O(1) type validation performance
+  private static readonly VALID_TYPES = new Set(Object.values(this.ItemType));
+
   /**
    * Check if item type is valid
    * @param type - Item type to validate
    * @returns True if valid
    */
   static isValidItemType(type: number): boolean {
-    return Object.values(this.ItemType).includes(type);
+    return this.VALID_TYPES.has(type as any);
   }
 
   // ========================================================================
@@ -740,7 +743,7 @@ export class UDMinimapAdapterV2 {
       width: item.dimensions[0],
       height: item.dimensions[1],
       type: item.type,
-      typeName: UniversalDocumentV2.ITEM_TYPE_NAMES[item.type] || 'Unknown',
+      typeName: (UniversalDocumentV2.ITEM_TYPE_NAMES as Record<number, string>)[item.type] || 'Unknown',
       color: this.getBaguaColor(item.bagua_descriptor),
       bagua: {
         descriptor: item.bagua_descriptor,

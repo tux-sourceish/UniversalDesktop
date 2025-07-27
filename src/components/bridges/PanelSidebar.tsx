@@ -40,7 +40,6 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
   style = {},
   children,
   showToggleButtons = true,
-  compactMode = false,
   onCreateItem
 }) => {
   const panels = usePanelManager();
@@ -166,7 +165,7 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
   }), [µ1_createNotizzettel, µ1_createTabelle, µ1_createCode, µ1_createBrowser, µ1_createTerminal, µ1_createCalendar, µ1_createMedia, µ1_createChart]);
 
   // Get panels for this position
-  const positionPanels = useMemo(() => 
+  const _positionPanels = useMemo(() => 
     panels.getPanelsByPosition(position),
     [panels, position]
   );
@@ -290,7 +289,7 @@ export const PanelSidebar: React.FC<PanelSidebarProps> = ({
 
   // Render individual panel
   const PanelContent: React.FC<PanelContentProps> = ({ 
-    panelId, 
+    panelId: _panelId, 
     title, 
     icon, 
     children, 

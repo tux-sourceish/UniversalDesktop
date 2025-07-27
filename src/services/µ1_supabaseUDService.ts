@@ -8,7 +8,7 @@
  * @version 2.1.0-raimund-algebra
  */
 
-import { enhancedSupabase } from './supabaseClient';
+import { enhancedSupabase } from './μ8_supabaseClient';
 import { UDFormat } from '../core/UDFormat';
 
 export interface µ1_Workspace {
@@ -170,11 +170,12 @@ export class µ1_SupabaseUDService {
         ...(metadata.name && { name: metadata.name })
       };
 
-      const { error } = await enhancedSupabase
+      const updateResult = await enhancedSupabase
         .from('workspaces')
         .update(updateData)
-        .eq('id', workspaceId)
-        .eq('user_id', userId);
+        .eq('id', workspaceId);
+      
+      const { error } = updateResult;
 
       // Algebraischer Transistor für Success-Check
       const success = UDFormat.transistor(error === null);
@@ -216,7 +217,7 @@ export class µ1_SupabaseUDService {
       const hashArray = new Uint8Array(hashBuffer);
       const documentHash = Array.from(hashArray, b => b.toString(16).padStart(2, '0')).join('');
 
-      const { data, error } = await enhancedSupabase
+      const insertResult = await enhancedSupabase
         .from('workspaces')
         .insert({
           user_id: userId,
@@ -233,19 +234,19 @@ export class µ1_SupabaseUDService {
             auto_save: true,
             context_zones: true
           }
-        })
-        .select('id')
-        .single();
+        });
+      
+      const { data, error } = insertResult;
 
       // Algebraischer Transistor für Success-Check
       const success = UDFormat.transistor(error === null && data !== null);
 
       if (success) {
         console.log('✅ µ1_createWorkspace completed:', {
-          id: data!.id,
+          id: data.id,
           name
         });
-        return data!.id;
+        return data.id;
       } else {
         console.error('💥 µ1_createWorkspace error:', error);
         return null;
@@ -271,13 +272,14 @@ export class µ1_SupabaseUDService {
   // µ1_ Workspace Access Time aktualisieren
   static async µ1_updateAccessTime(workspaceId: string, userId: string): Promise<boolean> {
     try {
-      const { error } = await enhancedSupabase
+      const updateResult = await enhancedSupabase
         .from('workspaces')
         .update({ 
           last_accessed_at: new Date().toISOString() 
         })
-        .eq('id', workspaceId)
-        .eq('user_id', userId);
+        .eq('id', workspaceId);
+      
+      const { error } = updateResult;
 
       const success = UDFormat.transistor(error === null);
       return success === 1;

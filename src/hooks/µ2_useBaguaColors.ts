@@ -10,7 +10,7 @@
 
 import { useCallback } from 'react';
 import { UDFormat } from '../core/UDFormat';
-import type { UniversalDocument } from '../core/universalDocument';
+// UniversalDocument type import removed - not used in this file
 
 // Bagua-Farbdefinitionen nach Raimunds System
 const µ2_BAGUA_COLORS = {
@@ -50,14 +50,14 @@ export const µ2_useBaguaColors = () => {
       UDFormat.transistor(baguaDescriptor > 0) * baguaDescriptor +
       UDFormat.transistor(baguaDescriptor === 0) * UDFormat.BAGUA.TAIJI;
 
-    return µ2_BAGUA_COLORS[finalDescriptor] || µ2_BAGUA_COLORS[UDFormat.BAGUA.TAIJI];
+    return (µ2_BAGUA_COLORS as Record<number, string>)[finalDescriptor] || µ2_BAGUA_COLORS[UDFormat.BAGUA.TAIJI];
   }, []);
 
   // µ2_ UniversalDocument Item Bagua-Farbe (für echte .ud Items)
   const µ2_getUDItemBaguaColor = useCallback((udItem: any): string => {
     // Nutze bereits berechneten bagua_descriptor aus UniversalDocument
     const descriptor = udItem.bagua_descriptor || UDFormat.BAGUA.TAIJI;
-    return µ2_BAGUA_COLORS[descriptor] || µ2_BAGUA_COLORS[UDFormat.BAGUA.TAIJI];
+    return (µ2_BAGUA_COLORS as Record<number, string>)[descriptor] || µ2_BAGUA_COLORS[UDFormat.BAGUA.TAIJI];
   }, []);
 
   // µ2_ Bagua-Symbol für Display
@@ -74,7 +74,7 @@ export const µ2_useBaguaColors = () => {
       [UDFormat.BAGUA.TAIJI]:  '☯'
     };
 
-    return symbolMap[baguaDescriptor] || '❓';
+    return (symbolMap as Record<number, string>)[baguaDescriptor] || '❓';
   }, []);
 
   // µ2_ Bagua-Name für Display
@@ -91,7 +91,7 @@ export const µ2_useBaguaColors = () => {
       [UDFormat.BAGUA.TAIJI]:  'TAIJI'
     };
 
-    return nameMap[baguaDescriptor] || 'UNKNOWN';
+    return (nameMap as Record<number, string>)[baguaDescriptor] || 'UNKNOWN';
   }, []);
 
   return {

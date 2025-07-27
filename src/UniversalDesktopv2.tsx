@@ -14,10 +14,10 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { AuthModule } from './modules/AuthModule';
-import { CanvasModule } from './modules/CanvasModule';
-import { PanelModule } from './modules/PanelModule';
-import { ContextModule } from './modules/ContextModule';
+import { AuthModule } from './modules/μ4_AuthModule';
+import { CanvasModule } from './modules/μ8_CanvasModule';
+import { PanelModule } from './modules/μ2_PanelModule';
+import { ContextModule } from './modules/μ6_ContextModule';
 import { µ1_Header } from './components/µ1_Header';
 
 // µX_ Campus-Modell Hook imports - Bagua-powered architecture
@@ -26,14 +26,16 @@ import {
   µ2_useMinimap,
   µ2_useBaguaColors,
   µ3_useNavigation,
-  useCanvasNavigation,
-  usePanelManager,
-  useContextManager,
-  useWindowManager,
-  useKeyboardShortcuts,
-  useAIAgent,
+  μ3_useCanvasNavigation,
+  μ8_usePanelLayout,
+  μ1_useWindowManager,
+  μ7_useKeyboardShortcuts,
+  μ6_useAIAgent,
   useClipboardManager
 } from './hooks';
+
+// Import μ6_useContextManager directly (not from index.ts)
+import { μ6_useContextManager } from './hooks/µ6_useContextManager';
 
 // Type imports
 import type { 
@@ -56,14 +58,16 @@ import './styles/index.css';
 const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({ 
   sessionData 
 }) => {
-  const { user } = sessionData;
+  console.log('🏠 DesktopWorkspace rendering with sessionData:', sessionData);
+  const { user, logout } = sessionData;
+  console.log('🏠 User extracted:', user?.id);
 
   // 🌌 µ1_ Campus-Modell Workspace Management (Bagua-powered)
   const workspace = µ1_useWorkspace(user?.id || '');
   const { workspaceState, documentState } = workspace;
 
   // 🎮 Navigation Hook - Canvas physics and movement (declared early for other hooks)
-  const canvas = useCanvasNavigation();
+  const canvas = μ3_useCanvasNavigation();
 
   // 🎨 µ2_ Bagua Color System - Visual philosophy integration
   const baguaColors = µ2_useBaguaColors();
@@ -76,7 +80,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   
   // 🪟 Window Management Hook - Intelligent item creation (v1 relic) - declared early for useEffect
   // TODO: Revive window management with v2 Campus-Model
-  const windows = useWindowManager();
+  const windows = μ1_useWindowManager();
   
   // Use hooks to prevent "unused" warnings (v2 ready hooks)
   React.useEffect(() => {
@@ -135,11 +139,12 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   // (Canvas already declared above for hook dependencies)
 
-  // 🎛️ Panel Management Hook - Unified panel state
-  const panels = usePanelManager();
+  // 🎛️ Panel Management Hook - NEW V2 System! (shared instance)
+  const panels = μ8_usePanelLayout();
+  
 
-  // 🧠 Context Management Hook - AI context optimization (µ1_ Campus-Model compatible)
-  const context = useContextManager(100000, (id: string, updates: any) => {
+  // 🧠 Context Management Hook - AI context optimization (μ6_ Bagua-powered)
+  const context = μ6_useContextManager(100000, (id: string, updates: any) => {
     // Delegate to µ1_ Campus-Model workspace methods
     workspace.µ1_transformItem(id, {
       verb: 'context-update',
@@ -151,7 +156,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   // (Windows hook already declared above for useEffect dependency)
 
   // ⌨️ Keyboard Shortcuts Hook - Context-aware shortcuts
-  useKeyboardShortcuts({
+  μ7_useKeyboardShortcuts({
     onZoomToLevel: (level: string) => {
       const zoomLevel = level as keyof typeof ZoomLevels;
       canvas.navigateToZoomLevel(zoomLevel);
@@ -164,7 +169,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   // 🤖 AI Agent Hook - Three-phase AI workflow (v1 relic)
   // TODO: Revive AI agent system with v2 Bagua logic
-  useAIAgent(null, context.activeContextItems);
+  μ6_useAIAgent(null, context.activeContextItems);
 
   // 🏛️ Territory Management Hook - Spatial organization (v1 relic - disabled in v2)
   // TODO: Revive territory management for v2 when ready
@@ -172,6 +177,20 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   // 📋 Clipboard Management Hook - Professional clipboard operations
   const clipboard = useClipboardManager();
+
+  // 💾 Auto-hide state for sync status
+  const [showSyncStatus, setShowSyncStatus] = React.useState(true);
+
+  // Auto-hide sync status after 2 seconds
+  React.useEffect(() => {
+    if (workspaceState.lastSyncedAt && !workspaceState.isSaving) {
+      setShowSyncStatus(true);
+      const timer = setTimeout(() => {
+        setShowSyncStatus(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [workspaceState.lastSyncedAt, workspaceState.isSaving]);
 
   // 📋 Context Menu State (legacy compatibility)
   const [contextMenu, setContextMenu] = React.useState<ContextMenuData>({ 
@@ -242,6 +261,33 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
     if (udItem && import.meta.env.DEV) {
       console.log('🌌 Item created:', { id: udItem.id, position: udItem.position });
+    }
+  }, [workspace]);
+
+  // 🔥 NEW: µ1_WindowFactory Unity Bridge Handler
+  const handleCreateUDItem = useCallback((udItem: any) => {
+    console.log('🌌 μ1_WindowFactory UDItem created:', { id: udItem.id, type: udItem.type, origin: udItem.origin?.tool });
+    
+    try {
+      // Convert UDItem back to µ1_addItem parameters
+      const createOptions = {
+        type: udItem.type,
+        title: udItem.title,
+        position: udItem.position,
+        dimensions: udItem.dimensions,
+        content: udItem.content,
+        is_contextual: udItem.is_contextual,
+        bagua_descriptor: udItem.bagua_descriptor
+      };
+
+      // Add to workspace via µ1_ Campus-Model
+      const addedItem = workspace.µ1_addItem(createOptions, udItem.origin);
+      
+      if (addedItem && import.meta.env.DEV) {
+        console.log('✅ UDItem added to workspace:', addedItem.id);
+      }
+    } catch (error) {
+      console.error('❌ Failed to add UDItem to workspace:', error);
     }
   }, [workspace]);
 
@@ -358,8 +404,44 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   const handleNavigationChange = useCallback((state: any) => {
     // Type mismatch - TODO: Align CanvasState interfaces between modules
-    canvas.setCanvasState(prev => ({ ...prev, ...state }));
+    // Handle both position objects and direct coordinates
+    if (state.x !== undefined && state.y !== undefined) {
+      // Direct coordinates from Minimap
+      canvas.setCanvasState(prev => ({ 
+        ...prev, 
+        position: { x: state.x, y: state.y, z: state.z || prev.position.z }
+      }));
+      // console.log('🎮 Navigation Change (coords):', state);
+    } else {
+      // State object from other sources
+      canvas.setCanvasState(prev => ({ ...prev, ...state }));
+      // console.log('🎮 Navigation Change (state):', state);
+    }
   }, [canvas]);
+
+  // 📌 Context Toggle Handler - Connect Pin Button to Context Manager
+  const handleToggleContext = useCallback((item: DesktopItemData) => {
+    console.log('📌 μ6 Context Toggle:', { 
+      itemId: item.id, 
+      title: item.title, 
+      currentlyInContext: context.isInContext(item.id),
+      activeContextItems: context.activeContextItems.length,
+      contextItemIds: context.activeContextItems.map(ci => ci.id)
+    });
+    
+    // Use μ6_useContextManager's toggleItemContext function
+    context.toggleItemContext(item, 'medium');
+    
+    // Debug: Check state after toggle
+    setTimeout(() => {
+      console.log('📌 μ6 Context After Toggle:', {
+        itemId: item.id,
+        nowInContext: context.isInContext(item.id),
+        activeCount: context.activeContextItems.length,
+        contextItemIds: context.activeContextItems.map(ci => ci.id)
+      });
+    }, 100);
+  }, [context]);
 
   const handleKeyboardNavigation = useCallback((e: KeyboardEvent) => {
     // Delegate keyboard navigation to main canvas hook
@@ -422,6 +504,10 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onZoomIn={() => canvas.setZoomLevel?.(Math.min(5.0, (canvas.zoomLevel || 1) * 1.1))}
         onZoomOut={() => canvas.setZoomLevel?.(Math.max(0.1, (canvas.zoomLevel || 1) * 0.9))}
         currentZoom={canvas.zoomLevel || 1}
+        panelState={panels.panelState}
+        panelConfigs={panels.panelConfigs}
+        onPanelToggle={panels.togglePanel}
+        onLogout={logout}
       />
       
       {/* Canvas & Items - Core workspace */}
@@ -434,6 +520,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onItemDelete={handleItemDelete}
         onItemRename={handleItemRename}
         onContextMenu={handleContextMenu}
+        onToggleContext={handleToggleContext}
+        isInContext={context.isInContext}
         className="main-canvas"
       />
 
@@ -446,7 +534,12 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onNavigationChange={handleNavigationChange}
         onZoomChange={handleZoomChange}
         onItemCreate={handleItemCreate}
+        onCreateUDItem={handleCreateUDItem}
+        onItemUpdate={handleItemUpdate}
         position="left"
+        μ8_panelState={panels.panelState}
+        μ8_panelConfigs={panels.panelConfigs}
+        contextManager={context}
       />
 
       {/* Context Menu System - Unified interactions */}
@@ -465,7 +558,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       {workspaceState.isSaving && (
         <div className="auto-save-indicator" style={{
           position: 'fixed',
-          top: '20px',
+          top: '80px',
           right: '20px',
           background: 'rgba(34, 197, 94, 0.9)',
           color: 'white',
@@ -494,10 +587,10 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       )}
 
       {/* Sync Status Indicator */}
-      {workspaceState.lastSyncedAt && !workspaceState.isSaving && (
+      {workspaceState.lastSyncedAt && !workspaceState.isSaving && showSyncStatus && (
         <div className="sync-status-indicator" style={{
           position: 'fixed',
-          top: '20px',
+          top: '80px',
           right: '20px',
           background: 'rgba(74, 144, 226, 0.8)',
           color: 'white',
@@ -516,7 +609,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       {workspaceState.syncError && (
         <div className="sync-error-indicator" style={{
           position: 'fixed',
-          top: '20px',
+          top: '80px',
           right: '20px',
           background: 'rgba(227, 80, 80, 0.9)',
           color: 'white',
@@ -532,19 +625,29 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         </div>
       )}
 
-      {/* Development Debug Info */}
-      {import.meta.env.DEV && (
-        <div className="debug-info" style={{
-          position: 'fixed',
-          top: '80px',
-          left: '10px',
-          background: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          padding: '8px',
-          borderRadius: '4px',
-          fontSize: '12px',
-          zIndex: 10000
-        }}>
+      {/* Development Debug Info - Smart Positioning */}
+      {import.meta.env.DEV && (() => {
+        // μ8_ Smart Debug Panel Positioning (vermeidet Panel-Kollisionen)
+        const canvasOffset = panels.getCanvasOffset();
+        const debugPosition = {
+          // Wenn rechte Panels aktiv sind, gehe weiter nach links
+          right: canvasOffset.right > 0 ? `${canvasOffset.right + 20}px` : '20px',
+          top: '200px'
+        };
+        
+        return (
+          <div className="debug-info" style={{
+            position: 'fixed',
+            top: debugPosition.top,
+            right: debugPosition.right,
+            background: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            padding: '8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            zIndex: 150, // Unter Panels aber über Canvas
+            transition: 'all 0.3s ease'
+          }}>
           <div>🌌 UniversalDesktop v2.0</div>
           <div>📊 Items: {items.length}</div>
           <div>🎛️ Panels: {Object.values(panels.panelState).filter(Boolean).length}/4</div>
@@ -552,8 +655,9 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
           <div>📍 Position: {Math.round(canvas.canvasState.position.x)}, {Math.round(canvas.canvasState.position.y)}</div>
           <div>💾 Changes: {documentState.hasChanges ? 'Yes' : 'No'}</div>
           <div>🔄 Auto-Save: {workspaceState.isSaving ? 'Active' : 'Idle'}</div>
-        </div>
-      )}
+          </div>
+        );
+      })()}
     </div>
   );
 };
@@ -563,6 +667,12 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
  * Pure orchestration with authentication wrapper
  */
 const UniversalDesktopv2: React.FC = () => {
+  console.log('🚀 UniversalDesktopv2 component started rendering');
+  
+  // Add error boundary for debugging
+  React.useEffect(() => {
+    console.log('🚀 UniversalDesktopv2 useEffect fired - component mounted');
+  }, []);
   return (
     <AuthModule>
       {(sessionData) => <DesktopWorkspace sessionData={sessionData} />}

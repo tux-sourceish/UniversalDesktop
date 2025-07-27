@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-import { useCanvasNavigation } from '../../hooks/useCanvasNavigation';
+import { useCanvasNavigation } from '../../hooks';
 
 interface CanvasControllerProps {
   children: React.ReactNode;
@@ -102,7 +102,7 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
       }
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (_e: MouseEvent) => {
       // TODO: Restore dragging methods when canvas hook is updated
       // canvas.updateDragging({ x: e.clientX, y: e.clientY, z: 0 });
     };
@@ -161,11 +161,22 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
     willChange: 'transform'
   };
 
+  // DEBUG: Log CSS transform vs canvasState (only during navigation changes)
+  React.useEffect(() => {
+    if (import.meta.env.DEV && externalCanvasState) {
+      console.log('🎨 CSS Transform Update:', {
+        cssTransform: `translate(${activeCanvasState.position.x}px, ${activeCanvasState.position.y}px) scale(${activeCanvasState.scale})`,
+        position: activeCanvasState.position,
+        scale: activeCanvasState.scale
+      });
+    }
+  }, [activeCanvasState.position.x, activeCanvasState.position.y, activeCanvasState.scale, externalCanvasState]);
+
   // Navigation info overlay
   const NavigationInfo = () => (
     <div className="canvas-navigation-info" style={{
       position: 'fixed',
-      top: '80px',
+      top: '120px',
       right: '20px',
       background: 'rgba(0, 0, 0, 0.8)',
       color: 'white',

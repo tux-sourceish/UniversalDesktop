@@ -38,18 +38,17 @@ export const µ3_useNavigation = () => {
     offsetY: number,
     hasItems: boolean
   ): µ3_Position => {
-    // Verbesserte Koordinaten-Konvertierung für intuitivere Navigation
-    const minimapCenterX = 128; // Minimap ist 256x256, Center bei 128
-    const minimapCenterY = 128;
+    // REPARIERTE Koordinaten-Konvertierung - kompatibel mit µ2_calculateMinimapScale
+    // Verwendet die Offsets und Scale aus der Minimap-Berechnung
     
-    // Relative Position vom Minimap-Center
-    const relativeX = (clickX - minimapCenterX) / scale;
-    const relativeY = (clickY - minimapCenterY) / scale;
+    // Direkte Konvertierung unter Verwendung der Scale-Daten
+    const worldX = (clickX - offsetX) / scale;
+    const worldY = (clickY - offsetY) / scale;
     
-    // Konvertierung zu Canvas-Koordinaten (invertiert für korrektes Panning)
+    // Minimap-System nutzt Canvas-Position als inverted World-Position
     return {
-      x: -relativeX,
-      y: -relativeY,
+      x: -worldX,
+      y: -worldY,
       z: 0
     };
   }, []);

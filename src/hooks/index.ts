@@ -12,19 +12,22 @@ import { µ2_useBaguaColors } from './µ2_useBaguaColors';
 // µ3_ WASSER (☵) - Flow/Navigation Hooks  
 import { µ3_useNavigation } from './µ3_useNavigation';
 
-// Legacy Hooks (Phase-out planned)
-import { useCanvasNavigation } from './useCanvasNavigation';
+// µ8_ ERDE (☷) - Global/Base System Hooks
+import { μ8_usePanelLayout } from './µ8_usePanelLayout';
+
+// μX-prefixed Hooks (Bagua System)
+import { μ3_useCanvasNavigation } from './μ3_useCanvasNavigation';
+import { μ1_useWindowManager } from './μ1_useWindowManager';
+import { μ7_useKeyboardShortcuts } from './μ7_useKeyboardShortcuts';
+import { μ6_useAIAgent } from './μ6_useAIAgent';
+import { μ5_useTerritoryManager } from './μ5_useTerritoryManager';
+import { μ7_useDraggable } from './μ7_useDraggable';
+import { μ7_useResizable } from './μ7_useResizable';
+
+// Legacy Hooks (still exist as files)
 import { usePanelManager } from './usePanelManager';
 import { useMinimap } from './useMinimap';
-
-// Phase 2: Core Features
 import { useContextManager } from './useContextManager';
-import { useWindowManager } from './useWindowManager'; 
-import { useKeyboardShortcuts } from './useKeyboardShortcuts';
-
-// Phase 3: Advanced Features
-import { useAIAgent } from './useAIAgent';
-import { useTerritoryManager } from './useTerritoryManager';
 import { useClipboardManager } from './useClipboardManager';
 import { useFileManager } from './useFileManager';
 
@@ -34,28 +37,43 @@ export {
   µ1_useWorkspace,
   µ2_useMinimap, 
   µ2_useBaguaColors, 
-  µ3_useNavigation 
+  µ3_useNavigation,
+  μ8_usePanelLayout,
+  μ3_useCanvasNavigation,
+  μ1_useWindowManager,
+  μ7_useKeyboardShortcuts,
+  μ6_useAIAgent,
+  μ5_useTerritoryManager,
+  μ7_useDraggable,
+  μ7_useResizable
 };
 
 // Legacy exports - DEPRECATED (for backward compatibility)  
-export { useCanvasNavigation, usePanelManager, useMinimap, useContextManager, useWindowManager, useKeyboardShortcuts, useAIAgent, useTerritoryManager, useClipboardManager, useFileManager };
+export { usePanelManager, useMinimap, useContextManager, useClipboardManager, useFileManager };
 
-// Hook Categories for organized imports
+// Backward compatibility aliases (old names → new μX names)
+export { μ3_useCanvasNavigation as useCanvasNavigation };
+export { μ1_useWindowManager as useWindowManager };
+export { μ7_useKeyboardShortcuts as useKeyboardShortcuts };
+export { μ6_useAIAgent as useAIAgent };
+export { μ5_useTerritoryManager as useTerritoryManager };
+
+// Hook Categories for organized imports  
 export const NavigationHooks = {
-  useCanvasNavigation,
+  useCanvasNavigation: μ3_useCanvasNavigation,
   useMinimap,
-  useKeyboardShortcuts
+  useKeyboardShortcuts: μ7_useKeyboardShortcuts
 } as const;
 
 export const UIManagementHooks = {
   usePanelManager,
-  useWindowManager,
+  useWindowManager: μ1_useWindowManager,
   useContextManager
 } as const;
 
 export const AdvancedFeatureHooks = {
-  useAIAgent,
-  useTerritoryManager,
+  useAIAgent: μ6_useAIAgent,
+  useTerritoryManager: μ5_useTerritoryManager,
   useClipboardManager
 } as const;
 
@@ -171,12 +189,12 @@ export const getHooksByPhase = (phase: HookPhase): string[] => {
 };
 
 export const getHookDependencies = (hookName: HookName): string[] => {
-  return HookMetadata[hookName]?.dependencies || [];
+  return [...(HookMetadata[hookName]?.dependencies || [])];
 };
 
-// Re-export existing hooks for compatibility
-export { useDraggable } from './useDraggable';
-export { useResizable } from './useResizable';
+// Re-export μX-prefixed hooks for compatibility  
+export { μ7_useDraggable as useDraggable } from './μ7_useDraggable';
+export { μ7_useResizable as useResizable } from './μ7_useResizable';
 
 // ============================================================================
 // 🌌 UNIVERSALFILE (.UD) FORMAT INTEGRATION

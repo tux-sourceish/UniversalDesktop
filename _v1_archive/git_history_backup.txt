@@ -1,3 +1,0 @@
-86db457 🌌 Complete UniversalFile (.UD) Format Implementation
-136c4b6 ❌ Mark prod/ experiment as failed - Document lessons learned
-1577f73 Initial commit: Lauffähige Monolith-Version

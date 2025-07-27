@@ -83,6 +83,7 @@ export interface PanelState {
 export interface UniversalDesktopSession {
   session: any;
   user: any;
+  logout?: () => Promise<void>;
 }
 
 // µ3_ Navigation types - Following Bagua system
