@@ -273,6 +273,17 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
               activeContextItemsIds: contextManager.activeContextItems?.map(item => item.id) || []
             });
             
+            // Get model name first for vision detection
+            const modelMap = {
+              'reasoning': 'nexus-online/claude-sonnet-4',
+              'fast': 'kira-local/llama3.1-8b',
+              'premium': 'kira-online/gemini-2.5-pro',
+              'super': 'nexus-online/claude-sonnet-4',
+              'vision': 'kira-local/llava-vision',
+              'local': 'kira-local/llama3.1-8b'
+            };
+            const actualModelName = modelMap[μ2_selectedModel] || modelMap['reasoning'];
+            
             // Check if this is a vision-capable model for enhanced context
             const isVisionModel = μ2_selectedModel === 'vision' || actualModelName.includes('vision') || actualModelName.includes('llava');
             

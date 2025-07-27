@@ -1,7 +1,7 @@
 {
-  "name": "universal-desktop-prototype",
-  "version": "1.0.0",
-  "description": "UniversalDesktop - Infinite intelligent desktop workspace prototype",
+  "name": "universal-desktop",
+  "version": "2.1.0",
+  "description": "UniversalDesktop v2.1 - Algebraic Operating System with μX-Bagua Architecture",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
