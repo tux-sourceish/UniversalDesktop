@@ -25,11 +25,14 @@ import { μ7_useDraggable } from './μ7_useDraggable';
 import { μ7_useResizable } from './μ7_useResizable';
 
 // Legacy Hooks (still exist as files)
-import { usePanelManager } from './usePanelManager';
+import { usePanelManager } from './μ8_usePanelManager';
 import { useMinimap } from './useMinimap';
 import { useContextManager } from './useContextManager';
 import { useClipboardManager } from './useClipboardManager';
 import { useFileManager } from './useFileManager';
+
+// μ6_ FEUER (☲) - Functions/Context Management
+import { μ6_useContextManager } from './µ6_useContextManager';
 
 // µX_ Campus-Modell Exports - PRIMARY (Bagua-powered)
 export { 
@@ -50,6 +53,9 @@ export {
 
 // Legacy exports - DEPRECATED (for backward compatibility)  
 export { usePanelManager, useMinimap, useContextManager, useClipboardManager, useFileManager };
+
+// μ6_ Context Management exports
+export { μ6_useContextManager };
 
 // Backward compatibility aliases (old names → new μX names)
 export { μ3_useCanvasNavigation as useCanvasNavigation };

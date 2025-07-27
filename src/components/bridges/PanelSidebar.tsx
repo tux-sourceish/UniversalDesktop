@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { usePanelManager } from '../../hooks/usePanelManager';
+import { usePanelManager } from '../../hooks/μ8_usePanelManager';
 import { UDFormat } from '../../core/UDFormat';
 
 interface PanelSidebarProps {
