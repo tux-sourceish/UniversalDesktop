@@ -11,7 +11,7 @@ interface μ6_ContextPanelProps {
   activeContextItems: Array<{
     id: string;
     title: string; 
-    type: 'window' | 'selection' | 'document' | 'code' | 'table';
+    type: 'window' | 'selection' | 'document' | 'code' | 'table' | 'notizzettel' | 'terminal' | 'tui' | 'tabelle' | 'image';
     content: string;
     tokenEstimate?: number;
     priority?: 'high' | 'medium' | 'low';

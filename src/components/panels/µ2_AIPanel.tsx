@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 import { μ1_WindowFactory } from '../factories/μ1_WindowFactory';
 import { liteLLMClient } from '../../services/μ6_litellmClient';
@@ -22,6 +22,7 @@ interface μ2_AIPanelProps {
   contextManager?: {
     getContextSummary: () => string;
     activeContextItems: any[];
+    getVisionContext?: () => { textContent: string; images: any[] };
   };
 }
 
@@ -43,7 +44,18 @@ interface μ2_AgentConfig {
   description: string;
   bagua: number;
   enabled: boolean;
+  model: string; // Added: Individual model selection per agent
 }
+
+// Available models for agent selection
+const μ2_AVAILABLE_MODELS = [
+  'kira-online/gemini-2.5-flash',
+  'nexus-online/claude-sonnet-4', 
+  'kira-online/gemini-2.5-pro',
+  'nexus-online/claude-opus-4',
+  'kira-local/llava-vision',
+  'kira-local/llama3.1-8b'
+];
 
 export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   position: _position = 'right',
@@ -67,7 +79,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
   });
 
-  // μ2_ Agent Configuration mit Checkboxes (FLEXIBLER WORKFLOW!)
+  // μ2_ Agent Configuration mit Checkboxes & Model Selection (FLEXIBLER WORKFLOW!)  
   const [μ2_agentConfigs, setμ2_AgentConfigs] = useState<μ2_AgentConfig[]>([
     {
       key: 'reasoner',
@@ -75,7 +87,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       name: 'Reasoner',
       description: 'Analysiert und plant',
       bagua: UDFormat.BAGUA.FEUER,
-      enabled: true
+      enabled: true,
+      model: 'nexus-online/claude-sonnet-4' // Default: Reasoning model
     },
     {
       key: 'coder', 
@@ -83,7 +96,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       name: 'Coder',
       description: 'Generiert Code/Content',
       bagua: UDFormat.BAGUA.HIMMEL,
-      enabled: true
+      enabled: false,
+      model: 'kira-local/llama3.1-8b' // Default: Local coding model
     },
     {
       key: 'refiner',
@@ -91,18 +105,59 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       name: 'Refiner',
       description: 'Optimiert und finalisiert',
       bagua: UDFormat.BAGUA.DONNER,
-      enabled: true
+      enabled: false,
+      model: 'kira-online/gemini-2.5-pro' // Default: Premium refining model
     }
   ]);
 
   const [μ2_inputValue, setμ2_InputValue] = useState('');
-  const [μ2_selectedModel, setμ2_SelectedModel] = useState('reasoning');
+  
+  // μ2_ Output Type Selection (for Window Creation)
+  type OutputType = 'notizzettel' | 'code' | 'tui';
+  const [μ2_outputType, setμ2_OutputType] = useState<OutputType>('notizzettel');
+
+  // μ4_ Configuration Persistence (BERG - Setup/Init)
+  useEffect(() => {
+    // Load saved configuration on mount
+    const savedConfig = localStorage.getItem('ud-agent-config');
+    if (savedConfig) {
+      try {
+        const parsedConfig = JSON.parse(savedConfig);
+        setμ2_AgentConfigs(parsedConfig);
+      } catch (error) {
+        console.warn('Failed to load agent config:', error);
+      }
+    }
+
+    const savedOutputType = localStorage.getItem('ud-output-type');
+    if (savedOutputType && ['notizzettel', 'code', 'tui'].includes(savedOutputType)) {
+      setμ2_OutputType(savedOutputType as OutputType);
+    }
+  }, []);
+
+  // μ4_ Save Configuration Changes
+  useEffect(() => {
+    localStorage.setItem('ud-agent-config', JSON.stringify(μ2_agentConfigs));
+  }, [μ2_agentConfigs]);
+
+  useEffect(() => {
+    localStorage.setItem('ud-output-type', μ2_outputType);
+  }, [μ2_outputType]);
 
   // μ2_ Toggle Agent Checkbox
   const μ2_toggleAgent = useCallback((agentKey: keyof μ2_AgentState['agents']) => {
     setμ2_AgentConfigs(prev => prev.map(config => 
       config.key === agentKey 
         ? { ...config, enabled: !config.enabled }
+        : config
+    ));
+  }, []);
+
+  // μ2_ Change Agent Model
+  const μ2_changeAgentModel = useCallback((agentKey: keyof μ2_AgentState['agents'], model: string) => {
+    setμ2_AgentConfigs(prev => prev.map(config => 
+      config.key === agentKey 
+        ? { ...config, model }
         : config
     ));
   }, []);
@@ -129,13 +184,9 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 
     try {
       console.log('🚀 μ2 LiteLLM API Call:', { 
-        baseUrl, 
         model: selectedModel, 
         agents: enabledAgents.length,
-        promptLength: prompt.length,
-        hasContext: prompt.includes('μ6 CONTEXT'),
-        contextItems: prompt.includes('μ6 CONTEXT') ? 
-          prompt.match(/\[.*?\]/g)?.length || 0 : 0
+        hasContext: prompt.includes('Context:')
       });
 
       const response = await fetch(`${baseUrl}/v1/chat/completions`, {
@@ -152,7 +203,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
               content: `${agentContext}${prompt}`
             }
           ],
-          max_tokens: 2000,
+          max_tokens: 8000,
           temperature: 0.7
         })
       });
@@ -164,11 +215,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       const data = await response.json();
       const aiResponse = data.choices?.[0]?.message?.content || 'No response from AI';
 
-      console.log('✅ μ2 LiteLLM Response received:', { 
-        model: selectedModel,
-        responseLength: aiResponse.length,
-        usage: data.usage 
-      });
+      console.log(`✅ μ2 Response received: ${aiResponse.length} chars`);
 
       // Format response based on agents and model
       if (enabledAgents.some(a => a.key === 'coder') && (aiResponse.includes('```') || aiResponse.includes('function'))) {
@@ -196,6 +243,51 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       };
     }
   }, []);
+
+  // μ6_ Sequential Agent Processing Chain (FEUER - Functions)
+  const μ6_processWithAgents = useCallback(async (
+    initialPrompt: string,
+    context: any[],
+    enabledAgents: μ2_AgentConfig[]
+  ): Promise<string> => {
+    let result = initialPrompt;
+    const contextString = context.length > 0 
+      ? `\nContext: ${context.map(item => `[${item.title}] ${item.content?.substring(0, 200)}...`).join('\n')}\n\n`
+      : '';
+
+    // Sequential processing through enabled agents
+    for (const agent of enabledAgents) {
+      try {
+        let agentPrompt = '';
+        
+        // Agent-specific prompt formatting
+        switch (agent.key) {
+          case 'reasoner':
+            agentPrompt = `[REASONER AGENT - Analysis & Planning]\nContext: ${contextString}\n\nAnalyze and plan approach for: ${result}`;
+            break;
+          case 'coder':
+            agentPrompt = `[CODER AGENT - Implementation]\nContext: ${contextString}\n${result}\n\nImplement solution with μX_ Bagua patterns and best practices:`;
+            break;
+          case 'refiner':
+            agentPrompt = `[REFINER AGENT - Enhancement & Finalization]\nContext: ${contextString}\n${result}\n\nPlease enhance this content by:\n1. Adding more detail and depth\n2. Improving clarity and structure\n3. Ensuring completeness\n4. Maintaining or expanding the length\n\nProvide the enhanced, finalized version:`;
+            break;
+          default:
+            agentPrompt = result;
+        }
+
+        // Call LiteLLM with agent-specific model
+        const response = await μ2_callLiteLLMAPI(agentPrompt, [agent], agent.model);
+        result = response.text || response.code || result;
+        
+        console.log(`✅ ${agent.name} completed`);
+      } catch (error) {
+        console.error(`❌ Agent ${agent.name} processing failed:`, error);
+        // Continue with current result on error
+      }
+    }
+
+    return result;
+  }, []); // No dependencies needed - μ2_callLiteLLMAPI is stable
 
   // μ2_ AI Request Processing (FLEXIBLER Three-Phase Workflow)
   const μ2_processAIRequest = useCallback(async (prompt: string) => {
@@ -256,23 +348,15 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
         isActive: false
       }));
 
-      // ✨ CREATE AI RESPONSE WINDOW via μ1_WindowFactory! ✨
+      // ✨ CREATE AI RESPONSE WINDOW via μ1_WindowFactory with NEW AGENT SYSTEM! ✨
       if (onCreateUDItem) {
-        // μ6_ Generate Context-Aware Prompt using contextManager prop
+        // μ6_ Generate Context-Aware Prompt using contextManager prop (WORKING VERSION!)
         const μ6_buildContextAwarePrompt = (userPrompt: string): string => {
           try {
             // Use contextManager prop directly - clean integration!
             if (!contextManager || !contextManager.getContextSummary) {
               return userPrompt;
             }
-            
-            
-            // Get model name from LiteLLM client (no duplication)
-            const modelMap = liteLLMClient.getRecommendedModels();
-            const actualModelName = modelMap[μ2_selectedModel] || modelMap['reasoning'];
-            
-            // Check if this is a vision-capable model for enhanced context
-            const isVisionModel = μ2_selectedModel === 'vision' || actualModelName.includes('vision') || actualModelName.includes('llava');
             
             // Use appropriate context method
             const contextSummary = contextManager.getContextSummary();
@@ -286,7 +370,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 **USER PROMPT:**
 ${userPrompt}
 
-**INSTRUCTIONS:** Use the pinned context items above for more relevant and context-aware responses.${isVisionModel ? ' If there are images in the context, analyze them in detail.' : ''}`;
+**INSTRUCTIONS:** Use the pinned context items above for more relevant and context-aware responses.`;
 
             
             return enhancedPrompt;
@@ -298,154 +382,46 @@ ${userPrompt}
         
         const contextAwarePrompt = μ6_buildContextAwarePrompt(prompt);
         
-        // μ6_ Map selected model to actual LiteLLM model name  
-        const modelMap: Record<string, string> = {
-          'reasoning': import.meta.env.VITE_LITELLM_MODEL_REASONING || 'nexus-online/claude-sonnet-4',
-          'fast': import.meta.env.VITE_LITELLM_MODEL_FAST || 'kira-online/gemini-2.5-flash', 
-          'premium': import.meta.env.VITE_LITELLM_MODEL_PREMIUM || 'kira-online/gemini-2.5-pro',
-          'vision': import.meta.env.VITE_LITELLM_MODEL_VISION || 'kira-local/llava-vision',
-          'local': import.meta.env.VITE_LITELLM_MODEL_LOCAL || 'kira-local/llama3.1-8b'
+        // μ6_ Build Context Array for Agent Processing (for backward compatibility)
+        const contextItems = contextManager?.activeContextItems || [];
+        
+        // μ6_ Process with Sequential Agent Chain using context-aware prompt
+        const finalResult = await μ6_processWithAgents(contextAwarePrompt, contextItems, enabledAgents);
+        
+        console.log(`🤖 Multi-Agent Complete: ${enabledAgents.map(a => a.name).join(' → ')} (${μ2_outputType})`);
+        
+        // μ1_ Create Window using μ1_WindowFactory with Agent Results
+        const position = { x: Math.random() * 500 + 100, y: Math.random() * 300 + 100, z: 10 };
+        
+        // μ6_ Generate Window Title from Agent Results
+        const generateTitle = (result: string, agents: μ2_AgentConfig[]): string => {
+          const agentNames = agents.map(a => a.name).join('+');
+          const firstLine = result.split('\n')[0]?.substring(0, 30) || 'AI Response';
+          return `${agentNames}: ${firstLine}${firstLine.length > 27 ? '...' : ''}`;
         };
         
-        const actualModelName = modelMap[μ2_selectedModel] || modelMap['reasoning'];
-        
-        // 🔍 DEBUG: Model Selection State
-        console.log('🔍 Model Debug:', { 
-          μ2_selectedModel, 
-          actualModelName, 
-          modelMap 
+        const newWindow = μ1_WindowFactory.createUDItem({
+          type: μ2_outputType, // Use the selected output type directly
+          position,
+          title: generateTitle(finalResult, enabledAgents),
+          content: {
+            text: finalResult,
+            code: μ2_outputType === 'code' ? finalResult : undefined,
+            tui_content: μ2_outputType === 'tui' ? finalResult : undefined
+          },
+          origin: 'ai-multi',
+          metadata: {
+            agents: enabledAgents.map(a => ({ name: a.name, model: a.model })),
+            processingType: 'multi-agent-chain',
+            originalPrompt: prompt,
+            outputType: μ2_outputType,
+            contextItems: contextItems.length
+          }
         });
         
-        // Generate real AI response via LiteLLM with context
-        const responseContent = await μ2_callLiteLLMAPI(contextAwarePrompt, enabledAgents, actualModelName);
-        
-        // μ2_ Enhanced Response Processing with Title & Content Intelligence
-        const contributingAgents = enabledAgents.map(a => a.key);
-        
-        // μ6_ Enhanced Smart Title Generation with Pattern Recognition
-        const μ6_generateWindowTitle = (response: any, agents: string[]): string => {
-          if (typeof response === 'string') {
-            const text = response.trim();
-            
-            // Pattern 1: Look for "**Als X**:" multi-agent patterns
-            const agentMatch = text.match(/\*\*Als\s+"?([^*"]+)"?\*\*:\s*([^\.!?]+[\.!?])/);
-            if (agentMatch) {
-              return `${agentMatch[1]}: ${agentMatch[2].trim()}`.substring(0, 50) + (agentMatch[2].length > 47 ? '...' : '');
-            }
-            
-            // Pattern 2: Look for strong opening statements + German/English starters
-            const strongOpeners = ['Interessant', 'Perfekt', 'Wichtig', 'Achtung', 'Problem', 'Lösung', 'Analyse', 'Ergebnis', 'Ich kann', 'Ich habe', 'Das ist', 'Hier ist'];
-            const firstSentence = text.split(/[\.!?]/)[0]?.trim();
-            if (firstSentence && strongOpeners.some(opener => firstSentence.startsWith(opener))) {
-              const cleaned = firstSentence.replace(/^(Ich kann leider|Ich habe|Das ist|Hier ist)\s+/i, '');
-              const finalSentence = cleaned.length > 0 ? cleaned : firstSentence;
-              return finalSentence.length > 50 ? finalSentence.substring(0, 47) + '...' : finalSentence;
-            }
-            
-            // Pattern 3: Extract topic from contextual phrases
-            const topicMatch = text.match(/(?:sprechen|diskutieren|analysieren|erklären|zeigen)\s+(?:über|dass|wie)\s+([^,.!?]+)/i);
-            if (topicMatch) {
-              return `Über ${topicMatch[1].trim()}`.substring(0, 50);
-            }
-            
-            // Pattern 4: Look for questions being answered
-            const questionMatch = text.match(/(?:Ihre Frage|Sie fragen|Problem|Thema):\s*([^\.!?]+)/i);
-            if (questionMatch) {
-              return `Re: ${questionMatch[1].trim()}`.substring(0, 50);
-            }
-            
-            // Pattern 5: Code/technical content detection
-            if (text.includes('```') || text.includes('function') || text.includes('const ')) {
-              return `Code: ${agents.join('+')} Implementation`;
-            }
-            
-            // Pattern 6: Fallback to enhanced first sentence
-            if (firstSentence && firstSentence.length > 10) {
-              // Clean up common AI intro phrases
-              const cleaned = firstSentence
-                .replace(/^(Hier ist|Das ist|Ich kann|Gerne|Natürlich|Selbstverständlich)\s+/i, '')
-                .replace(/^(eine|ein|der|die|das)\s+/i, '');
-              
-              const finalTitle = cleaned.length > 50 ? cleaned.substring(0, 47) + '...' : cleaned;
-              return finalTitle || `${agents[0]} Analysis`;
-            }
-            
-            // Pattern 7: Agent-specific fallbacks with more personality
-            const agentTitles = {
-              'reasoner': 'Reasoning Analysis',
-              'coder': 'Code Solution', 
-              'refiner': 'Refined Response'
-            };
-            
-            return agentTitles[agents[0] as keyof typeof agentTitles] || `AI ${agents.join('+')} Response`;
-          }
-          
-          if (response.title) return response.title;
-          if (response.summary) return response.summary;
-          
-          return `AI ${agents.length > 1 ? 'Multi-Agent' : agents[0]} Response`;
-        };
-        
-        // μ6_ Smart Content Enhancement based on Type
-        const μ6_enhanceContent = (rawContent: any, detectedType: string) => {
-          if (typeof rawContent === 'string') {
-            // Check for code patterns
-            if (detectedType === 'code') {
-              return { code: rawContent, language: 'typescript' };
-            }
-            
-            // Check for table patterns
-            if (detectedType === 'tabelle' && rawContent.includes('|')) {
-              const lines = rawContent.split('\n').filter(l => l.includes('|'));
-              if (lines.length >= 2) {
-                const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
-                const rows = lines.slice(2).map(row => 
-                  row.split('|').map(cell => cell.trim()).filter(cell => cell)
-                );
-                return { headers, rows, tableType: 'ai-generated' };
-              }
-            }
-            
-            // Enhanced text content
-            return { text: rawContent, ai_generated: true, response_length: rawContent.length };
-          }
-          
-          return rawContent;
-        };
-        
-        const optimalType = μ1_WindowFactory.detectOptimalType(responseContent, contributingAgents);
-        const smartTitle = μ6_generateWindowTitle(responseContent, contributingAgents);
-        const enhancedContent = μ6_enhanceContent(responseContent, optimalType);
-        
-        // Create window position with smart stacking
-        const windowPosition = {
-          x: 200 + (Math.random() * 100), // Slight randomization to avoid exact overlap
-          y: 50 + (Math.random() * 100),
-          z: Date.now() % 1000
-        };
-        
-        try {
-          // Create UDItem via μ1_WindowFactory with enhanced metadata
-          const udItem = μ1_WindowFactory.createUDItem({
-            type: optimalType,
-            title: smartTitle,
-            position: windowPosition,
-            content: enhancedContent,
-            origin: contributingAgents.length > 1 ? 'ai-multi' : `ai-${contributingAgents[0]}`,
-            contributingAgents
-          });
-          
-          onCreateUDItem(udItem);
-          
-          console.log('🤖 μ2 AI Response Window Created via μ1_WindowFactory:', {
-            type: optimalType,
-            agents: contributingAgents,
-            model: μ2_selectedModel,
-            position: windowPosition,
-            udItemId: udItem.id
-          });
-        } catch (error) {
-          console.error('❌ μ2 AI Window Creation Failed:', error);
+        if (newWindow) {
+          onCreateUDItem(newWindow);
+          console.log(`🌟 AI Window Created: ${newWindow.title}`);
         }
       }
 
@@ -469,7 +445,7 @@ ${userPrompt}
         isActive: false 
       }));
     }
-  }, [μ2_getEnabledAgents, μ2_selectedModel]);
+  }, [μ2_getEnabledAgents]);
 
   // μ2_ Handle Input Submit
   const μ2_handleSubmit = useCallback(() => {
@@ -655,10 +631,34 @@ ${userPrompt}
                 <div style={{
                   fontSize: '11px',
                   color: '#6b7280',
-                  opacity: isEnabled ? 1 : 0.5
+                  opacity: isEnabled ? 1 : 0.5,
+                  marginBottom: '4px'
                 }}>
                   {config.description}
                 </div>
+                
+                {/* Model Selection Dropdown */}
+                <select
+                  value={config.model}
+                  onChange={(e) => μ2_changeAgentModel(config.key, e.target.value)}
+                  disabled={!isEnabled || μ2_agentState.status === 'processing'}
+                  style={{
+                    fontSize: '10px',
+                    padding: '2px 4px',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(74, 144, 226, 0.2)',
+                    backgroundColor: isEnabled ? 'rgba(255, 255, 255, 0.1)' : 'rgba(176, 176, 176, 0.05)',
+                    color: isEnabled ? '#4a90e2' : '#9ca3af',
+                    maxWidth: '160px',
+                    opacity: isEnabled ? 1 : 0.5
+                  }}
+                >
+                  {μ2_AVAILABLE_MODELS.map(model => (
+                    <option key={model} value={model} style={{ backgroundColor: '#1a1a1a' }}>
+                      {model.split('/')[1] || model}
+                    </option>
+                  ))}
+                </select>
               </div>
               
               {/* Status */}
@@ -729,49 +729,65 @@ ${userPrompt}
         </div>
       </div>
 
-      {/* Model Selector */}
-      <div className="μ2-model-selector" style={{
-        padding: '16px',
-        borderBottom: '1px solid rgba(74, 144, 226, 0.1)'
-      }}>
-        <label style={{
-          display: 'block',
-          fontSize: '14px',
-          fontWeight: '500',
-          color: '#374151',
-          marginBottom: '8px'
-        }}>
-          AI Model:
-        </label>
-        <select
-          value={μ2_selectedModel}
-          onChange={(e) => {
-            console.log('🔄 Dropdown changed to:', e.target.value);
-            setμ2_SelectedModel(e.target.value);
-          }}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            borderRadius: '8px',
-            border: '1px solid rgba(74, 144, 226, 0.2)',
-            backgroundColor: 'white',
-            fontSize: '14px',
-            color: '#374151'
-          }}
-        >
-          <option value="reasoning">🧠 Reasoning Model</option>
-          <option value="fast">⚡ Fast Model</option>
-          <option value="premium">💎 Premium Model</option>
-          <option value="vision">👁️ Vision Model</option>
-          <option value="local">🏠 Local Model</option>
-        </select>
-      </div>
 
       {/* Input Area - V1 Style */}
       <div className="μ2-ai-input" style={{
         padding: '16px',
         marginTop: 'auto'
       }}>
+        {/* Output Type Selection */}
+        <div className="μ2-output-type-selector" style={{
+          marginBottom: '12px',
+          padding: '8px',
+          backgroundColor: 'rgba(74, 144, 226, 0.02)',
+          borderRadius: '6px',
+          border: '1px solid rgba(74, 144, 226, 0.1)'
+        }}>
+          <div style={{
+            fontSize: '12px',
+            fontWeight: '600',
+            color: '#6b7280',
+            marginBottom: '6px'
+          }}>
+            Output Type:
+          </div>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center', fontSize: '11px', color: '#4a90e2', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="notizzettel"
+                checked={μ2_outputType === 'notizzettel'}
+                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
+                disabled={μ2_agentState.status === 'processing'}
+                style={{ marginRight: '4px', accentColor: '#4a90e2' }}
+              />
+              📝 Note
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', fontSize: '11px', color: '#4a90e2', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="code"
+                checked={μ2_outputType === 'code'}
+                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
+                disabled={μ2_agentState.status === 'processing'}
+                style={{ marginRight: '4px', accentColor: '#4a90e2' }}
+              />
+              💻 Code
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', fontSize: '11px', color: '#4a90e2', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                value="tui"
+                checked={μ2_outputType === 'tui'}
+                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
+                disabled={μ2_agentState.status === 'processing'}
+                style={{ marginRight: '4px', accentColor: '#4a90e2' }}
+              />
+              🖥️ TUI
+            </label>
+          </div>
+        </div>
+
         <textarea
           value={μ2_inputValue}
           onChange={(e) => setμ2_InputValue(e.target.value)}

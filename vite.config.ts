@@ -11,16 +11,31 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: process.env.NODE_ENV === 'production',
+    // Suppress rollup warnings for vendor source maps
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'SOURCEMAP_ERROR') return;
+        warn(warning);
+      }
+    }
   },
   resolve: {
     alias: {
       '@': '/src'
     }
   },
-  // Fix source map errors
+  // Fix source map errors completely - NUCLEAR OPTION
   optimizeDeps: {
     include: ['react', 'react-dom'],
-    exclude: []
+    exclude: [],
+    // Force no source maps for dependencies
+    esbuildOptions: {
+      sourcemap: false
+    }
+  },
+  // Disable ALL source maps in development
+  css: {
+    devSourcemap: false
   }
 })

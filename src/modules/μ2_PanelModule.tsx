@@ -89,6 +89,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
   // Use passed contextManager or create local one as fallback
   const localContextManager = μ6_useContextManager(100000, μ6_onItemUpdate);
   const activeContextManager = contextManager || localContextManager;
+  
 
   // μ8_ Dynamic Panel Offset Calculation
   const calculateRightOffset = (panelId: 'ai' | 'territory' | 'context'): number => {
@@ -128,7 +129,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         width={320}
         rightOffset={calculateRightOffset('ai')}
         onCreateUDItem={onCreateUDItem}
-        contextManager={contextManager}
+        contextManager={activeContextManager}
       />
 
       {/* μ5_ Territory Panel - Territory Management (Rechts) */}
