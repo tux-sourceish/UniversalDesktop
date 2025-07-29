@@ -1,4 +1,28 @@
 /* Desktop Item Styles */
+
+/* File Manager Window Soul */
+.window-soul.filemanager-soul {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, var(--glass-bg) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.window-soul.filemanager-soul:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, var(--glass-bg) 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.window-soul.filemanager-soul .item-header {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-bottom-color: rgba(59, 130, 246, 0.2);
+}
+
+.filemanager-soul .item-soul-indicator {
+  color: #3b82f6;
+  text-shadow: 0 0 4px rgba(59, 130, 246, 0.5);
+}
 .desktop-item {
   position: absolute;
   background: var(--glass-bg);

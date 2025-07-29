@@ -6,6 +6,7 @@ import { UDFormat } from '../../core/UDFormat';
 import { μ8_NoteWindow } from '../windows/μ8_NoteWindow';
 import { μ2_TuiWindow } from '../windows/μ2_TuiWindow';
 import { μ2_TableWindow } from '../windows/μ2_TableWindow';
+import { μ2_FileManagerWindow } from '../windows/μ2_FileManagerWindow';
 
 /**
  * μ1_WindowFactory - HIMMEL (☰) Classes/Templates
@@ -142,6 +143,27 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     supportedAgents: ['coder', 'refiner'],
     icon: '💻',
     category: 'code'
+  },
+  
+  // File Manager Windows (μ3 WASSER - Flow/Procedures)
+  'filemanager': {
+    id: 'filemanager',
+    displayName: 'File Manager',
+    component: μ2_FileManagerWindow,
+    defaultBagua: UDFormat.BAGUA.WASSER | UDFormat.BAGUA.WIND, // Flow + UI
+    itemType: UniversalDocument.ItemType.FLUSS,
+    defaultDimensions: { width: 800, height: 600 },
+    createDefaultContent: (options = {}) => ({
+      initialPath: options.initialPath || '/home/user',
+      mode: options.mode || 'gui',
+      showToolbar: options.showToolbar !== false,
+      showStatusBar: options.showStatusBar !== false,
+      allowMultiSelect: options.allowMultiSelect !== false,
+      ...options
+    }),
+    supportedAgents: ['reasoner'],
+    icon: '📁',
+    category: 'system'
   }
 };
 
@@ -165,6 +187,8 @@ export interface μ1_WindowCreationRequest {
   dimensions?: { width: number; height: number };
   /** AI agents that contributed (for AI origins) */
   contributingAgents?: string[];
+  /** Optional metadata for tracking and context */
+  metadata?: any;
 }
 
 export interface μ1_RenderedWindow {
@@ -215,7 +239,11 @@ export class μ1_WindowFactory {
   
   // μ1_ Create UDItem from Request
   static createUDItem(request: μ1_WindowCreationRequest): UDItem {
+    console.log('🏭 μ1_WindowFactory.createUDItem called with request:', request);
+    
     const typeConfig = μ1_WindowFactory.getWindowType(request.type);
+    console.log('🔍 Retrieved typeConfig for', request.type, ':', typeConfig);
+    
     if (!typeConfig) {
       throw new Error(`μ1_WindowFactory: Unknown window type '${request.type}'`);
     }

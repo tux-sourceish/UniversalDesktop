@@ -12,6 +12,9 @@ import { µ2_useBaguaColors } from './µ2_useBaguaColors';
 // µ3_ WASSER (☵) - Flow/Navigation Hooks  
 import { µ3_useNavigation } from './µ3_useNavigation';
 
+// μ3_ WASSER File System Hook
+import { μ3_useFileSystem } from './μ3_useFileSystem';
+
 // µ8_ ERDE (☷) - Global/Base System Hooks
 import { μ8_usePanelLayout } from './µ8_usePanelLayout';
 
@@ -41,6 +44,7 @@ export {
   µ2_useMinimap, 
   µ2_useBaguaColors, 
   µ3_useNavigation,
+  μ3_useFileSystem,
   μ8_usePanelLayout,
   μ3_useCanvasNavigation,
   μ1_useWindowManager,
@@ -59,6 +63,7 @@ export { μ6_useContextManager };
 
 // Backward compatibility aliases (old names → new μX names)
 export { μ3_useCanvasNavigation as useCanvasNavigation };
+export { μ3_useFileSystem as useFileSystem };
 export { μ1_useWindowManager as useWindowManager };
 export { μ7_useKeyboardShortcuts as useKeyboardShortcuts };
 export { μ6_useAIAgent as useAIAgent };
@@ -68,6 +73,7 @@ export { μ7_useClipboardManager as useClipboardManager };
 // Hook Categories for organized imports  
 export const NavigationHooks = {
   useCanvasNavigation: μ3_useCanvasNavigation,
+  useFileSystem: μ3_useFileSystem,
   useMinimap,
   useKeyboardShortcuts: μ7_useKeyboardShortcuts
 } as const;
@@ -155,7 +161,14 @@ export const HookMetadata = {
     description: 'Type-aware clipboard operations with export functionality',
     dependencies: [],
     features: ['type-specific-paste', 'clipboard-history', 'export-operations']
-  }
+  },
+  useFileSystem: {
+    category: 'ui-management',
+    phase: 2,
+    description: 'File system operations with dual-mode support (GUI/TUI)',
+    dependencies: [],
+    features: ['dual-mode', 'file-operations', 'virtual-file-system']
+  },
 } as const;
 
 // Usage patterns for documentation

@@ -28,6 +28,8 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
 
   // μ2_ Unified Creation Handler (WIND-Pattern: Views/UI Creation via μ1_WindowFactory)
   const μ2_createWindow = useCallback((windowType: string, customContent?: any) => {
+    console.log('🚀 μ2_ToolPanel.μ2_createWindow called with:', { windowType, customContent });
+    
     const pos = {
       x: Math.random() * 800 + 100,
       y: Math.random() * 600 + 100,
@@ -35,12 +37,21 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
     };
     
     try {
+      console.log('🏭 Calling μ1_WindowFactory.createUDItem with:', {
+        type: windowType,
+        position: pos,
+        content: customContent,
+        origin: 'human-tool'
+      });
+      
       const udItem = μ1_WindowFactory.createUDItem({
         type: windowType,
         position: pos,
         content: customContent,
         origin: 'human-tool'
       });
+      
+      console.log('✅ μ1_WindowFactory created UDItem:', udItem);
       
       onCreateUDItem(udItem);
     } catch (error) {
@@ -51,7 +62,7 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   // μ2_ Tool Configuration from μ1_WindowFactory Registry (UNIFIED!)
   const μ2_toolConfigs = useMemo(() => {
     // Get primary window types from factory registry  
-    const primaryTypes = ['notizzettel', 'tabelle', 'terminal', 'tui', 'code'];
+    const primaryTypes = ['notizzettel', 'tabelle', 'terminal', 'tui', 'code', 'filemanager'];
     
     return primaryTypes
       .map(typeId => {
@@ -64,14 +75,19 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
           'tabelle': '#60a5fa', 
           'terminal': '#1f2937',
           'tui': '#10b981',
-          'code': '#a78bfa'
+          'code': '#a78bfa',
+          'filemanager': '#fbbf24'
         };
         
         return {
           id: registryConfig.id,
           icon: registryConfig.icon,
           label: registryConfig.displayName,
-          handler: () => μ2_createWindow(registryConfig.id),
+          handler: () => {
+            μ2_createWindow(registryConfig.id, { 
+              initialPath: '/home/tux/SingularUniverse/UniversalDesktop'
+            });
+          },
           bagua: registryConfig.defaultBagua,
           color: colorMap[registryConfig.id] || '#6b7280',
           category: registryConfig.category

@@ -1,11 +1,286 @@
-/node_modules
-Production build
-/dist
+# Copy of git repositories
+git/
 
-.env
-.env.local
-.env.*.local
-
+# Dependencies
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Production builds
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================================================
+# 🤖 CLAUDE-FLOW & AI ARTIFACTS
+# ============================================================================
+
+# Claude-Flow binaries and executables
+claude-flow
+claude-flow.bat
+claude-flow.ps1
+claude-flow.exe
+
+# Claude-Flow configuration (KEEP: needed for team consistency)
+# claude-flow.config.json
+
+# Claude-Flow runtime data and memory
+.claude-flow.pid
+.claude-flow/
+memory/
+coordination/
+.hive-mind/
+.swarm/
+.claude/
+
+# AI session data and temporary files
+ki-kontext/
+*.claude-session
+*.ai-context
+*.swarm-data
+claude-flow-data.json
+
+# AI-generated analysis reports (DECISION: Keep these as they're valuable documentation)
+# AI_KNOWLEDGE_BASE.md        # Keep - valuable for team
+# PERFORMANCE_ANALYSIS_REPORT.md  # Keep - documentation
+# SECURITY_ANALYSIS_REPORT.md     # Keep - documentation
+
+# ============================================================================
+# 🧠 CLAUDE CODE INTEGRATION
+# ============================================================================
+
+# Claude Code configuration directory (KEEP: needed for development)
+# .claude/
+
+# Claude Code memory and session data
+.claude/memory/
+.claude/sessions/
+.claude/cache/
+.claude/temp/
+
+# Claude Code hook outputs and logs
+.claude/hooks/logs/
+.claude/hooks/temp/
+
+# ============================================================================
+# 🗂️ PROJECT-SPECIFIC ARCHIVE & CONTEXT
+# ============================================================================
+
+# Archive directories (development artifacts)
+UniversalDesktop_archive/
+UniversalDesktop_context/
+
+# Legacy components and old versions
+v1_legacy_components/
+v1_legacy_hooks/
+*_legacy/
+*.backup
+*.old
+
+# Development screenshots and media
+screenshots/
+*.png.backup
+*.jpg.backup
+
+# Documentation working files
+*.md.backup
+*.md.temp
+TODOS_*.md
+
+# ============================================================================
+# 🔧 DEVELOPMENT & DEBUGGING
+# ============================================================================
+
+# Debug files
+debug.log
+*.debug
+debug/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Editor backup files
+*~
+*.bak
+*.backup
+
+# ============================================================================
+# 📊 PERFORMANCE & MONITORING
+# ============================================================================
+
+# Performance monitoring data
+perf-data/
+*.perf
+benchmarks/results/
+
+# Bundle analysis
+bundle-analysis/
+webpack-bundle-analyzer-report.html
+
+# ============================================================================
+# 🚀 DEPLOYMENT & PRODUCTION
+# ============================================================================
+
+# Deployment artifacts
+deploy/
+deployment/
+.deploy/
+
+# Docker
+.dockerignore
+Dockerfile.backup
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# ============================================================================
+# 📝 DOCUMENTATION WORKING FILES
+# ============================================================================
+
+# Temporary documentation
+docs/temp/
+*.draft.md
+*.wip.md
+
+# Generated documentation (if auto-generated)
+# docs/api/        # Uncomment if API docs are auto-generated
+
+# ============================================================================
+# 🎯 CUSTOM PROJECT PATTERNS
+# ============================================================================
+
+# UniversalDocument format working files
+*.ud.backup
+*.ud.temp
+*.ud.working
+
+# Bagua system development files
+bagua-experiments/
+μX-testing/
+
+# Campus-Model development artifacts
+campus-dev/
+hook-experiments/
+
+# AI context development
+ai-context-dev/
+context-experiments/
+
+# ============================================================================
+# 📱 MOBILE & ELECTRON (Future preparation)
+# ============================================================================
+
+# Electron
+out/
+app/dist/
+
+# React Native (if added later)
+# ios/
+# android/
+
+# ============================================================================
+# 🔍 SEARCH & INDEX FILES
+# ============================================================================
+
+# Search indices
+.search-index/
+*.search
+
+# File system metadata
+.fseventsd/
+.DocumentRevisions-V100/
+
+# ============================================================================
+# 🧪 TESTING & QUALITY ASSURANCE
+# ============================================================================
+
+# Test artifacts
+test-results/
+.jest/
+.vitest/
+
+# Linting cache
+.eslintcache
+.stylelintcache
+
+# ============================================================================
+# 📦 PACKAGE MANAGER SPECIFICS
+# ============================================================================
+
+# npm
+package-lock.json.backup
+npm-shrinkwrap.json
+
+# yarn
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# pnpm
+.pnpm-store/
+
+# ============================================================================
+# 🔄 VERSION CONTROL HELPERS
+# ============================================================================
+
+# Git merge artifacts
+*.orig
+*.rej
+
+# Patch files (unless specifically needed)
+*.patch.backup
+*.diff.backup
+
+# ============================================================================
+# 🎨 DESIGN & ASSETS WORKING FILES
+# ============================================================================
+
+# Design source files
+*.psd
+*.ai
+*.sketch
+*.figma.backup
+
+# Font cache
+.font-cache/
+
+# Image optimization cache
+.image-cache/

@@ -32,7 +32,7 @@ export interface SpatialBookmark {
 
 export interface DesktopItemData {
   id: string;
-  type: 'notizzettel' | 'tabelle' | 'code' | 'browser' | 'terminal' | 'tui' | 'media' | 'chart' | 'calendar';
+  type: 'notizzettel' | 'tabelle' | 'code' | 'browser' | 'terminal' | 'tui' | 'media' | 'chart' | 'calendar' | 'filemanager';
   title: string;
   position: Position;
   content: any;

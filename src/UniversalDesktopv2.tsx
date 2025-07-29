@@ -101,10 +101,10 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         udItem.type === 8 ? 'notizzettel' : 
         udItem.type === 2 ? 'tabelle' : 
         udItem.type === 1 ? 'code' : 
-        udItem.type === 3 ? 'browser' : 
+        udItem.type === 3 ? 'filemanager' :  // Factory creates type 3 for filemanager
         udItem.type === 6 ? 'terminal' : 
         udItem.type === 7 ? 'calendar' : 
-        udItem.type === 4 ? 'tui' :
+        udItem.type === 4 ? 'browser' :  // Switch browser to type 4
         udItem.type === 9 ? 'media' :
         udItem.type === 10 ? 'chart' :
         'notizzettel';
@@ -134,23 +134,6 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     });
   }, [documentState.items, user?.id, baguaColors]);
   
-  // CRITICAL DEBUG: Check data flow
-  React.useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.log('🔍 DEBUG - Data Flow Check:', {
-        workspaceLoaded: !!workspaceState.currentWorkspace,
-        workspaceId: workspaceState.currentWorkspace?.id,
-        documentStateItems: documentState.items?.length || 0,
-        renderedItems: items.length,
-        isLoading: workspaceState.isLoading,
-        syncStatus: {
-          lastSyncedAt: workspaceState.lastSyncedAt,
-          isSaving: workspaceState.isSaving,
-          syncError: workspaceState.syncError
-        }
-      });
-    }
-  }, [workspaceState.currentWorkspace, documentState.items, items.length, workspaceState.isLoading]);
 
   // STATE RELIABILITY CHECK: Detect when items should be there but aren't
   React.useEffect(() => {
@@ -306,7 +289,6 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   // 🔥 NEW: µ1_WindowFactory Unity Bridge Handler
   const handleCreateUDItem = useCallback((udItem: any) => {
-    
     try {
       // Convert UDItem back to µ1_addItem parameters
       const createOptions = {
@@ -363,9 +345,6 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   }, [workspace]);
 
   const handleItemDelete = useCallback(async (id: string) => {
-    // Debug: Check what we're trying to delete
-    const itemToDelete = items.find(item => item.id === id);
-
     // µ1_ Campus-Modell: Pure removal with auto-save
     const success = workspace.µ1_removeItem(id);
     

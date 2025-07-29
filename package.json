@@ -8,7 +8,21 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "start": "vite",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:performance": "vitest run tests/performance",
+    "test:accessibility": "vitest run tests/accessibility",
+    "test:compatibility": "vitest run tests/compatibility",
+    "test:e2e": "vitest run tests/e2e",
+    "test:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=test-results.json",
+    "test:parallel": "vitest run --threads",
+    "test:coverage:upload": "npm run test:coverage && codecov"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -20,7 +34,16 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "jsdom": "^23.0.0",
+    "jest-axe": "^8.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "codecov": "^3.8.3"
   },
   "browserslist": {
     "production": [

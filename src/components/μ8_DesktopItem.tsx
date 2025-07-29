@@ -4,6 +4,7 @@ import type { DesktopItemData } from '../types';
 import { μ2_TuiWindow } from './windows/μ2_TuiWindow';
 import { μ2_TableWindow } from './windows/μ2_TableWindow';
 import { μ8_NoteWindow } from './windows/μ8_NoteWindow';
+import { μ2_FileManagerWindow } from './windows/μ2_FileManagerWindow';
 import '../styles/DesktopItem.css';
 
 export interface DesktopItemProps {
@@ -85,6 +86,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'media': return '🎬';
       case 'chart': return '📈';
       case 'calendar': return '📅';
+      case 'filemanager': return '📁';
       default: return '📝';
     }
   };
@@ -100,6 +102,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'media': return `${baseClass} media-soul`;
       case 'chart': return `${baseClass} chart-soul`;
       case 'calendar': return `${baseClass} calendar-soul`;
+      case 'filemanager': return `${baseClass} filemanager-soul`;
       default: return `${baseClass} default-soul`;
     }
   };
@@ -129,6 +132,8 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
         return '📊'; // Indicates data visualization
       case 'calendar':
         return '⏰'; // Indicates time-based data
+      case 'filemanager':
+        return '💾'; // Indicates file system access
       default:
         return '✨'; // Default sparkle
     }
@@ -190,6 +195,44 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
 
   const renderContent = () => {
     switch (item.type) {
+      case 'filemanager':
+        // Convert DesktopItemData to UDItem for μ2_FileManagerWindow
+        const fileManagerUDItem = {
+          id: item.id,
+          type: 3, // File manager type in UDItem system (FLUSS/Flow)
+          title: item.title,
+          position: item.position,
+          dimensions: { width: item.width || 800, height: item.height || 600 },
+          bagua_descriptor: item.bagua_descriptor || 0,
+          content: typeof item.content === 'object' ? item.content : {
+            initialPath: '/home/user',
+            mode: 'gui',
+            showToolbar: true,
+            showStatusBar: true,
+            allowMultiSelect: true
+          },
+          is_contextual: item.is_contextual || false,
+          created_at: Date.now(),
+          updated_at: Date.now(),
+          transformation_history: []
+        };
+        return (
+          <μ2_FileManagerWindow
+            udItem={fileManagerUDItem}
+            onUDItemChange={(updatedItem, _description) => {
+              onUpdate(item.id, { 
+                content: updatedItem.content,
+                metadata: { ...item.metadata, lastPath: updatedItem.content?.currentPath }
+              });
+            }}
+            onAddToContext={(udItem) => {
+              // Handle adding files to context - could trigger creation of new UDItems
+              onToggleContext(item);
+            }}
+            readOnly={item.metadata?.readOnly || false}
+          />
+        );
+      
       case 'tabelle':
         // Convert DesktopItemData to UDItem for μ2_TableWindow
         const tableUDItem = {
@@ -345,7 +388,12 @@ $ `,
         width: item.width || 250,
         height: item.height || 200
       }}
-      onContextMenu={(e) => onContextMenu(e, item.id)}
+      onContextMenu={(e) => {
+        // Only handle context menu for non-filemanager items
+        if (item.type !== 'filemanager') {
+          onContextMenu(e, item.id);
+        }
+      }}
       onKeyDown={handleWindowKeyDown}
       tabIndex={0}
     >
