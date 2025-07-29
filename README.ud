@@ -209,15 +209,15 @@ Das μX-Bagua-System ist nicht nur Code - es ist gelebte Philosophie. Die Harmon
 }])
 
 ([{CONTENT
-| Component | Technology | Performance |
-|-----------|------------|-------------|
-| Frontend | React 18 + TypeScript | 40,000 items/sec rendering |
-| Backend | Supabase + localStorage | 90% re-render reduction |
-| Format | Binary .UD + Text | Cross-platform compatible |
-| AI Integration | LiteLLM Multi-Model | 6 model categories |
-| Architecture | μX-Bagua Campus-Model | <200 lines orchestration |
-| Navigation | Infinite Canvas 3D | 5-level zoom system |
-| Persistence | Binary BYTEA + JSONB | Complete provenance tracking |
+| Component | Technology | Key Files |
+|-----------|------------|-----------|
+| Core Engine | universalDocument.ts (1,916 LOC) | UDFormat.ts, universalfile-index.ts |
+| Main Orchestrator | UniversalDesktopv2.tsx (673 LOC) | Campus-Model architecture |
+| Hook System | 21 μX-Hooks (Campus-Model) | µ1_useWorkspace.ts, µ2_useMinimap.ts |
+| Window Factory | μ1_WindowFactory.tsx (377 LOC) | Human-AI Unity Bridge |
+| File Manager | μ2_FileManager.tsx | Dual-mode TUI/GUI, Tauri-ready |
+| AI Integration | µ2_AIPanel.tsx (869 LOC) | 6 model categories, context-aware |
+| Context System | μ7_UniversalContextMenu.tsx | Algebraic visibility, smart clipboard |
 }])
 
 ([{ITEM

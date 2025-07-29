@@ -330,26 +330,47 @@ export const μ2_ExampleWindow: React.FC = () => {
 
 ## 🏗️ Architektur-Übersicht
 
-### Modular v2.0 Architecture
+### Modular v2.1 Architecture  
 ```
 src/
-├── modules/           # Core functional modules
-│   ├── AuthModule/    # Supabase authentication
-│   ├── CanvasModule/  # Infinite canvas management  
-│   ├── PanelModule/   # Multi-panel system
-│   └── ContextModule/ # AI context management
-├── hooks/             # μX_ prefixed React hooks
-│   ├── μ1_useWorkspace.ts    # Workspace management
-│   ├── μ2_useMinimap.ts      # StarCraft-style minimap
-│   └── μ6_useContextManager.ts # AI context optimization
-├── components/        # React components with bridges
-│   ├── panels/        # Panel system components
-│   └── windows/       # μX-Window implementations
-├── core/              # Universal Document (.UD) format
-│   └── universalDocument.ts  # Bagua integration
-└── services/          # External integrations
-    ├── supabaseClient.ts     # Database with localStorage fallback
-    └── litellmService.ts     # Multi-model AI integration
+├── core/                     # Core Foundation
+│   ├── universalDocument.ts  # UDFormat Engine - 1,916 LOC
+│   ├── UDFormat.ts          # Bagua Constants & Algebraic Transistor
+│   └── universalfile-index.ts # Native .UD File Format
+├── hooks/                    # μX-Hook Specialists (21 hooks)
+│   ├── µ1_useWorkspace.ts    # HIMMEL - Workspace management
+│   ├── µ2_useMinimap.ts      # WIND - StarCraft-style minimap
+│   ├── µ3_useNavigation.ts   # WASSER - Canvas flow navigation
+│   ├── μ3_useFileSystem.ts   # WASSER - File system abstraction
+│   ├── µ6_useContextManager.ts # FEUER - AI context optimization
+│   └── μ7_useUniversalContextMenu.ts # DONNER - Context system
+├── components/               # React Components with Bridges
+│   ├── factories/
+│   │   └── μ1_WindowFactory.tsx # HIMMEL - Human-AI Unity Bridge
+│   ├── windows/             # μX-Window implementations
+│   │   ├── μ8_NoteWindow.tsx    # ERDE - Universal text/markdown
+│   │   ├── μ2_TuiWindow.tsx     # WIND - Terminal with 15 presets
+│   │   ├── μ2_TableWindow.tsx   # WIND - Interactive tables
+│   │   └── μ2_FileManagerWindow.tsx # WIND - File operations
+│   ├── panels/              # Panel system components
+│   │   ├── µ2_ToolPanel.tsx     # WIND - Human tool creation
+│   │   ├── µ2_AIPanel.tsx       # WIND - AI communication
+│   │   ├── µ5_TerritoryPanel.tsx # SEE - Territory management
+│   │   └── µ6_ContextPanel.tsx  # FEUER - Context management
+│   ├── contextMenu/
+│   │   └── μ7_UniversalContextMenu.tsx # DONNER - Universal context
+│   ├── μ8_DesktopItem.tsx       # ERDE - Spatial item container
+│   └── μ2_FileManager.tsx       # WIND - Core file manager
+├── modules/                  # Core Functional Modules
+│   ├── μ4_AuthModule.tsx     # BERG - Authentication & session
+│   ├── μ8_CanvasModule.tsx   # ERDE - Spatial canvas management
+│   ├── μ2_PanelModule.tsx    # WIND - Panel orchestration
+│   ├── μ6_ContextModule.tsx  # FEUER - Context menu system
+│   └── µ2_Minimap.tsx        # WIND - Minimap module
+└── services/                 # External Integrations
+    ├── μ8_supabaseClient.ts  # Database with localStorage fallback
+    ├── μ6_litellmClient.ts   # Multi-model AI integration
+    └── μ8_FileSystemAbstraction.ts # Tauri/Browser abstraction
 ```
 
 ### Database Schema (Workspaces v2.1)
