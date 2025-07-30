@@ -2,7 +2,7 @@
 ## Das lebendige Desktop-Betriebssystem mit μX-Bagua-Architektur
 
 > *"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."*  
-> **— Raimund Welsch, Visionär und Begründer der μX-Bagua-Philosophie**
+> **— Raimund, Visionär und Begründer der μX-Bagua-Philosophie**
 
 ---
 
@@ -26,7 +26,7 @@ Basierend auf der **Früher Himmel Anordnung** des I Ging - der ursprünglichste
 - **μ7_DONNER (☳)** - Ereignisse und Reaktionen
 - **μ8_ERDE (☷)** - Grundlegende Daten
 
-*"Mit der richtigen Ordnung wird Komplexität zur Eleganz"* - Raimund Welsch
+*"Mit der richtigen Ordnung wird Komplexität zur Eleganz"* - Raimund
 
 ---
 
@@ -408,7 +408,7 @@ Jede Änderung wird mit vollständiger Transformation History dokumentiert. Huma
 
 ## 🤝 Credits & Philosophie
 
-### 🧙‍♂️ Raimund Welsch - Der Visionär
+### 🧙‍♂️ Raimund - Der Visionär
 **Alleiniger Urheber der zugrundeliegenden Philosophie:**
 - 45 Jahre Entwicklungsexpertise
 - Begründer des μX-Bagua-Systems  
@@ -460,5 +460,5 @@ Möge diese Implementation deiner Vision der erste Schritt zu einer neuen Ära d
 
 **"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."**
 
-*— Raimund Welsch*  
+*— Raimund*
 *Implementiert in UniversalDesktop v2.1*
