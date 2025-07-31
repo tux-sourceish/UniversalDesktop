@@ -6,7 +6,7 @@
  * Resurrektion der geliebten StarCraft-Minimap mit philosophischer Fundierung
  */
 
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useMemo } from 'react';
 import { UDFormat } from '../core/UDFormat';
 import type { DesktopItemData, CanvasState, Position } from '../types';
 import { µ2_useMinimap } from '../hooks/µ2_useMinimap';
@@ -43,6 +43,18 @@ export const µ2_Minimap: React.FC<MinimapProps> = ({
   const minimap = µ2_useMinimap();
   const baguaColors = µ2_useBaguaColors();
   const navigation = µ3_useNavigation();
+
+  // ✅ useMemo: Cache expensive minimap item transformations (AFTER hooks!)
+  const minimapItems = useMemo(() => {
+    return items
+      .filter(item => item.position) // Nur gültige Items
+      .map(item => ({
+        ...item,
+        minimapX: item.position.x * 0.1, // Minimap scale
+        minimapY: item.position.y * 0.1,
+        color: baguaColors.µ2_getBaguaColor ? baguaColors.µ2_getBaguaColor(item) : '#666'
+      }));
+  }, [items, baguaColors]);
 
   // µ2_ FEATURE 4 & 5: Zoom-Level Integration - StarCraft-Style
   const ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4];

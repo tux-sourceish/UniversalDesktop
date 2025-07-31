@@ -46,7 +46,7 @@ export const μ8_usePanelLayout = () => {
       position: 'left',
       width: 280,
       bagua_descriptor: UDFormat.BAGUA.WIND,
-      shortcut: 'Ctrl+1'
+      shortcut: 'Ctrl+Shift+1' // FIXED: Panel shortcuts use Shift to avoid zoom conflict
     },
     {
       id: 'ai', 
@@ -55,7 +55,7 @@ export const μ8_usePanelLayout = () => {
       position: 'right',
       width: 320,
       bagua_descriptor: UDFormat.BAGUA.FEUER,
-      shortcut: 'Ctrl+2'
+      shortcut: 'Ctrl+Shift+2' // FIXED: Panel shortcuts use Shift to avoid zoom conflict
     },
     {
       id: 'territory',
@@ -64,7 +64,7 @@ export const μ8_usePanelLayout = () => {
       position: 'right',
       width: 300,
       bagua_descriptor: UDFormat.BAGUA.SEE,
-      shortcut: 'Ctrl+3'
+      shortcut: 'Ctrl+Shift+3' // FIXED: Panel shortcuts use Shift to avoid zoom conflict
     },
     {
       id: 'context',
@@ -73,7 +73,7 @@ export const μ8_usePanelLayout = () => {
       position: 'right',
       width: 350,
       bagua_descriptor: UDFormat.BAGUA.FEUER,
-      shortcut: 'Ctrl+4'
+      shortcut: 'Ctrl+Shift+4' // FIXED: Panel shortcuts use Shift to avoid zoom conflict
     },
     {
       id: 'minimap',

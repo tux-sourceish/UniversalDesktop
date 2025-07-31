@@ -1,5 +1,6 @@
-# Copy of git repositories
-git/
+# Copy of git repositories (KEEP: User needs git/ folder)
+# git/ - KEEP for user
+.git-repos/
 
 # Dependencies
 node_modules/
@@ -36,6 +37,7 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+.directory
 
 # ============================================================================
 # 🤖 CLAUDE-FLOW & AI ARTIFACTS
@@ -92,9 +94,13 @@ claude-flow-data.json
 # 🗂️ PROJECT-SPECIFIC ARCHIVE & CONTEXT
 # ============================================================================
 
-# Archive directories (development artifacts)
+# Archive directories (development artifacts) - FIXED: More specific patterns
 UniversalDesktop_archive/
 UniversalDesktop_context/
+*_archive/
+*_context/
+doc/UniversalDesktop-v2.1_Gedächtnis_NEXUS.md
+doc/UniversalDesktop-v2.1_Zusammenfassung_NEXUS.md
 
 # Legacy components and old versions
 v1_legacy_components/
@@ -103,10 +109,30 @@ v1_legacy_hooks/
 *.backup
 *.old
 
-# Development screenshots and media
-screenshots/
+# Claude-Flow specific backup and memory files
+.claude-flow-backup/
+.claude-flow-data
+.claude-flow-memory
+CLAUDE-FLOW.md
+CLAUDECODE_HANDOVER*.md
+CONTEXT_FIX_SUMMARY.md
+ERROR.txt
+FINAL_VALIDATION_REPORT.md
+README-STARTUP.md
+TEST_RESULTS.md
+TEST_SCENARIOS.md
+
+# AI Context and development files
+ki-kontext/
+*_kontext/
+
+# Development screenshots and media (FIXED: Keep some, ignore development ones) 
+# screenshots/ - Keep for documentation
 *.png.backup
 *.jpg.backup
+# Temporary screenshot files
+screenshot*.png
+screenshot*.jpg
 
 # Documentation working files
 *.md.backup

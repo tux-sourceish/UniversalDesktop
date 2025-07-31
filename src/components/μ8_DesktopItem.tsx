@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useDraggable, useResizable } from '../hooks';
 import type { DesktopItemData } from '../types';
 import { μ2_TuiWindow } from './windows/μ2_TuiWindow';
@@ -46,6 +46,10 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
 
   const { ref: dragRef, onMouseDown } = useDraggable(item.id, onUpdate, canvasState);
   const { ref: resizeRef, onResizeStart } = useResizable(item.id, onUpdate, canvasState);
+  
+  // Local state to track drag/resize for flicker prevention
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [isResizing, setIsResizing] = React.useState(false);
 
   // Refs zusammenführen
   const itemRef = useRef<HTMLDivElement>(null);
@@ -76,7 +80,8 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
     }
   };
 
-  const getTypeIcon = () => {
+  // ✅ useMemo: Cache expensive icon/class calculations
+  const typeIcon = useMemo(() => {
     switch (item.type) {
       case 'tui': return '🖥️';
       case 'code': return '💻';
@@ -89,9 +94,10 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'filemanager': return '📁';
       default: return '📝';
     }
-  };
+  }, [item.type]);
 
-  const getWindowSoulClass = () => {
+  const windowSoulClass = useMemo(() => {
+
     const baseClass = 'window-soul';
     switch (item.type) {
       case 'tui': return `${baseClass} tui-soul`;
@@ -105,9 +111,10 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'filemanager': return `${baseClass} filemanager-soul`;
       default: return `${baseClass} default-soul`;
     }
-  };
+  }, [item.type]);
 
-  const getWindowSoulIndicator = () => {
+  const windowSoulIndicator = useMemo(() => {
+
     switch (item.type) {
       case 'tui':
         const tuiTheme = item.metadata?.tuiTheme || 'green';
@@ -137,7 +144,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       default:
         return '✨'; // Default sparkle
     }
-  };
+  }, [item.type, item.metadata?.tuiTheme]);
 
   const handleTitleSave = () => {
     if (editTitle.trim() && editTitle !== item.title) {
@@ -380,14 +387,17 @@ $ `,
   return (
     <div
       ref={itemRef}
-      className={`desktop-item ${item.type} ${isInContext ? 'in-context' : ''} ${getWindowSoulClass()}`}
+      className={`desktop-item ${item.type} ${isInContext ? 'in-context' : ''} ${windowSoulClass} ${isDragging ? 'dragging' : ''} ${isResizing ? 'resizing' : ''}`}
+      data-μ3-zoom-level={canvasState.scale <= 0.3 ? 'GALAXY' : canvasState.scale <= 0.7 ? 'SYSTEM' : 'SURFACE'}
       style={{
         left: item.position?.x || 0,
         top: item.position?.y || 0,
         zIndex: item.position?.z || 10,
         width: item.width || 250,
-        height: item.height || 200
-      }}
+        height: item.height || 200,
+        // μ8_ Pass canvas scale as CSS custom property for zoom-adaptive resize handles (ERDE ☷ - Global/Base)
+        '--μ8-canvas-scale': canvasState.scale
+      } as React.CSSProperties}
       onContextMenu={(e) => {
         // Only handle context menu for non-filemanager items
         if (item.type !== 'filemanager') {
@@ -400,7 +410,12 @@ $ `,
       {/* Header */}
       <div 
         className="item-header"
-        onMouseDown={onMouseDown}
+        onMouseDown={(e) => {
+          setIsDragging(true);
+          onMouseDown(e);
+          // Clear drag state after a short delay
+          setTimeout(() => setIsDragging(false), 100);
+        }}
         onClick={(e) => {
           // Only trigger titlebar click if not clicking on controls
           if (!e.target || !(e.target as Element).closest('.item-controls')) {
@@ -410,7 +425,7 @@ $ `,
       >
         <div className="item-title-container">
           <span className="item-type-icon" title={`${item.type} window`}>
-            {getTypeIcon()}
+            {typeIcon}
           </span>
           {isEditing ? (
             <input
@@ -439,7 +454,7 @@ $ `,
             className="item-soul-indicator"
             title={`${item.type} window soul`}
           >
-            {getWindowSoulIndicator()}
+            {windowSoulIndicator}
           </span>
           <button
             className={`item-control-btn context ${isInContext ? 'active' : ''}`}
@@ -478,16 +493,28 @@ $ `,
       <div className="resize-handles">
         <div 
           className="resize-handle resize-se"
-          onMouseDown={(e) => onResizeStart(e, 'se')}
+          onMouseDown={(e) => {
+            setIsResizing(true);
+            onResizeStart(e, 'se');
+            setTimeout(() => setIsResizing(false), 100);
+          }}
           title="Größe ändern"
         />
         <div 
           className="resize-handle resize-s"
-          onMouseDown={(e) => onResizeStart(e, 's')}
+          onMouseDown={(e) => {
+            setIsResizing(true);
+            onResizeStart(e, 's');
+            setTimeout(() => setIsResizing(false), 100);
+          }}
         />
         <div 
           className="resize-handle resize-e"
-          onMouseDown={(e) => onResizeStart(e, 'e')}
+          onMouseDown={(e) => {
+            setIsResizing(true);
+            onResizeStart(e, 'e');
+            setTimeout(() => setIsResizing(false), 100);
+          }}
         />
       </div>
     </div>

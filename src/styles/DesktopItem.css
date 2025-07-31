@@ -32,24 +32,38 @@
   box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
-  transition: all var(--transition-medium) var(--ease-natural);
+  /* FIXED: Removed 'all' transition to prevent flickering during position updates */
+  transition: 
+    transform var(--transition-medium) var(--ease-natural),
+    box-shadow var(--transition-medium) var(--ease-natural),
+    border-color var(--transition-medium) var(--ease-natural);
   min-width: 200px;
   min-height: 150px;
-  max-width: 800px;
-  max-height: 600px;
+  max-width: 95vw;
+  max-height: 95vh;
   resize: none;
   overflow: hidden;
   /* Wichtig: Absolute Positionierung ohne Container-Begrenzung */
   z-index: 10;
   /* Erweiterte Positionierung für unendlichen Canvas */
   contain: none; /* Verhindert CSS Containment */
-  /* will-change: transform removed - only apply during actual transforms to avoid memory issues */
+  /* PERFORMANCE: Controlled GPU acceleration - only for transform */
+  will-change: transform;
 }
 
 .desktop-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border-color: var(--accent-blue);
+  /* PERFORMANCE: Disable transitions during drag to prevent flicker */
+}
+
+.desktop-item.dragging {
+  transition: none !important;
+}
+
+.desktop-item.resizing {
+  transition: none !important;
 }
 
 .desktop-item.focused {
@@ -136,7 +150,17 @@
 
 @keyframes soul-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Performance optimization for many windows */
+.desktop-container.many-windows .desktop-item {
+  /* Simplified transitions for performance */
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.desktop-container.many-windows .desktop-item:hover {
+  transform: translateY(-1px); /* Reduced hover effect */
 }
 
 .item-title {
@@ -307,53 +331,167 @@
   word-wrap: break-word;
 }
 
-/* Resize Handles */
+/* μ7_ Zoom-Adaptive Resize Handles - Performance Optimized for Infinite Canvas (WIND ☴) */
+.μ7-resize-handles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Performance: Use CSS containment for resize handles */
+  contain: layout style paint;
+}
+
+.μ7-resize-handle {
+  position: absolute;
+  pointer-events: auto;
+  background: rgba(74, 144, 226, 0.7);
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--ease-natural);
+  /* Performance: GPU acceleration for smooth interactions */
+  will-change: opacity, transform;
+  /* Better visibility with enhanced styling */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  /* Native OS feel for cross-platform compatibility */
+  backdrop-filter: blur(4px);
+}
+
+/* μ7_ Zoom-adaptive visibility - always show at low zoom levels */
+.desktop-item:hover .μ7-resize-handle,
+.desktop-item[data-μ3-zoom-level="GALAXY"] .μ7-resize-handle,
+.desktop-item[data-μ3-zoom-level="SYSTEM"] .μ7-resize-handle {
+  opacity: 1;
+}
+
+/* μ7_ Corner resize handle - zoom adaptive sizing (WIND ☴ - UI Controls) */
+.μ7-resize-se {
+  bottom: 0;
+  right: 0;
+  cursor: nw-resize;
+  border-radius: 0 0 var(--border-radius) 0;
+  /* Zoom-responsive sizing using CSS custom properties */
+  width: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  height: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+}
+
+/* μ7_ Side resize handles - zoom adaptive (WIND ☴ - UI Controls) */
+.μ7-resize-s {
+  bottom: 0;
+  cursor: ns-resize;
+  /* Dynamic positioning based on corner handle size */
+  left: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  right: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  /* Adaptive height */
+  height: clamp(4px, calc(6px / var(--μ8-canvas-scale, 1)), 16px);
+}
+
+.μ7-resize-e {
+  right: 0;
+  cursor: ew-resize;
+  /* Dynamic positioning */
+  top: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  bottom: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  /* Adaptive width */
+  width: clamp(4px, calc(6px / var(--μ8-canvas-scale, 1)), 16px);
+}
+
+/* μ7_ Enhanced hover effects for better UX */
+.μ7-resize-handle:hover {
+  background: var(--accent-blue);
+  opacity: 1 !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* μ3_ Special styling for low zoom levels - more prominent handles (WASSER ☵ - Navigation) */
+.desktop-item[data-μ3-zoom-level="GALAXY"] .μ7-resize-handle,
+.desktop-item[data-μ3-zoom-level="SYSTEM"] .μ7-resize-handle {
+  background: rgba(74, 144, 226, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* μ8_ Performance: Reduce handle complexity at very low zoom for thousands of windows (ERDE ☷ - Base/Global) */
+@media (max-resolution: 1dppx) {
+  .μ7-resize-handle {
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}
+
+/* μ7_ Native OS compatibility - better touch targets (WIND ☴ - UI/Platform) */
+@media (pointer: coarse) {
+  .μ7-resize-handle {
+    /* Larger touch targets for mobile/touch devices */
+    min-width: 16px;
+    min-height: 16px;
+  }
+  
+  .μ7-resize-se {
+    width: clamp(16px, calc(16px / var(--μ8-canvas-scale, 1)), 32px);
+    height: clamp(16px, calc(16px / var(--μ8-canvas-scale, 1)), 32px);
+  }
+}
+
+/* μ7_ High DPI displays - sharper handles (WIND ☴ - UI Enhancement) */
+@media (min-resolution: 2dppx) {
+  .μ7-resize-handle {
+    border-width: 0.5px;
+  }
+}
+
+/* Legacy support - maintain backwards compatibility */
 .resize-handles {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  contain: layout style paint;
 }
-
 .resize-handle {
   position: absolute;
   pointer-events: auto;
-  background: rgba(74, 144, 226, 0.5);
+  background: rgba(74, 144, 226, 0.7);
   opacity: 0;
   transition: opacity var(--transition-fast) var(--ease-natural);
+  will-change: opacity, transform;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
 }
-
-.desktop-item:hover .resize-handle {
+.desktop-item:hover .resize-handle,
+.desktop-item[data-μ3-zoom-level="GALAXY"] .resize-handle,
+.desktop-item[data-μ3-zoom-level="SYSTEM"] .resize-handle {
   opacity: 1;
 }
-
 .resize-se {
   bottom: 0;
   right: 0;
-  width: 12px;
-  height: 12px;
   cursor: nw-resize;
   border-radius: 0 0 var(--border-radius) 0;
+  width: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  height: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
 }
-
 .resize-s {
   bottom: 0;
-  left: 12px;
-  right: 12px;
-  height: 4px;
   cursor: ns-resize;
+  left: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  right: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  height: clamp(4px, calc(6px / var(--μ8-canvas-scale, 1)), 16px);
 }
-
 .resize-e {
-  top: 12px;
   right: 0;
-  bottom: 12px;
-  width: 4px;
   cursor: ew-resize;
+  top: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  bottom: clamp(12px, calc(12px / var(--μ8-canvas-scale, 1)), 28px);
+  width: clamp(4px, calc(6px / var(--μ8-canvas-scale, 1)), 16px);
 }
-
 .resize-handle:hover {
   background: var(--accent-blue);
   opacity: 1 !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 /* Scrollbar für Content */
@@ -443,6 +581,21 @@
   animation: itemFadeIn 0.3s var(--ease-natural);
 }
 
+/* PERFORMANCE: Additional optimizations for many windows */
+.desktop-container.many-windows .resize-handle {
+  transition: opacity 0.1s ease !important;
+}
+
+.desktop-container.many-windows .item-control-btn {
+  transition: background-color 0.1s ease !important;
+}
+
+/* Disable expensive effects with many windows */
+.desktop-container.many-windows .desktop-item:hover .item-soul-indicator {
+  animation: none !important;
+  transform: none !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .desktop-item {
@@ -502,10 +655,19 @@
   animation: default-sparkle 3s ease-in-out infinite;
 }
 
-/* Soul Animations */
+/* PERFORMANCE: Reduced motion soul animations for many windows */
 @keyframes tui-glow {
   0%, 100% { box-shadow: 0 0 0 rgba(34, 197, 94, 0.3); }
-  50% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
+  50% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+}
+
+/* Disable intensive animations when many windows are present */
+.desktop-container.many-windows .window-soul {
+  animation: none !important;
+}
+
+.desktop-container.many-windows .item-soul-indicator {
+  animation: none !important;
 }
 
 @keyframes code-intellisense {

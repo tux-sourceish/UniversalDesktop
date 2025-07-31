@@ -37,7 +37,8 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
   isInContext,
   className = ''
 }) => {
-
+  // Performance optimization: Detect many windows for reduced animations
+  const hasManyWindows = items.length > 8;
 
   const handleCanvasContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,7 +54,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
       className={className}
     >
       <div 
-        className="canvas-workspace"
+        className={`canvas-workspace desktop-container ${hasManyWindows ? 'many-windows' : ''}`}
         onContextMenu={handleCanvasContextMenu}
         style={{
           width: '100%',
