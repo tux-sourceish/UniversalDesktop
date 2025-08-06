@@ -6,7 +6,7 @@
  * with Tauri-ready abstractions and Norton Commander inspired features.
  */
 
-import type { UDPosition } from './index';
+// import type { UDPosition } from './index'; // TODO: UDPosition unused in this file currently
 
 // Core File System Types
 export interface FileSystemItem {

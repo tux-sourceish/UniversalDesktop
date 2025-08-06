@@ -5,6 +5,7 @@ import { μ2_TuiWindow } from './windows/μ2_TuiWindow';
 import { μ2_TableWindow } from './windows/μ2_TableWindow';
 import { μ8_NoteWindow } from './windows/μ8_NoteWindow';
 import { μ2_FileManagerWindow } from './windows/μ2_FileManagerWindow';
+import { μ2_CodeWindow } from './windows/μ2_CodeWindow';
 import '../styles/DesktopItem.css';
 
 export interface DesktopItemProps {
@@ -259,12 +260,43 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
         );
       
       case 'code':
+        // Convert DesktopItemData to UDItem for μ2_CodeWindow
+        const codeUDItem = {
+          id: item.id,
+          type: 1, // KONSTRUKTOR type for code
+          title: item.title,
+          position: { x: item.x, y: item.y, z: item.z },
+          content: {
+            code: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction μ1_example() {\n  return "UniversalDesktop v2.1";\n}',
+            text: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction μ1_example() {\n  return "UniversalDesktop v2.1";\n}',
+            language: (typeof item.content === 'object' ? item.content?.language : null) || item.metadata?.language || 'typescript',
+            theme: (typeof item.content === 'object' ? item.content?.theme : null) || item.metadata?.theme || 'light'
+          },
+          bagua_descriptor: 0,
+          metadata: item.metadata || {},
+          is_contextual: item.is_contextual || false,
+          created_at: Date.now(),
+          updated_at: Date.now(),
+          transformation_history: []
+        };
         return (
-          <div className="desktop-code-container">
-            <pre className="desktop-code">
-              <code>{item.content || '// Code hier eingeben'}</code>
-            </pre>
-          </div>
+          <μ2_CodeWindow
+            udItem={codeUDItem}
+            onUDItemChange={(updatedItem, _description) => {
+              onUpdate(item.id, { 
+                content: updatedItem.content, // Store complete content object!
+                metadata: { 
+                  ...item.metadata, 
+                  language: updatedItem.content.language,
+                  theme: updatedItem.content.theme
+                }
+              });
+            }}
+            onAddToContext={(udItem) => {
+              onToggleContext(item);
+            }}
+            readOnly={item.metadata?.readOnly || false}
+          />
         );
       
       case 'terminal':

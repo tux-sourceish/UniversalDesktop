@@ -127,6 +127,9 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       return {
         ...legacyItem,
         metadata: {
+          ...udItem.metadata,
+          language: udItem.content?.language || 'typescript',
+          theme: udItem.content?.theme || 'light',
           // 🎨 Bagua color integration - pass the full item object
           baguaColor: baguaColors.µ2_getBaguaColor(legacyItem)
         }
@@ -228,6 +231,36 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     contextType: 'canvas' | 'window' | 'content';
   }>({ visible: false, x: 0, y: 0, contextType: 'canvas' });
 
+  // 🎯 Smart viewport-centered positioning (EXTRACTED for reuse)
+  const calculateSmartPosition = useCallback((requestedPosition: UDPosition) => {
+    // FIXED: Check for explicit non-zero position OR if z is set (context menu case)
+    if ((requestedPosition.x !== 0 || requestedPosition.y !== 0) && requestedPosition.z !== 0) {
+      return {
+        x: requestedPosition.x,
+        y: requestedPosition.y,
+        z: requestedPosition.z || documentState.items.length + 1
+      };
+    }
+
+    // Calculate viewport center in world coordinates  
+    const canvasState = canvas.canvasState;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    const worldCenterX = (viewportWidth / 2 - canvasState.position.x) / canvasState.scale;
+    const worldCenterY = (viewportHeight / 2 - canvasState.position.y) / canvasState.scale;
+    
+    const baseOffset = 30;
+    const zoomAdjustedOffset = baseOffset * Math.max(0.5, canvasState.scale);
+    const stackOffset = (documentState.items.length % 10) * zoomAdjustedOffset;
+    
+    return {
+      x: worldCenterX + stackOffset,
+      y: worldCenterY + stackOffset,
+      z: requestedPosition.z || documentState.items.length + 1
+    };
+  }, [canvas.canvasState, documentState.items.length]);
+
   // 🎯 Event Handlers - Campus-Modell powered
   const handleItemCreate = useCallback(async (
     type: string, 
@@ -244,13 +277,53 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
                    type === 'chart' ? 2 :       // TABELLE (☴)
                    8; // Default: VARIABLE
 
-    // Quick-Fix: Smart stacking for new windows (avoid 0,0 overlap)
-    const stackOffset = documentState.items.length * 25;
-    const smartPosition = {
-      x: position.x === 0 ? 100 + stackOffset : position.x,
-      y: position.y === 0 ? 100 + stackOffset : position.y,  
-      z: position.z || documentState.items.length + 1
+    // 🎯 Smart viewport-centered positioning with zoom-level awareness
+    const calculateSmartPosition = (requestedPosition: UDPosition) => {
+      // FIXED: Check for explicit non-zero position OR if z is set (context menu case)
+      // Default viewport-centered positioning uses { x: 0, y: 0, z: 0 }
+      if ((requestedPosition.x !== 0 || requestedPosition.y !== 0) && requestedPosition.z !== 0) {
+        return {
+          x: requestedPosition.x,
+          y: requestedPosition.y,
+          z: requestedPosition.z || documentState.items.length + 1
+        };
+      }
+
+      // Calculate viewport center in world coordinates
+      const canvasState = canvas.canvasState;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Convert viewport center to world coordinates
+      // Canvas transform: screen = (world * scale) + canvasPosition
+      // Inverse: world = (screen - canvasPosition) / scale
+      const worldCenterX = (viewportWidth / 2 - canvasState.position.x) / canvasState.scale;
+      const worldCenterY = (viewportHeight / 2 - canvasState.position.y) / canvasState.scale;
+      
+      // Smart stacking to avoid overlaps - scale offset with zoom level
+      const baseOffset = 30;
+      const zoomAdjustedOffset = baseOffset * Math.max(0.5, canvasState.scale);
+      const stackOffset = (documentState.items.length % 10) * zoomAdjustedOffset;
+      
+      const finalPosition = {
+        x: worldCenterX + stackOffset,
+        y: worldCenterY + stackOffset,
+        z: requestedPosition.z || documentState.items.length + 1
+      };
+      
+      // Debug logging
+      console.log('🎯 Smart positioning:', {
+        viewport: { width: viewportWidth, height: viewportHeight },
+        canvasState: { position: canvasState.position, scale: canvasState.scale },
+        worldCenter: { x: worldCenterX, y: worldCenterY },
+        stackOffset,
+        finalPosition
+      });
+      
+      return finalPosition;
     };
+
+    const smartPosition = calculateSmartPosition(position);
     
     // Intelligente Fenstergrößen basierend auf Content-Type
     const getOptimalSize = (windowType: string) => {
@@ -600,6 +673,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onZoomChange={handleZoomChange}
         onItemCreate={handleItemCreate}
         onCreateUDItem={handleCreateUDItem}
+        positionCalculator={calculateSmartPosition}
         onItemUpdate={handleItemUpdate}
         position="left"
         μ8_panelState={panels.panelState}

@@ -12,6 +12,8 @@ import { μ1_WindowFactory, μ1_WINDOW_REGISTRY } from '../factories/μ1_WindowF
 interface μ2_ToolPanelProps {
   /** Callback für μ1_WindowFactory UDItem Creation */
   onCreateUDItem: (udItem: any) => void;
+  /** Smart positioning calculator for viewport-centered windows */
+  positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
   position?: 'left' | 'right' | 'floating';
   width?: number;
   visible: boolean;
@@ -20,6 +22,7 @@ interface μ2_ToolPanelProps {
 
 export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   onCreateUDItem,
+  positionCalculator,
   position = 'left',
   width = 280,
   visible,
@@ -30,10 +33,11 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   const μ2_createWindow = useCallback((windowType: string, customContent?: any) => {
     console.log('🚀 μ2_ToolPanel.μ2_createWindow called with:', { windowType, customContent });
     
+    // FIXED: Use default position (0,0,0) to trigger viewport-centered positioning
     const pos = {
-      x: Math.random() * 800 + 100,
-      y: Math.random() * 600 + 100,
-      z: Date.now()
+      x: 0,
+      y: 0,
+      z: 0
     };
     
     try {
@@ -49,7 +53,7 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
         position: pos,
         content: customContent,
         origin: 'human-tool'
-      });
+      }, positionCalculator);
       
       console.log('✅ μ1_WindowFactory created UDItem:', udItem);
       

@@ -149,7 +149,12 @@ export const μ3_useCanvasNavigation = () => {
   }, []);
 
   const resetZoom = useCallback(() => {
-    setCanvasState(prev => ({ ...prev, scale: 1.0 }));
+    // FIXED: Reset both zoom AND position to initial state
+    setCanvasState(prev => ({ 
+      ...prev, 
+      scale: 1.0,
+      position: { x: 0, y: 0, z: 0 }
+    }));
     navigateToZoomLevel('SURFACE');
   }, [navigateToZoomLevel]);
 

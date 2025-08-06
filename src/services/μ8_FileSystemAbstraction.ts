@@ -198,9 +198,9 @@ class BrowserFileSystemAPI implements μ3_FileSystemAPI {
     return true;
   }
 
-  async readTextFile(path: string, encoding = 'utf-8'): Promise<string> {
+  async readTextFile(path: string, _encoding = 'utf-8'): Promise<string> {
     const buffer = await this.readFile(path);
-    return new TextDecoder(encoding).decode(buffer);
+    return new TextDecoder(_encoding).decode(buffer);
   }
 
   async writeTextFile(path: string, content: string, encoding = 'utf-8'): Promise<boolean> {
@@ -228,13 +228,13 @@ class BrowserFileSystemAPI implements μ3_FileSystemAPI {
     };
   }
 
-  async getItemPermissions(path: string): Promise<{ read: boolean; write: boolean; execute: boolean }> {
+  async getItemPermissions(_path: string): Promise<{ read: boolean; write: boolean; execute: boolean }> {
     // Browser has limited permission concepts
     return { read: true, write: true, execute: false };
   }
 
-  async setItemPermissions(path: string, permissions: string): Promise<boolean> {
-    console.log(`[Browser] Cannot set permissions: ${path} -> ${permissions}`);
+  async setItemPermissions(_path: string, _permissions: string): Promise<boolean> {
+    console.log(`[Browser] Cannot set permissions: ${_path} -> ${_permissions}`);
     return false;
   }
 
@@ -375,7 +375,7 @@ class TauriFileSystemAPI implements μ3_FileSystemAPI {
       if ((window as any).__TAURI__) {
         try {
           try {
-          this.tauriAPI = await import('@tauri-apps/api');
+          // TODO: Fix Tauri import - this.tauriAPI = await import('@tauri-apps/api');
         } catch (error) {
           console.warn('Tauri API not available, running in browser mode');
           this.tauriAPI = null;

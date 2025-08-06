@@ -316,8 +316,8 @@ export class μX_FileSystemOptimizer implements μX_FileSystemPerformance {
     const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'webm'];
     
     return item.type === 'file' && Boolean(item.extension) && (
-      imageExtensions.includes(item.extension.toLowerCase()) ||
-      videoExtensions.includes(item.extension.toLowerCase())
+      imageExtensions.includes(item.extension?.toLowerCase() || '') ||
+      videoExtensions.includes(item.extension?.toLowerCase() || '')
     );
   }
   
@@ -327,7 +327,7 @@ export class μX_FileSystemOptimizer implements μX_FileSystemPerformance {
     return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' fill='%23f0f0f0'/><text x='32' y='32' text-anchor='middle' dy='0.3em'>${item.extension?.toUpperCase() || '?'}</text></svg>`;
   }
   
-  private async executeBatchGroup(type: string, operations: Array<{ type: string; path: string; data?: any }>): Promise<any[]> {
+  private async executeBatchGroup(_type: string, operations: Array<{ type: string; path: string; data?: any }>): Promise<any[]> {
     // Mock batch execution - real implementation would optimize based on operation type
     return operations.map(op => ({ success: true, path: op.path }));
   }
@@ -436,7 +436,7 @@ export class μX_ContextMenuOptimizer implements μX_ContextMenuPerformance {
     };
   }
   
-  private generateMenuItems(contextType: string, targetItem?: any): any[] {
+  private generateMenuItems(contextType: string, _targetItem?: any): any[] {
     // Mock menu generation - real implementation would generate actual menu items
     const baseItems = [
       { id: 'action1', label: 'Action 1', icon: '🔧' },
@@ -531,7 +531,8 @@ export class μX_MemoryManager implements μX_MemoryManagement {
   }
   
   createWeakRef<T extends object>(obj: T): any {
-    const weakRef = typeof WeakRef !== 'undefined' ? new (WeakRef as any)(obj) : obj;
+    // TODO: Fix WeakRef support - const weakRef = typeof WeakRef !== 'undefined' ? new WeakRef(obj) : obj;
+    const weakRef = obj; // Fallback to strong reference
     this.weakRefs.add(weakRef);
     return weakRef;
   }

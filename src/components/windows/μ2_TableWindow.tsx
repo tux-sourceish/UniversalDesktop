@@ -28,9 +28,6 @@ interface μ2_TableWindowProps {
   onAddToContext?: (item: UDItem) => void;
   /** Read-only Modus */
   readOnly?: boolean;
-  /** Window-spezifische Styling Props */
-  width?: number;
-  height?: number;
 }
 
 interface μ2_TableData {
@@ -53,9 +50,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
-  readOnly = false,
-  width = 600,
-  height = 400
+  readOnly = false
 }) => {
 
   // μ2_ Table State Management (WIND-Pattern: Views/UI Data)
@@ -376,8 +371,10 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
 
   // μ2_ Window Styling
   const μ2_windowStyle: React.CSSProperties = {
-    width: `${width}px`,
-    height: `${height}px`,
+    width: '100%',
+    height: '100%',
+    minWidth: '300px',
+    minHeight: '250px',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white',

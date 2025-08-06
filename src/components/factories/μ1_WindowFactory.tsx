@@ -7,6 +7,7 @@ import { μ8_NoteWindow } from '../windows/μ8_NoteWindow';
 import { μ2_TuiWindow } from '../windows/μ2_TuiWindow';
 import { μ2_TableWindow } from '../windows/μ2_TableWindow';
 import { μ2_FileManagerWindow } from '../windows/μ2_FileManagerWindow';
+import { μ2_CodeWindow } from '../windows/μ2_CodeWindow';
 
 /**
  * μ1_WindowFactory - HIMMEL (☰) Classes/Templates
@@ -126,18 +127,19 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     category: 'data'
   },
   
-  // Code Windows (μ1 HIMMEL - Classes/Templates)
+  // Code Windows (μ2 WIND - Views/UI with μ1 HIMMEL + μ6 FEUER)
   'code': {
     id: 'code',
     displayName: 'Code Editor',  
-    component: μ8_NoteWindow, // Temporarily use NoteWindow for code
+    component: μ2_CodeWindow, // NEW: Dedicated Code Editor with syntax highlighting
     defaultBagua: UDFormat.BAGUA.HIMMEL | UDFormat.BAGUA.FEUER, // Templates + Functions
     itemType: UniversalDocument.ItemType.KONSTRUKTOR,
-    defaultDimensions: { width: 700, height: 500 },
+    defaultDimensions: { width: 750, height: 550 }, // Slightly larger for line numbers
     createDefaultContent: (options = {}) => ({
       text: options.code || options.text || '// Neuer Code\nfunction μ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
       code: options.code || options.text || '// Neuer Code\nfunction μ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
       language: options.language || 'typescript',
+      autoFormat: options.autoFormat !== false,
       ...options
     }),
     supportedAgents: ['coder', 'refiner'],
@@ -237,8 +239,11 @@ export class μ1_WindowFactory {
     return 'notizzettel';
   }
   
-  // μ1_ Create UDItem from Request
-  static createUDItem(request: μ1_WindowCreationRequest): UDItem {
+  // μ1_ Create UDItem from Request (with optional smart positioning)
+  static createUDItem(
+    request: μ1_WindowCreationRequest, 
+    positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number }
+  ): UDItem {
     console.log('🏭 μ1_WindowFactory.createUDItem called with request:', request);
     
     const typeConfig = μ1_WindowFactory.getWindowType(request.type);
@@ -277,11 +282,14 @@ export class μ1_WindowFactory {
     };
     
     // Create complete UDItem
+    // FIXED: Use position calculator for smart positioning if provided
+    const finalPosition = positionCalculator ? positionCalculator(request.position) : request.position;
+    
     const udItem: UDItem = {
       id,
       type: typeConfig.itemType,
       title: request.title || `${typeConfig.displayName} ${new Date().toLocaleTimeString()}`,
-      position: request.position,
+      position: finalPosition,
       dimensions: request.dimensions || typeConfig.defaultDimensions,
       bagua_descriptor: request.baguaDescriptor || typeConfig.defaultBagua,
       content,

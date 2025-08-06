@@ -62,22 +62,22 @@ export const μ7_useUniversalContextMenu = (
   const platform: μ7_PlatformContextMenu = useMemo(() => ({
     supportsNativeMenus: !!(window as any).__TAURI__,
     platform: (window as any).__TAURI__ ? 'tauri' : 'browser',
-    showNativeMenu: async (items: μ7_MenuItem[], x: number, y: number) => {
+    showNativeMenu: async (_items: μ7_MenuItem[], _x: number, _y: number) => {
       if ((window as any).__TAURI__) {
         // Future Tauri implementation
         try {
           try {
-          const { invoke } = await import('@tauri-apps/api/tauri');
-          return invoke;
-        } catch (error) {
-          // Fallback for browser environment
-          console.warn('Tauri not available, using browser clipboard fallback');
-          return null;
-        }
-          return await invoke('show_context_menu', { items, x, y });
+            // TODO: Fix Tauri import - const { invoke } = await import('@tauri-apps/api/tauri');
+            // TODO: Fix Tauri invoke - return await invoke('show_context_menu', { items, x, y });
+            return null;
+          } catch (error) {
+            // Fallback for browser environment
+            console.warn('Tauri not available, using browser clipboard fallback');
+            return null;
+          }
         } catch (error) {
           console.warn('Tauri invoke not available in browser environment');
-          return false;
+          return null;
         }
       }
       return null;

@@ -24,12 +24,12 @@ import type {
   FileOperation,
   NavigationHistoryEntry,
   ClipboardData,
-  DragDropState,
-  FileFilter,
-  TUIConfiguration,
+  // DragDropState, // TODO: Unused type declaration
+  // FileFilter, // TODO: Unused type declaration
+  // TUIConfiguration, // TODO: Unused type declaration
   NortonCommanderLayout,
   VirtualizationConfig,
-  FileManagerAction,
+  // FileManagerAction, // TODO: Unused type declaration
   SearchOptions
 } from '../types/FileManagerTypes';
 

@@ -36,10 +36,14 @@ export const μ7_useResizable = (
     isResizingRef.current = true;
     resizeTypeRef.current = type;
     
-    const rect = itemRef.current.getBoundingClientRect();
+    // FIXED: Get actual CSS width/height, not scaled getBoundingClientRect
+    const computedStyle = window.getComputedStyle(itemRef.current);
+    const actualWidth = parseFloat(computedStyle.width) || itemRef.current.offsetWidth;
+    const actualHeight = parseFloat(computedStyle.height) || itemRef.current.offsetHeight;
+    
     startSizeRef.current = {
-      width: rect.width,
-      height: rect.height
+      width: actualWidth,
+      height: actualHeight
     };
     startPosRef.current = {
       x: e.clientX,
@@ -56,34 +60,26 @@ export const μ7_useResizable = (
     const onMouseMove = (e: MouseEvent) => {
       if (!isResizingRef.current || !resizeTypeRef.current) return;
       
-      // FIXED: Use canvas-controller for consistent coordinate system
-      const canvasController = document.querySelector('.canvas-controller') as HTMLElement;
-      if (!canvasController) return;
-      
-      const canvasRect = canvasController.getBoundingClientRect();
+      // FIXED: Simplified coordinate transformation - direct screen pixel delta
       const scale = canvasState.scale;
       
-      // Calculate current mouse position in canvas coordinates
-      const currentMouseX = (e.clientX - canvasRect.left - canvasState.position.x) / scale;
-      const currentMouseY = (e.clientY - canvasRect.top - canvasState.position.y) / scale;
+      // Calculate raw pixel delta from start position
+      const deltaX = e.clientX - startPosRef.current.x;
+      const deltaY = e.clientY - startPosRef.current.y;
       
-      // Calculate start mouse position in canvas coordinates (convert from screen coordinates)
-      const startMouseX = (startPosRef.current.x - canvasRect.left - canvasState.position.x) / scale;
-      const startMouseY = (startPosRef.current.y - canvasRect.top - canvasState.position.y) / scale;
-      
-      // Calculate delta in canvas coordinates
-      const deltaX = (currentMouseX - startMouseX) * scale;
-      const deltaY = (currentMouseY - startMouseY) * scale;
+      // Apply zoom compensation to delta (scale down the delta for high zoom)
+      const scaledDeltaX = deltaX / scale;
+      const scaledDeltaY = deltaY / scale;
       
       let newWidth = startSizeRef.current.width;
       let newHeight = startSizeRef.current.height;
       
       if (resizeTypeRef.current === 'se' || resizeTypeRef.current === 'e') {
-        newWidth = Math.max(minWidth, startSizeRef.current.width + deltaX);
+        newWidth = Math.max(minWidth, startSizeRef.current.width + scaledDeltaX);
       }
       
       if (resizeTypeRef.current === 'se' || resizeTypeRef.current === 's') {
-        newHeight = Math.max(minHeight, startSizeRef.current.height + deltaY);
+        newHeight = Math.max(minHeight, startSizeRef.current.height + scaledDeltaY);
       }
       
       onUpdate(id, { width: newWidth, height: newHeight });
@@ -105,7 +101,7 @@ export const μ7_useResizable = (
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-  }, [id, onUpdate, minWidth, minHeight, canvasState.scale, canvasState.position.x, canvasState.position.y]);
+  }, [id, onUpdate, minWidth, minHeight, canvasState.scale]);
 
   return { 
     ref: itemRef, 

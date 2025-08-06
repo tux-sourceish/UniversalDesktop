@@ -6,7 +6,7 @@
  * integrating with μX-Bagua architecture and Tauri-ready abstractions.
  */
 
-import type { DesktopItemData, UDPosition } from './index';
+import type { DesktopItemData /* , UDPosition */ } from './index'; // TODO: UDPosition unused here
 
 // Core Context Menu Data Structures
 export interface μ7_ContextMenuData {

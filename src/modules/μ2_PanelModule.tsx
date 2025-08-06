@@ -36,6 +36,7 @@ interface PanelModuleProps {
   onItemCreate?: (type: string, position: { x: number; y: number; z: number }, content?: any) => void;
   onCreateUDItem?: (udItem: any) => void;  // NEW: μ1_WindowFactory Unity Bridge API
   onItemUpdate?: (id: string, updates: Partial<DesktopItemData>) => void;
+  positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
   position?: 'left' | 'right' | 'top' | 'bottom';
   className?: string;
   // NEW V2: Panel State als Props statt separater Hook
@@ -53,6 +54,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
   onItemCreate,
   onCreateUDItem,
   onItemUpdate,
+  positionCalculator,
   className = '',
   μ8_panelState,
   μ8_panelConfigs,
@@ -117,6 +119,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         visible={panelLayout.isPanelVisible('tools')}
         onToggle={() => panelLayout.togglePanel('tools')}
         onCreateUDItem={onCreateUDItem || (() => {})}
+        positionCalculator={positionCalculator}
         position="left"
         width={280}
       />
@@ -129,6 +132,7 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         width={320}
         rightOffset={calculateRightOffset('ai')}
         onCreateUDItem={onCreateUDItem}
+        positionCalculator={positionCalculator}
         contextManager={activeContextManager}
       />
 

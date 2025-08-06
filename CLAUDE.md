@@ -1,14 +1,5 @@
 # Claude Code Configuration - SPARC Development Environment (Batchtools Optimized)
 
-## 🧠 AI CONTEXT LOADING - CRITICAL FOR CONTINUITY
-**MANDATORY**: Before starting ANY work, load the AI context to maintain continuity:
-
-1. **PRIMARY**: Load `AI-CONTEXT.ud` - Complete project knowledge in native .ud format
-2. **BACKUP**: Read `AI_KNOWLEDGE_BASE.md` - Comprehensive analysis backup  
-3. **LATEST**: Check `ki-kontext/` directory - Current KIRA/NEXUS strategic plans
-
-This ensures seamless handoff between AI instances and preserves architectural insights.
-
 ## 🚨 CRITICAL: CONCURRENT EXECUTION FOR ALL ACTIONS
 
 **ABSOLUTE RULE**: ALL operations MUST be concurrent/parallel in a single message:
@@ -625,7 +616,7 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 2. Each agent MUST use Claude Flow hooks for coordination:
    - `npx claude-flow@alpha hooks pre-task` before starting
    - `npx claude-flow@alpha hooks post-edit` after each file operation
-   - `npx claude-flow@alpha hooks notification` to share decisions
+   - `npx claude-flow@alpha hooks notify` to share decisions
 3. Claude Code uses its native Read, WebSearch, and Task tools
 4. The swarm coordinates through shared memory and hooks
 5. Results are synthesized by Claude Code with full coordination history
@@ -852,7 +843,7 @@ npx claude-flow@alpha hooks session-restore --session-id "swarm-[id]" --load-mem
 npx claude-flow@alpha hooks post-edit --file "[filepath]" --memory-key "swarm/[agent]/[step]"
 
 # Store decisions and findings
-npx claude-flow@alpha hooks notification --message "[what was done]" --telemetry true
+npx claude-flow@alpha hooks notify --message "[what was done]" --telemetry true
 
 # Check coordination with other agents
 npx claude-flow@alpha hooks pre-search --query "[what to check]" --cache-results true
@@ -876,7 +867,7 @@ You are the [Agent Type] agent in a coordinated swarm.
 MANDATORY COORDINATION:
 1. START: Run `npx claude-flow@alpha hooks pre-task --description "[your task]"`
 2. DURING: After EVERY file operation, run `npx claude-flow@alpha hooks post-edit --file "[file]" --memory-key "agent/[step]"`
-3. MEMORY: Store ALL decisions using `npx claude-flow@alpha hooks notification --message "[decision]"`
+3. MEMORY: Store ALL decisions using `npx claude-flow@alpha hooks notify --message "[decision]"`
 4. END: Run `npx claude-flow@alpha hooks post-task --task-id "[task]" --analyze-performance true`
 
 Your specific task: [detailed task description]

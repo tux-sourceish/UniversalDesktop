@@ -422,8 +422,12 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       ? '0 4px 20px rgba(239, 68, 68, 0.15)' 
       : `0 4px 12px ${μ2_tuiState.theme.backgroundColor}33`,
     position: 'relative',
-    width: 'fit-content',
-    minWidth: '300px'
+    width: '100%',
+    height: '100%',
+    minWidth: '300px',
+    minHeight: '200px',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   return (

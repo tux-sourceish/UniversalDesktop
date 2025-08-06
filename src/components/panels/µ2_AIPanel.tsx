@@ -1,7 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 import { μ1_WindowFactory } from '../factories/μ1_WindowFactory';
-import { liteLLMClient } from '../../services/μ6_litellmClient';
+// μ1_ Agent Personas Integration - HIMMEL (☰) Templates/Configuration
+import {
+  AGENT_PERSONAS,
+  μ1_generateAgentPrompt,
+  μ1_validateAgentResponse
+} from '../../config/μ1_AgentPersonas';
 
 /**
  * μ2_AIPanel - WIND (☴) Views/UI - KI-Assistent Panel
@@ -18,6 +23,8 @@ interface μ2_AIPanelProps {
   rightOffset?: number; // Für Panel-Kollisionsvermeidung
   /** Callback für μ1_WindowFactory UDItem Creation */
   onCreateUDItem?: (udItem: any) => void;
+  /** Smart positioning calculator for viewport-centered windows */
+  positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
   /** Context Manager for AI-aware prompts */
   contextManager?: {
     getContextSummary: () => string;
@@ -30,10 +37,11 @@ interface μ2_AgentState {
   isActive: boolean;
   currentTask: string;
   status: 'idle' | 'processing' | 'completed' | 'error';
+  validationWarnings: string[]; // Track philosophy compliance issues
   agents: {
-    reasoner: { active: boolean; status: string };
-    coder: { active: boolean; status: string };
-    refiner: { active: boolean; status: string };
+    reasoner: { active: boolean; status: string; validationPassed?: boolean };
+    coder: { active: boolean; status: string; validationPassed?: boolean };
+    refiner: { active: boolean; status: string; validationPassed?: boolean };
   };
 }
 
@@ -64,49 +72,51 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   onToggle,
   rightOffset = 0,
   onCreateUDItem,
+  positionCalculator,
   contextManager
 }) => {
   
-  // μ2_ Agent State Management (WIND-Pattern: UI-State-Management) 
+  // μ2_ Agent State Management with Philosophy Tracking (WIND-Pattern: UI-State-Management) 
   const [μ2_agentState, setμ2_AgentState] = useState<μ2_AgentState>({
     isActive: false,
     currentTask: '',
     status: 'idle',
+    validationWarnings: [],
     agents: {
-      reasoner: { active: false, status: 'idle' },
-      coder: { active: false, status: 'idle' },
-      refiner: { active: false, status: 'idle' }
+      reasoner: { active: false, status: 'idle', validationPassed: true },
+      coder: { active: false, status: 'idle', validationPassed: true },
+      refiner: { active: false, status: 'idle', validationPassed: true }
     }
   });
 
-  // μ2_ Agent Configuration mit Checkboxes & Model Selection (FLEXIBLER WORKFLOW!)  
+  // μ2_ Agent Configuration with Philosophy-Aware Personas (MODULAR SYSTEM!)  
   const [μ2_agentConfigs, setμ2_AgentConfigs] = useState<μ2_AgentConfig[]>([
     {
       key: 'reasoner',
-      icon: '🧠',
+      icon: '🏗️',
       name: 'Reasoner',
-      description: 'Analysiert und plant',
-      bagua: UDFormat.BAGUA.FEUER,
+      description: 'UniversalDesktop Architekt - Plans with μX-Bagua System',
+      bagua: AGENT_PERSONAS.reasoner?.baguaAlignment || UDFormat.BAGUA.HIMMEL,
       enabled: true,
-      model: 'nexus-online/claude-sonnet-4' // Default: Reasoning model
+      model: 'nexus-online/claude-sonnet-4' // Best for architectural reasoning
     },
     {
       key: 'coder', 
-      icon: '💻',
+      icon: '🔥',
       name: 'Coder',
-      description: 'Generiert Code/Content',
-      bagua: UDFormat.BAGUA.HIMMEL,
+      description: 'TypeScript Implementer - μX-Prefix Enforced, NO Python',
+      bagua: AGENT_PERSONAS.coder?.baguaAlignment || UDFormat.BAGUA.FEUER,
       enabled: false,
-      model: 'kira-local/llama3.1-8b' // Default: Local coding model
+      model: 'kira-local/llama3.1-8b' // Local coding with philosophy compliance
     },
     {
       key: 'refiner',
-      icon: '✨', 
+      icon: '🌊', 
       name: 'Refiner',
-      description: 'Optimiert und finalisiert',
-      bagua: UDFormat.BAGUA.DONNER,
+      description: 'Philosophy Perfectionist - Ensures Raimund Standards',
+      bagua: AGENT_PERSONAS.refiner?.baguaAlignment || UDFormat.BAGUA.SEE,
       enabled: false,
-      model: 'kira-online/gemini-2.5-pro' // Default: Premium refining model
+      model: 'kira-online/gemini-2.5-pro' // Premium for perfect refinement
     }
   ]);
 
@@ -115,6 +125,14 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   // μ2_ Output Type Selection (for Window Creation)
   type OutputType = 'notizzettel' | 'code' | 'tui';
   const [μ2_outputType, setμ2_OutputType] = useState<OutputType>('notizzettel');
+
+  // μ7_ Debug Mode State (DONNER - Events/Debug/Interactions)
+  const [μ7_debugMode, setμ7_DebugMode] = useState(() => 
+    localStorage.getItem('ud-debug-mode') === 'true'
+  );
+  const [μ7_debugSessionId, setμ7_DebugSessionId] = useState(() => 
+    `debug-${Date.now()}`
+  );
 
   // μ4_ Configuration Persistence (BERG - Setup/Init)
   useEffect(() => {
@@ -133,6 +151,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     if (savedOutputType && ['notizzettel', 'code', 'tui'].includes(savedOutputType)) {
       setμ2_OutputType(savedOutputType as OutputType);
     }
+
+    // Debug mode is already loaded in useState initializer
   }, []);
 
   // μ4_ Save Configuration Changes
@@ -143,6 +163,12 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   useEffect(() => {
     localStorage.setItem('ud-output-type', μ2_outputType);
   }, [μ2_outputType]);
+
+  // μ7_ Debug Mode Persistence
+  useEffect(() => {
+    localStorage.setItem('ud-debug-mode', String(μ7_debugMode));
+  }, [μ7_debugMode]);
+
 
   // μ2_ Toggle Agent Checkbox
   const μ2_toggleAgent = useCallback((agentKey: keyof μ2_AgentState['agents']) => {
@@ -171,7 +197,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   const μ2_callLiteLLMAPI = useCallback(async (
     prompt: string, 
     enabledAgents: μ2_AgentConfig[], 
-    model: string
+    model: string,
+    contextInfo?: { activeItems?: any[], hasContextInPrompt?: boolean }
   ): Promise<any> => {
     const baseUrl = import.meta.env.VITE_LITELLM_BASE_URL || 'http://localhost:4001';
     const apiKey = import.meta.env.VITE_LITELLM_API_KEY || 'test123';
@@ -183,10 +210,22 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       : '';
 
     try {
+      // Better context detection using both prompt content and contextInfo parameter
+      const promptHasContext = prompt.includes('Pinned Items:') || 
+                               prompt.includes('MCP-CONTEXT:') || 
+                               prompt.includes('**INSTRUCTIONS:** Use the pinned context items');
+      const hasActiveItems = contextInfo?.activeItems && contextInfo.activeItems.length > 0;
+      const hasContext = promptHasContext || hasActiveItems || (contextInfo?.hasContextInPrompt === true);
+      
       console.log('🚀 μ2 LiteLLM API Call:', { 
         model: selectedModel, 
         agents: enabledAgents.length,
-        hasContext: prompt.includes('Context:')
+        hasContext: hasContext,
+        contextItems: contextInfo?.activeItems?.length || 0,
+        promptContainsContext: promptHasContext,
+        contextInfo: contextInfo ? 'provided' : 'missing',
+        promptLength: prompt.length,
+        promptPreview: prompt.substring(0, 100) + (prompt.length > 100 ? '...' : '')
       });
 
       const response = await fetch(`${baseUrl}/v1/chat/completions`, {
@@ -244,42 +283,136 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
   }, []);
 
-  // μ6_ Sequential Agent Processing Chain (FEUER - Functions)
+  // μ6_ Sequential Agent Processing Chain with Modular Personas (FEUER - Functions)
   const μ6_processWithAgents = useCallback(async (
     initialPrompt: string,
     context: any[],
-    enabledAgents: μ2_AgentConfig[]
+    enabledAgents: μ2_AgentConfig[],
+    outputType: string = 'notizzettel'
   ): Promise<string> => {
     let result = initialPrompt;
+    
+    // Build context string properly - this is used by μ1_generateAgentPrompt for "Pinned Items"
     const contextString = context.length > 0 
-      ? `\nContext: ${context.map(item => `[${item.title}] ${item.content?.substring(0, 200)}...`).join('\n')}\n\n`
+      ? `Pinned Items:\n${context.map(item => `[${item.title}] ${item.content?.substring(0, 200)}...`).join('\n')}`
       : '';
 
-    // Sequential processing through enabled agents
-    for (const agent of enabledAgents) {
+    // Sequential processing through enabled agents using modular personas
+    for (let i = 0; i < enabledAgents.length; i++) {
+      const agent = enabledAgents[i];
+      const isLastAgent = i === enabledAgents.length - 1;
+      
       try {
-        let agentPrompt = '';
+        // Get MCP context if available (UniversalDesktop philosophy integration)
+        const mcpContext = contextManager?.getContextSummary?.() || '';
+
+        // Build specialized prompt using the modular persona system with output-type awareness
+        const finalAgentPrompt = μ1_generateAgentPrompt(
+          agent.key,
+          result,
+          contextString,
+          mcpContext,
+          outputType // Include output type for AI formatting instructions
+        );
+
+        // Call LiteLLM API with the generated prompt and context info
+        const response = await μ2_callLiteLLMAPI(
+          finalAgentPrompt,
+          [agent],
+          agent.model,
+          {
+            activeItems: contextManager?.activeContextItems || [],
+            hasContextInPrompt: finalAgentPrompt.includes('Pinned Items:') || finalAgentPrompt.includes('**INSTRUCTIONS:**')
+          }
+        );
+
+        // μ7_ Debug Window Spawning (DONNER - Events/Debug)
+        // Spawn debug window with prompt for NEXT agent (if not last agent and debug enabled)
+        const μ7_shouldCreateDebugWindow = UDFormat.transistor(
+          μ7_debugMode && !isLastAgent && onCreateUDItem !== undefined
+        );
         
-        // Agent-specific prompt formatting
-        switch (agent.key) {
-          case 'reasoner':
-            agentPrompt = `[REASONER AGENT - Analysis & Planning]\nContext: ${contextString}\n\nAnalyze and plan approach for: ${result}`;
-            break;
-          case 'coder':
-            agentPrompt = `[CODER AGENT - Implementation]\nContext: ${contextString}\n${result}\n\nImplement solution with μX_ Bagua patterns and best practices:`;
-            break;
-          case 'refiner':
-            agentPrompt = `[REFINER AGENT - Enhancement & Finalization]\nContext: ${contextString}\n${result}\n\nPlease enhance this content by:\n1. Adding more detail and depth\n2. Improving clarity and structure\n3. Ensuring completeness\n4. Maintaining or expanding the length\n\nProvide the enhanced, finalized version:`;
-            break;
-          default:
-            agentPrompt = result;
+        if (μ7_shouldCreateDebugWindow && !isLastAgent) {
+          try {
+            const nextAgent = enabledAgents[i + 1];
+            const nextPrompt = μ1_generateAgentPrompt(
+              nextAgent.key,
+              response.text || response.code || result,
+              contextString,
+              mcpContext,
+              outputType // Include output type for debug window consistency
+            );
+
+            const debugWindow = μ1_WindowFactory.createUDItem({
+              type: 'notizzettel',
+              position: { 
+                x: 0, // Default triggers viewport centering
+                y: 0, 
+                z: 1000 + i 
+              },
+              title: `🔍 ${agent.name} → ${nextAgent.name}`,
+              content: {
+                text: `🔍 DEBUG: Agent-zu-Agent Prompt Flow\n` +
+                      `═══════════════════════════════════\n\n` +
+                      `📤 FROM: ${agent.name} (${agent.model})\n` +
+                      `📥 TO: ${nextAgent.name} (${nextAgent.model})\n` +
+                      `🕐 TIME: ${new Date().toLocaleString('de-DE')}\n` +
+                      `🔗 SESSION: ${μ7_debugSessionId}\n\n` +
+                      `📝 KOMPLETTER PROMPT AN NÄCHSTES MODELL:\n` +
+                      `${'='.repeat(50)}\n\n` +
+                      `${nextPrompt}\n\n` +
+                      `${'='.repeat(50)}\n\n` +
+                      `💡 AKTUELLER RESULT (Input für nächsten Agent):\n` +
+                      `${(response.text || response.code || result).substring(0, 1000)}${(response.text || response.code || result).length > 1000 ? '...\n\n[TRUNCATED - See full result in main window]' : ''}`
+              },
+              origin: 'debug-agent-prompt',
+              metadata: {
+                debugSessionId: μ7_debugSessionId,
+                agentFlow: `${agent.name} → ${nextAgent.name}`,
+                agentIndex: i,
+                isDebugWindow: true,
+                fromModel: agent.model,
+                toModel: nextAgent.model
+              }
+            }, positionCalculator); // Use positionCalculator for viewport-centered debug windows
+            
+            if (debugWindow && onCreateUDItem) {
+              onCreateUDItem(debugWindow);
+              console.log(`🔍 Debug Window spawned: ${agent.name} → ${nextAgent.name}`);
+            }
+          } catch (debugError) {
+            console.warn('μ7_Debug Window creation failed:', debugError);
+            // Continue agent processing - debug failure doesn't break main workflow
+          }
         }
 
-        // Call LiteLLM with agent-specific model
-        const response = await μ2_callLiteLLMAPI(agentPrompt, [agent], agent.model);
+        // Validate response for philosophy compliance
+        const validation = μ1_validateAgentResponse(response.text || '', agent.key);
+        if (!validation.valid) {
+          console.warn(`μ6_Agent validation issues for ${agent.name}:`, validation.issues);
+          // Update UI state with validation warnings
+          setμ2_AgentState(prev => ({
+            ...prev,
+            validationWarnings: [...prev.validationWarnings, ...validation.issues.map(issue => `${agent.name}: ${issue}`)],
+            agents: {
+              ...prev.agents,
+              [agent.key]: { ...prev.agents[agent.key], validationPassed: false }
+            }
+          }));
+        } else {
+          // Mark agent as validation passed
+          setμ2_AgentState(prev => ({
+            ...prev,
+            agents: {
+              ...prev.agents,
+              [agent.key]: { ...prev.agents[agent.key], validationPassed: true }
+            }
+          }));
+        }
+
         result = response.text || response.code || result;
         
-        console.log(`✅ ${agent.name} completed`);
+        console.log(`✅ ${agent.name} completed with ${validation.valid ? 'compliant' : 'non-compliant'} response`);
       } catch (error) {
         console.error(`❌ Agent ${agent.name} processing failed:`, error);
         // Continue with current result on error
@@ -287,7 +420,14 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
 
     return result;
-  }, []); // No dependencies needed - μ2_callLiteLLMAPI is stable
+  }, [contextManager, μ7_debugMode, μ7_debugSessionId, onCreateUDItem]); // Include debugMode and onCreateUDItem for debug functionality
+
+  // μ7_ Debug Mode Toggle (DONNER - Events/Interactions)
+  const μ7_toggleDebugMode = useCallback(() => {
+    setμ7_DebugMode(prev => !prev);
+    // Generate new session ID when toggling debug mode
+    setμ7_DebugSessionId(`debug-${Date.now()}`);
+  }, []);
 
   // μ2_ AI Request Processing (FLEXIBLER Three-Phase Workflow)
   const μ2_processAIRequest = useCallback(async (prompt: string) => {
@@ -295,6 +435,9 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 
     const enabledAgents = μ2_getEnabledAgents();
     if (enabledAgents.length === 0) return;
+
+    // Generate new debug session ID for each request
+    setμ7_DebugSessionId(`debug-${Date.now()}`);
 
     setμ2_AgentState(prev => ({ 
       ...prev, 
@@ -341,11 +484,11 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
         }
       }
 
-      // Workflow completed
+      // Agent-Simulation completed, jetzt beginnt echte AI-Verarbeitung
       setμ2_AgentState(prev => ({
         ...prev,
-        status: 'completed',
-        isActive: false
+        status: 'processing', // Weiter processing für echte AI
+        isActive: true
       }));
 
       // ✨ CREATE AI RESPONSE WINDOW via μ1_WindowFactory with NEW AGENT SYSTEM! ✨
@@ -385,13 +528,20 @@ ${userPrompt}
         // μ6_ Build Context Array for Agent Processing (for backward compatibility)
         const contextItems = contextManager?.activeContextItems || [];
         
+        // Status auf "processing" für echte AI-Calls setzen
+        setμ2_AgentState(prev => ({
+          ...prev,
+          status: 'processing', // Echte AI-Verarbeitung beginnt jetzt
+          isActive: true
+        }));
+        
         // μ6_ Process with Sequential Agent Chain using context-aware prompt
-        const finalResult = await μ6_processWithAgents(contextAwarePrompt, contextItems, enabledAgents);
+        const finalResult = await μ6_processWithAgents(contextAwarePrompt, contextItems, enabledAgents, μ2_outputType);
         
         console.log(`🤖 Multi-Agent Complete: ${enabledAgents.map(a => a.name).join(' → ')} (${μ2_outputType})`);
         
-        // μ1_ Create Window using μ1_WindowFactory with Agent Results
-        const position = { x: Math.random() * 500 + 100, y: Math.random() * 300 + 100, z: 10 };
+        // μ1_ Create Window using μ1_WindowFactory with Agent Results - viewport-centered positioning
+        const position = { x: 0, y: 0, z: 0 }; // Default triggers viewport centering
         
         // μ6_ Generate Window Title from Agent Results
         const generateTitle = (result: string, agents: μ2_AgentConfig[]): string => {
@@ -400,43 +550,58 @@ ${userPrompt}
           return `${agentNames}: ${firstLine}${firstLine.length > 27 ? '...' : ''}`;
         };
         
-        const newWindow = μ1_WindowFactory.createUDItem({
-          type: μ2_outputType, // Use the selected output type directly
-          position,
-          title: generateTitle(finalResult, enabledAgents),
-          content: {
-            text: finalResult,
-            code: μ2_outputType === 'code' ? finalResult : undefined,
-            tui_content: μ2_outputType === 'tui' ? finalResult : undefined
-          },
-          origin: 'ai-multi',
-          metadata: {
-            agents: enabledAgents.map(a => ({ name: a.name, model: a.model })),
-            processingType: 'multi-agent-chain',
-            originalPrompt: prompt,
-            outputType: μ2_outputType,
-            contextItems: contextItems.length
+        try {
+          const newWindow = μ1_WindowFactory.createUDItem({
+            type: μ2_outputType, // Use the selected output type directly
+            position,
+            title: generateTitle(finalResult, enabledAgents),
+            content: {
+              text: finalResult,
+              code: μ2_outputType === 'code' ? finalResult : undefined,
+              tui_content: μ2_outputType === 'tui' ? finalResult : undefined
+            },
+            origin: 'ai-multi',
+            metadata: {
+              agents: enabledAgents.map(a => ({ name: a.name, model: a.model })),
+              processingType: 'multi-agent-chain',
+              originalPrompt: prompt,
+              outputType: μ2_outputType,
+              contextItems: contextItems.length
+            }
+          }, positionCalculator); // Use positionCalculator for viewport-centered AI response windows
+          
+          if (newWindow && onCreateUDItem) {
+            onCreateUDItem(newWindow);
+            console.log(`🌟 AI Window Created: ${newWindow.title}`);
+          } else {
+            console.warn('❌ AI Window creation failed: newWindow or onCreateUDItem missing', { newWindow: !!newWindow, onCreateUDItem: !!onCreateUDItem });
           }
-        });
-        
-        if (newWindow) {
-          onCreateUDItem(newWindow);
-          console.log(`🌟 AI Window Created: ${newWindow.title}`);
+        } catch (windowError) {
+          console.error('❌ AI Window creation error:', windowError);
+          throw windowError; // Re-throw to trigger error state
         }
       }
 
-      // Auto-reset nach 2 Sekunden
+      // AI-Request erfolgreich abgeschlossen - Status auf "completed" dann "idle"
+      setμ2_AgentState(prev => ({
+        ...prev,
+        status: 'completed',
+        isActive: false
+      }));
+
+      // Nach kurzer Zeit auf "idle" wechseln für bessere UX
       setTimeout(() => {
         setμ2_AgentState(prev => ({
           ...prev,
           status: 'idle',
+          validationWarnings: [], // Clear warnings after timeout
           agents: { 
-            reasoner: { active: false, status: 'idle' },
-            coder: { active: false, status: 'idle' },
-            refiner: { active: false, status: 'idle' }
+            reasoner: { active: false, status: 'idle', validationPassed: true },
+            coder: { active: false, status: 'idle', validationPassed: true },
+            refiner: { active: false, status: 'idle', validationPassed: true }
           }
         }));
-      }, 2000);
+      }, 1500); // Verkürzt von 2000ms auf 1500ms
 
     } catch (error) {
       setμ2_AgentState(prev => ({ 
@@ -528,18 +693,21 @@ ${userPrompt}
               fontSize: '12px',
               fontWeight: '500',
               backgroundColor: 
-                μ2_agentState.status === 'processing' ? 'rgba(245, 215, 110, 0.2)' :
+                μ2_agentState.status === 'processing' ? 'rgba(239, 68, 68, 0.15)' :
                 μ2_agentState.status === 'completed' ? 'rgba(80, 227, 194, 0.2)' :
                 μ2_agentState.status === 'error' ? 'rgba(227, 80, 80, 0.2)' :
                 'rgba(176, 176, 176, 0.2)',
               color:
-                μ2_agentState.status === 'processing' ? '#f5d76e' :
+                μ2_agentState.status === 'processing' ? '#ef4444' :
                 μ2_agentState.status === 'completed' ? '#50e3c2' :
                 μ2_agentState.status === 'error' ? '#e35050' :
                 '#b0b0b0'
             }}
           >
-            {μ2_agentState.status}
+            {μ2_agentState.status === 'processing' ? '🤖 KI denkt...' : 
+             μ2_agentState.status === 'completed' ? '✅ Fertig' :
+             μ2_agentState.status === 'error' ? '❌ Fehler' :
+             '💤 Bereit'}
           </div>
           
           <button
@@ -661,20 +829,97 @@ ${userPrompt}
                 </select>
               </div>
               
-              {/* Status */}
+              {/* Status with Validation Indicator */}
               <div style={{
                 fontSize: '12px',
                 color: isActive ? '#f5d76e' : '#9ca3af',
                 fontWeight: '500',
                 minWidth: '60px',
-                textAlign: 'right'
+                textAlign: 'right',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
               }}>
                 {agentState.status}
+                {agentState.validationPassed === false && (
+                  <span title="Philosophy compliance issues detected" style={{ color: '#ef4444', fontSize: '10px' }}>
+                    ⚠️
+                  </span>
+                )}
+                {agentState.validationPassed === true && agentState.status === 'completed' && (
+                  <span title="Philosophy compliant" style={{ color: '#10b981', fontSize: '10px' }}>
+                    ✓
+                  </span>
+                )}
               </div>
             </div>
           );
         })}
         
+        {/* μ7_ Debug Mode Controls (DONNER - Events/Debug) */}
+        <div className="μ7-debug-controls" style={{
+          marginTop: '12px',
+          padding: '8px 12px',
+          backgroundColor: μ7_debugMode 
+            ? 'rgba(245, 215, 110, 0.1)' 
+            : 'rgba(74, 144, 226, 0.02)',
+          borderRadius: '6px',
+          border: `1px solid ${μ7_debugMode 
+            ? 'rgba(245, 215, 110, 0.3)' 
+            : 'rgba(74, 144, 226, 0.1)'}`
+        }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: '500',
+            color: μ7_debugMode ? '#f5d76e' : '#6b7280'
+          }}>
+            <input
+              type="checkbox"
+              checked={μ7_debugMode}
+              onChange={μ7_toggleDebugMode}
+              disabled={μ2_agentState.status === 'processing'}
+              style={{
+                transform: 'scale(1.1)',
+                accentColor: '#f5d76e'
+              }}
+            />
+            <span style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '4px' 
+            }}>
+              🔍 Debug Agent Prompts
+              {μ7_debugMode && (
+                <span style={{
+                  fontSize: '10px',
+                  padding: '2px 6px',
+                  backgroundColor: 'rgba(245, 215, 110, 0.2)',
+                  borderRadius: '4px',
+                  color: '#f5d76e',
+                  fontWeight: '600'
+                }}>
+                  ACTIVE
+                </span>
+              )}
+            </span>
+          </label>
+          <div style={{
+            fontSize: '10px',
+            color: μ7_debugMode ? 'rgba(245, 215, 110, 0.8)' : '#9ca3af',
+            marginTop: '4px',
+            marginLeft: '28px',
+            lineHeight: '1.3'
+          }}>
+            {μ7_debugMode 
+              ? `✨ Debug-Windows zeigen Prompts zwischen Agenten (Session: ${μ7_debugSessionId.split('-')[1]})` 
+              : 'Zeigt Zwischenergebnisse und Prompts für jeden Agent-Übergang'}
+          </div>
+        </div>
+
         {/* Quick Presets */}
         <div className="μ2-quick-presets" style={{
           marginTop: '12px',
@@ -855,6 +1100,31 @@ ${userPrompt}
         </div>
       )}
 
+      {/* Validation Warnings Display */}
+      {μ2_agentState.validationWarnings.length > 0 && (
+        <div className="μ2-validation-warnings" style={{
+          padding: '12px 16px',
+          backgroundColor: 'rgba(239, 68, 68, 0.05)',
+          borderTop: '1px solid rgba(239, 68, 68, 0.2)',
+          fontSize: '11px',
+          color: '#ef4444'
+        }}>
+          <div style={{ fontWeight: '600', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            ⚠️ Philosophy Compliance Issues:
+          </div>
+          {μ2_agentState.validationWarnings.slice(-3).map((warning, index) => (
+            <div key={index} style={{ marginBottom: '2px', opacity: 0.8 }}>
+              • {warning}
+            </div>
+          ))}
+          {μ2_agentState.validationWarnings.length > 3 && (
+            <div style={{ opacity: 0.6, fontStyle: 'italic' }}>
+              ...and {μ2_agentState.validationWarnings.length - 3} more issues
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Bagua Info Footer */}
       <div className="μ2-bagua-info" style={{
         padding: '12px 16px',
@@ -864,10 +1134,28 @@ ${userPrompt}
         color: '#6b7280'
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-          μ2 WIND (☴) - Flexible AI Workflow
+          μ2 WIND (☴) - Philosophy-Aware AI Workflow v2.0
         </div>
         <div>
           Enabled: {μ2_getEnabledAgents().map(a => a.name).join(' → ') || 'None'}
+          {μ7_debugMode && (
+            <span style={{ 
+              color: '#f5d76e', 
+              marginLeft: '8px',
+              fontSize: '10px',
+              fontWeight: '600'
+            }}>
+              | 🔍 DEBUG
+            </span>
+          )}
+        </div>
+        <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '2px' }}>
+          Modular Personas | MCP Integration | TypeScript-Only Enforcement
+          {μ7_debugMode && (
+            <span style={{ color: '#f5d76e', marginLeft: '4px' }}>
+              | Debug: Agent-zu-Agent Prompt Flow
+            </span>
+          )}
         </div>
       </div>
     </div>

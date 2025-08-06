@@ -1,0 +1,263 @@
+{
+  "configurations": {
+    "development": {
+      "name": "Development MCP Configuration",
+      "description": "Configuration for local development with debugging enabled",
+      "servers": {
+        "claude-flow": {
+          "command": "npx",
+          "args": ["claude-flow@alpha", "mcp", "start"],
+          "env": {
+            "CLAUDE_FLOW_DEBUG": "true",
+            "CLAUDE_FLOW_LOG_LEVEL": "debug"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true,
+            "prompts": false
+          },
+          "metadata": {
+            "name": "claude-flow",
+            "version": "2.0.0-alpha",
+            "description": "Claude Flow MCP server for development"
+          }
+        },
+        "ruv-swarm": {
+          "command": "npx",
+          "args": ["ruv-swarm@1.0.17", "mcp", "start", "--stability"],
+          "env": {
+            "RUV_SWARM_DEBUG": "true",
+            "RUV_SWARM_MAX_AGENTS": "10"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true
+          },
+          "metadata": {
+            "name": "ruv-swarm",
+            "version": "1.0.17",
+            "description": "Distributed agent orchestration with neural networks"
+          }
+        }
+      }
+    },
+    "production": {
+      "name": "Production MCP Configuration",
+      "description": "Optimized configuration for production deployment",
+      "servers": {
+        "claude-flow": {
+          "command": "npx",
+          "args": ["claude-flow@stable", "mcp", "start", "--production"],
+          "env": {
+            "CLAUDE_FLOW_LOG_LEVEL": "error",
+            "CLAUDE_FLOW_TELEMETRY_ENABLED": "false"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true,
+            "prompts": false
+          },
+          "metadata": {
+            "name": "claude-flow",
+            "version": "stable",
+            "description": "Claude Flow MCP server for production"
+          }
+        },
+        "ruv-swarm": {
+          "command": "npx",
+          "args": ["ruv-swarm@stable", "mcp", "start", "--production"],
+          "env": {
+            "RUV_SWARM_MAX_AGENTS": "50",
+            "RUV_SWARM_USE_SIMD": "true"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true
+          },
+          "metadata": {
+            "name": "ruv-swarm",
+            "version": "stable",
+            "description": "Production ruv-swarm coordination"
+          }
+        }
+      }
+    },
+    "security-hardened": {
+      "name": "Security-Hardened MCP Configuration",
+      "description": "Maximum security configuration with authentication and validation",
+      "servers": {
+        "claude-flow-secure": {
+          "command": "./scripts/secure-mcp-wrapper.sh",
+          "args": ["claude-flow@verified", "mcp", "start", "--secure"],
+          "env": {
+            "CLAUDE_FLOW_AUTH_REQUIRED": "true",
+            "CLAUDE_FLOW_VALIDATE_INPUTS": "true",
+            "CLAUDE_FLOW_RATE_LIMIT": "100"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": false,
+            "prompts": false
+          },
+          "metadata": {
+            "name": "claude-flow-secure",
+            "version": "verified",
+            "description": "Security-hardened Claude Flow MCP server"
+          }
+        },
+        "ruv-swarm-secure": {
+          "command": "./scripts/secure-mcp-wrapper.sh",
+          "args": ["ruv-swarm@verified", "mcp", "start", "--secure"],
+          "env": {
+            "RUV_SWARM_AUTH_TOKEN": "${RUV_SWARM_AUTH_TOKEN}",
+            "RUV_SWARM_VALIDATE_ALL": "true",
+            "RUV_SWARM_MAX_AGENTS": "20"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": false
+          },
+          "metadata": {
+            "name": "ruv-swarm-secure",
+            "version": "verified",
+            "description": "Security-hardened ruv-swarm coordination"
+          }
+        }
+      }
+    },
+    "multi-server": {
+      "name": "Multi-Server Coordination Setup",
+      "description": "Configuration for coordinating multiple MCP servers",
+      "servers": {
+        "claude-flow-primary": {
+          "command": "npx",
+          "args": ["claude-flow@alpha", "mcp", "start", "--role=primary"],
+          "env": {
+            "CLAUDE_FLOW_COORDINATION_MODE": "primary",
+            "CLAUDE_FLOW_SYNC_INTERVAL": "5000"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true,
+            "prompts": true
+          }
+        },
+        "claude-flow-secondary": {
+          "command": "npx",
+          "args": ["claude-flow@alpha", "mcp", "start", "--role=secondary"],
+          "env": {
+            "CLAUDE_FLOW_COORDINATION_MODE": "secondary",
+            "CLAUDE_FLOW_PRIMARY_HOST": "localhost:3001"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": false,
+            "prompts": false
+          }
+        },
+        "ruv-swarm-coordinator": {
+          "command": "npx",
+          "args": ["ruv-swarm@1.0.17", "mcp", "start", "--coordinator"],
+          "env": {
+            "RUV_SWARM_ROLE": "coordinator",
+            "RUV_SWARM_PEERS": "localhost:3001,localhost:3002"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true
+          }
+        }
+      }
+    },
+    "performance-optimized": {
+      "name": "Performance-Optimized Configuration",
+      "description": "Configuration optimized for maximum performance",
+      "servers": {
+        "claude-flow-perf": {
+          "command": "npx",
+          "args": ["claude-flow@alpha", "mcp", "start", "--performance"],
+          "env": {
+            "CLAUDE_FLOW_BATCH_SIZE": "100",
+            "CLAUDE_FLOW_PARALLEL_TASKS": "10",
+            "CLAUDE_FLOW_CACHE_SIZE": "1000",
+            "CLAUDE_FLOW_COMPRESSION": "true"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true,
+            "prompts": false
+          }
+        },
+        "ruv-swarm-perf": {
+          "command": "npx",
+          "args": ["ruv-swarm@1.0.17", "mcp", "start", "--performance"],
+          "env": {
+            "RUV_SWARM_MAX_AGENTS": "100",
+            "RUV_SWARM_BATCH_SIZE": "50",
+            "RUV_SWARM_USE_SIMD": "true",
+            "RUV_SWARM_PARALLEL_EXECUTION": "true"
+          },
+          "capabilities": {
+            "tools": true,
+            "resources": true
+          }
+        }
+      }
+    }
+  },
+  "installation_scripts": {
+    "development": {
+      "claude_code_setup": [
+        "claude mcp add claude-flow npx claude-flow@alpha mcp start",
+        "claude mcp add ruv-swarm npx ruv-swarm@1.0.17 mcp start --stability"
+      ],
+      "validation": [
+        "claude mcp list",
+        "npx claude-flow@alpha --version",
+        "npx ruv-swarm@1.0.17 --version"
+      ]
+    },
+    "production": {
+      "claude_code_setup": [
+        "claude mcp add claude-flow-prod npx claude-flow@stable mcp start --production",
+        "claude mcp add ruv-swarm-prod npx ruv-swarm@stable mcp start --production"
+      ],
+      "validation": [
+        "claude mcp status",
+        "claude mcp test claude-flow-prod",
+        "claude mcp test ruv-swarm-prod"
+      ]
+    }
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "server_not_starting": {
+        "symptoms": ["MCP server fails to start", "Connection timeout"],
+        "solutions": [
+          "Check if port is already in use: lsof -i :3000",
+          "Verify command path: which npx",
+          "Check environment variables are set",
+          "Restart with debug mode: --debug flag"
+        ]
+      },
+      "tools_not_available": {
+        "symptoms": ["MCP tools not showing in Claude Code", "Tool call failures"],
+        "solutions": [
+          "Verify server is running: claude mcp status",
+          "Check capabilities in configuration",
+          "Restart Claude Code to refresh connections",
+          "Validate tool permissions"
+        ]
+      },
+      "performance_issues": {
+        "symptoms": ["Slow tool responses", "High memory usage"],
+        "solutions": [
+          "Use performance-optimized configuration",
+          "Reduce max agents in swarm settings",
+          "Enable SIMD optimizations",
+          "Monitor with performance tools"
+        ]
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@
  */
 
 import { UDFormat } from '../core/UDFormat';
-import type { DesktopItemData, UDPosition } from '../types';
+import type { /* DesktopItemData, */ UDPosition } from '../types'; // TODO: DesktopItemData unused
 
 // Base State Pattern
 export interface μX_BaseState {
@@ -81,9 +81,9 @@ export class μX_AlgebraicStateValidator {
     // Define valid transitions using algebraic logic
     const transitionRules: Record<string, Record<string, (conditions: any) => number>> = {
       'idle': {
-        'loading': (c) => UDFormat.transistor(true), // Always allowed
-        'ready': (c) => UDFormat.transistor(c.hasData),
-        'error': (c) => UDFormat.transistor(c.hasError)
+        'loading': (_c) => UDFormat.transistor(true), // Always allowed
+        'ready': (_c) => UDFormat.transistor(_c.hasData),
+        'error': (_c) => UDFormat.transistor(_c.hasError)
       },
       'loading': {
         'ready': (c) => UDFormat.transistor(c.loadingComplete),

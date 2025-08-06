@@ -26,9 +26,6 @@ interface μ8_NoteWindowProps {
   onAddToContext?: (item: UDItem) => void;
   /** Read-only Modus */
   readOnly?: boolean;
-  /** Window-spezifische Styling Props */
-  width?: number;
-  height?: number;
   /** Bagua-Color-Themes basierend auf Descriptor */
   autoBaguaTheme?: boolean;
 }
@@ -46,8 +43,6 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
   onUDItemChange,
   onAddToContext,
   readOnly = false,
-  width = 400,
-  height = 300,
   autoBaguaTheme = true
 }) => {
 
@@ -392,8 +387,10 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
 
   // Window Styling basierend auf Bagua Theme
   const μ8_windowStyle: React.CSSProperties = {
-    width: `${width}px`,
-    height: `${height}px`,
+    width: '100%',
+    height: '100%',
+    minWidth: '250px',
+    minHeight: '200px',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white',

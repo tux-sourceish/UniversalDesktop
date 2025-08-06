@@ -22,7 +22,15 @@
     "test:e2e": "vitest run tests/e2e",
     "test:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=test-results.json",
     "test:parallel": "vitest run --threads",
-    "test:coverage:upload": "npm run test:coverage && codecov"
+    "test:coverage:upload": "npm run test:coverage && codecov",
+    "claude-flow": "/home/tux/claude-flow/bin/claude-flow",
+    "claude-flow:start": "/home/tux/claude-flow/bin/claude-flow start",
+    "claude-flow:mcp": "/home/tux/claude-flow/bin/claude-flow mcp start",
+    "claude-flow:swarm": "/home/tux/claude-flow/bin/claude-flow swarm init",
+    "startup": "./scripts/startup-claude-flow.sh",
+    "swarm:status": "./claude-flow swarm status",
+    "mcp:status": "./claude-flow mcp status",
+    "system:health": "./claude-flow system health"
   },
   "dependencies": {
     "react": "^18.2.0",

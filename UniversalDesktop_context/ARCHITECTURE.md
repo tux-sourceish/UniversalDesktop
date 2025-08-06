@@ -723,6 +723,55 @@ npm run preview
 
 ---
 
+## 🏷️ **CRITICAL: μX-Bagua Filename Convention (NEW FILES ONLY)**
+
+### **MANDATORY RULE: ALL NEW FILES must start with μX_ prefix**
+
+**✅ CORRECT Examples for NEW files:**
+```typescript
+// NEW Components (choose appropriate Bagua type):
+μ1_NewTemplate.tsx        // HIMMEL - Classes/Templates
+μ2_NewUIComponent.tsx     // WIND - Views/UI  
+μ3_newProcedure.ts        // WASSER - Procedures/Flow
+μ4_newSetupFunction.ts    // BERG - Init/Setup
+μ5_newProperties.ts       // SEE - Properties
+μ6_newFunction.ts         // FEUER - Functions
+μ7_newEventHandler.ts     // DONNER - Events
+μ8_newGlobalState.ts      // ERDE - Global/Base
+
+// NEW Hooks (specialized responsibilities):
+μ1_useNewWorkspace.ts     // HIMMEL - Document/workspace management
+μ2_useNewUI.ts           // WIND - UI state management
+μ3_useNewFlow.ts         // WASSER - Process/workflow management
+μ6_useNewCalculation.ts   // FEUER - Function/calculation hooks
+μ7_useNewEvents.ts       // DONNER - Event handling
+μ8_useNewGlobal.ts       // ERDE - Global state management
+```
+
+**⚠️ CRITICAL WARNING: DO NOT RENAME EXISTING FILES**
+```typescript
+// ❌ DO NOT RENAME these working files (separate TODO for later):
+- UniversalDesktopv2.tsx  → μ1_UniversalDesktop.tsx (LATER)
+- CanvasController.tsx    → μ3_CanvasController.tsx (LATER) 
+- LoginPage.tsx          → μ4_LoginPage.tsx (LATER)
+- Any bridge components  → Keep working during V2 transition
+
+// Renaming existing files is a separate refactoring task
+// Focus on NEW files following convention
+```
+
+**Bagua Responsibility Guide:**
+- **μ1 HIMMEL (☰)**: Templates, factories, orchestrators, main entry points
+- **μ2 WIND (☴)**: UI components, panels, visual elements, user interfaces
+- **μ3 WASSER (☵)**: Procedures, workflows, navigation, file operations
+- **μ4 BERG (☶)**: Initialization, setup, configuration, bootstrapping
+- **μ5 SEE (☱)**: Properties, metadata, configuration states
+- **μ6 FEUER (☲)**: Functions, calculations, processing, AI integration
+- **μ7 DONNER (☳)**: Events, interactions, keyboard shortcuts, context menus
+- **μ8 ERDE (☷)**: Global state, foundation systems, core abstractions
+
+---
+
 ## 🎯 **EXTENSION POINTS & PATTERNS**
 
 ### **Adding New μX-Components**
