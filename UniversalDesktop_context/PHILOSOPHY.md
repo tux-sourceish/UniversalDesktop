@@ -31,15 +31,15 @@ Dieses Prinzip manifestiert sich in UniversalDesktop durch:
 Raimunds Bagua-System basiert auf der **Früher Himmel Anordnung** des I Ging - der ursprünglichsten und kraftvollsten Ordnung der acht Trigramme. Diese Ordnung ist **UNVERÄNDERLICH** und **UNIVERSELL GÜLTIG**.
 
 ```
-    ☰ HIMMEL (1)
-       / \
+         ☰ HIMMEL (1)
+            / \
    ☴ WIND (2)   ☳ DONNER (7)
      /               \
 ☵ WASSER (3)      ☲ FEUER (6)
     |                 |
 ☶ BERG (4)        ☱ SEE (5)
      \               /
-       ☷ ERDE (8)
+         ☷ ERDE (8)
 ```
 
 ### **Die μX-Präfix-Ordnung (GESETZGEBUNG):**
