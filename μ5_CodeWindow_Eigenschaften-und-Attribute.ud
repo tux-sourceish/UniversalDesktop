@@ -1,0 +1,218 @@
+([{HEADER:μ5_CodeWindow:ComponentDocumentation}])
+UniversalDesktop μ2_CodeWindow Component Documentation
+μX-Bagua Integration: WIND (☴) Views/UI Pattern
+Version: 2.1.0-raimund-algebra
+Component Type: μ2_ (Views/UI) 
+Location: src/components/windows/μ2_CodeWindow.tsx (537 LOC)
+
+([{INPUT:Props:RequiredInputs}])
+udItem: UDItem - Vollständiges UniversalDocument Item mit Code-Content
+  └─ udItem.content.code: string - Der Code-Content als String
+  └─ udItem.content.language: string - Programmiersprache ('typescript', 'python', etc.)
+  └─ udItem.content.theme: string - Theme ('light', 'dark')
+  └─ udItem.is_contextual: boolean - AI Context Manager Status
+  └─ udItem.transformation_history: array - Änderungsprotokoll
+
+onUDItemChange: function(updatedItem: UDItem, description: string) - Update Callback
+  └─ REQUIRED - Wird bei jeder Code-Änderung aufgerufen
+  └─ Überträgt vollständiges UDItem mit Transformation History
+  └─ Description dokumentiert die Art der Änderung
+
+([{INPUT:Props:OptionalInputs}])
+onAddToContext?: function(item: UDItem) - Context Manager Integration
+  └─ Für 📌 Button Funktionalität (AI Context hinzufügen)
+  └─ Wird von μ6_ContextPanel bereitgestellt
+
+readOnly?: boolean = false - Read-Only Modus für Code Review
+autoFormat?: boolean = true - Automatische Code-Formatierung aktivieren
+
+([{OUTPUT:Capabilities:MainFeatures}])
+Multi-Language Code Editor mit 8 unterstützten Sprachen:
+  └─ TypeScript (🔷 .ts, 2 spaces)
+  └─ JavaScript (🟨 .js, 2 spaces) 
+  └─ Python (🐍 .py, 4 spaces)
+  └─ HTML (🟧 .html, 2 spaces)
+  └─ CSS (🎨 .css, 2 spaces)
+  └─ JSON (📋 .json, 2 spaces)
+  └─ Markdown (📝 .md, 2 spaces)
+  └─ Plain Text (📄 .txt, 2 spaces)
+
+Line Numbers Display mit Scroll-Synchronisation
+Real-time Code Statistics (Lines, Characters)
+Language-specific Auto-Formatting (Ctrl+S, Ctrl+Shift+F)
+Dual Theme System (Light/Dark mit TUI-Terminal Colors)
+Context Manager Integration (📌 Button für AI-Context)
+
+([{PROCESSING:StateManagement:InternalState}])
+μ2_codeState: Code Content + Metadata State
+  └─ code: string - Aktueller Code Content
+  └─ language: string - Gewählte Programmiersprache
+  └─ lineCount/charCount: number - Statistiken
+  └─ lastModified: timestamp - Letzte Änderung
+  └─ hasErrors/isFormatted: boolean - Status Flags
+
+μ5_theme: Theme State ('light', 'dark')
+μ2_isContextual: boolean - Context Manager Pin Status
+μ2_scrollTop: number - Scroll Position für Line Numbers Sync
+
+([{PROCESSING:LanguageSupport:FormattingRules}])
+Language-Specific Formatting Engine:
+  └─ Python: 4-space indentation, colon-based block detection
+  └─ TypeScript/JavaScript: 2-space indentation, brace-based blocks, semicolon insertion
+  └─ HTML: Tag-based indentation with self-closing tag detection
+  └─ CSS/JSON: Standard bracket-based formatting
+  └─ Markdown/Plain: Minimal formatting preservation
+
+TabSize Detection: Automatisch basierend auf gewählter Sprache
+Auto-Format Trigger: Ctrl+S oder Ctrl+Shift+F
+Format-Algorithm: Sprach-spezifische Regex + Indentation Logic
+
+([{INTEGRATION:SpawnSources:CreationPaths}])
+Human Creation Paths:
+  └─ μ2_ToolPanel.tsx → "Code Editor" Button → μ1_WindowFactory → μ8_DesktopItem → μ2_CodeWindow
+  └─ User selects 'code' type from Tool Panel
+
+AI Creation Paths:
+  └─ μ2_AIPanel.tsx → AI Response Analysis → μ1_WindowFactory.detectOptimalType() → 'code' → μ2_CodeWindow
+  └─ AI automatically chooses Code Window for programming content
+
+Factory Registration:
+  └─ μ1_WindowFactory.tsx line 45: 'code' registry entry
+  └─ component: μ2_CodeWindow, defaultDimensions: 750x550
+
+([{INTEGRATION:DataFlow:UpdateCycle}])
+Content Update Flow:
+User Edit → μ6_updateCodeContent() → UDItem Update → onUDItemChange() → 
+μ8_DesktopItem.onUpdate() → UniversalDesktopv2.handleItemUpdate() → 
+μ1_useWorkspace.μ1_transformItem() → Auto-Save (2s debounced)
+
+Language/Theme Change Flow:
+Dropdown Change → μ6_changeLanguage()/μ6_changeTheme() → UDItem Content Update → 
+Persistent Storage in both content{} and metadata{} → Reload-Safe Persistence
+
+Context Manager Flow:
+📌 Button → μ7_toggleContextPin() → μ6_useContextManager.addToContext() → 
+μ6_ContextPanel displays → AI Prompt Enhancement
+
+([{INTEGRATION:Rendering:DesktopItemBridge}])
+Container Integration - μ8_DesktopItem.tsx lines 269-303:
+  └─ Type Detection: item.type === 'code' → μ2_CodeWindow rendering
+  └─ Content Conversion: DesktopItemData → UDItem transformation
+  └─ Robust Content Loading: Handles both object and string content
+  └─ Metadata Preservation: language/theme from content OR metadata fallback
+
+Content Structure Handling:
+  └─ Legacy: item.content as string → Converted to object with defaults
+  └─ Modern: item.content as {code, language, theme} → Direct usage
+  └─ Fallback Chain: content.language → metadata.language → 'typescript'
+
+([{DEPENDENCIES:SystemIntegration:RequiredModules}])
+Core Dependencies:
+  └─ React Hooks: useState, useEffect, useRef, useCallback, useMemo
+  └─ UDItem: ../../core/universalDocument - Core document format
+  └─ UDFormat: ../../core/UDFormat - Bagua constants & algebraic transistor
+
+Integration Points:
+  └─ μ1_WindowFactory - Factory registration for creation
+  └─ μ8_DesktopItem - Container component for spatial placement
+  └─ μ6_ContextManager - AI Context integration via onAddToContext
+  └─ μ1_useWorkspace - Auto-save and persistence system
+
+([{DEPENDENCIES:Styling:ThemeSystem}])
+μ5_baguaTheme Colors (SEE-Pattern):
+Light Theme:
+  └─ borderColor: 'rgba(167, 139, 250, 0.3)' - Bagua purple accent
+  └─ backgroundColor: 'rgba(167, 139, 250, 0.02)' - Subtle purple tint
+  └─ textColor: '#1f2937' - Dark gray text
+  └─ accentColor: '#a78bfa' - Purple accent
+
+Dark Theme (TUI-Inspired):
+  └─ borderColor: '#00aa00' - Classic terminal green
+  └─ backgroundColor: '#001100' - Dark green background
+  └─ textColor: '#00ff00' - Bright terminal green
+  └─ lineNumberBg: '#003300' - Darker green for line numbers
+
+([{PERFORMANCE:Optimization:KeyFeatures}])
+React Performance Patterns:
+  └─ useMemo für μ5_baguaTheme - Theme-Berechnungen gecacht
+  └─ useCallback für Event Handler - Render-Optimierung
+  └─ Line Numbers Memoization - Verhindert unnötige Re-Renders
+  └─ Scroll Synchronization - Smooth line number tracking
+
+State Management Efficiency:
+  └─ Separate Theme State - Unabhängig von Code State
+  └─ Debounced Updates - Auto-save integration (2s delay)
+  └─ Transformation History - Komplettes Change Tracking
+  └─ Content Object Preservation - Vollständige Persistierung
+
+([{BAGUA:Classification:ArchitecturalAlignment}])
+μX-Bagua Integration - WIND (☴) Pattern:
+  └─ μ2_ Functions: UI State Management, Language Selection, Rendering
+  └─ μ5_ Properties: Theme Colors, Component Metadata, Configuration
+  └─ μ6_ Functions: Code Processing, Language Change, Format Operations
+  └─ μ7_ Events: Keyboard Shortcuts, Context Pin, Scroll Handling
+  └─ μ8_ Global: UDItem Updates, Transformation History, Data Flow
+
+Campus-Model Compliance:
+  └─ Single Responsibility: Code editing and language-specific formatting only
+  └─ Hook Integration: Works with specialized μX_ hooks system
+  └─ Algebraic Transistor: Math.pow(0, condition ? 0 : 1) für Conditional Logic
+  └─ Pure Component: No side effects außer UDItem updates
+
+([{FUTURE:Enhancement:PlannedFeatures}])
+Phase 2 Enhancements:
+  └─ Syntax Highlighting Engine - Visual code differentiation
+  └─ Code Intelligence - Auto-completion, error detection
+  └─ Multi-cursor Support - Professional editor features
+  └─ Plugin Architecture - Language-specific extensions
+
+Integration Roadmap:
+  └─ μ6_AICodeAssistant - AI-powered code suggestions
+  └─ μ3_FileSystemIntegration - Direct file editing capability
+  └─ μ7_AdvancedShortcuts - Professional editor shortcuts
+  └─ μ4_ProjectManagement - Multi-file code project support
+
+([{TESTING:Validation:QualityAssurance}])
+Component Status: ✅ FULLY FUNCTIONAL
+  └─ Language/Theme persistence: ✅ FIXED (content object storage)
+  └─ Multi-language support: ✅ WORKING (8 languages)
+  └─ Auto-formatting: ✅ WORKING (language-specific rules)
+  └─ Context integration: ✅ WORKING (📌 button functional)
+  └─ Auto-save integration: ✅ WORKING (2s debounced)
+
+Known Limitations:
+  └─ No syntax highlighting (plain text with monospace font)
+  └─ Basic formatting only (no advanced code intelligence)
+  └─ Single-file editing (no project-wide features)
+  └─ Limited error detection (no real-time syntax validation)
+
+([{USAGE:Examples:CommonScenarios}])
+Human Code Creation:
+  1. User clicks "Code Editor" in μ2_ToolPanel
+  2. μ1_WindowFactory creates μ2_CodeWindow with TypeScript defaults
+  3. User selects language (Python) from dropdown
+  4. User writes code with 4-space Python indentation
+  5. Auto-format on Ctrl+S applies Python-specific formatting
+  6. Content persists with language/theme in UDItem
+
+AI Code Generation:
+  1. User sends AI prompt: "Create a Python function for data processing"
+  2. μ2_AIPanel detects code content in response
+  3. μ1_WindowFactory.detectOptimalType() returns 'code'
+  4. μ2_CodeWindow spawns with Python auto-detected
+  5. AI response pre-formatted with correct indentation
+  6. User can modify and format further
+
+Context Manager Integration:
+  1. User writes important code function
+  2. Clicks 📌 button to add to AI context
+  3. μ6_ContextManager stores code for AI reference
+  4. Subsequent AI queries include this code as context
+  5. AI provides contextually aware suggestions
+
+([{FOOTER:Metadata:DocumentInfo}])
+Document Format: μ5_ (SEE-Pattern) - Properties/Metadata Documentation
+Created: 2025-01-30 | UniversalDesktop v2.1.0-raimund-algebra
+μX-Bagua Compliant: ✅ | Context Utilization: 19% → Optimized for efficiency
+Author: AI Assistant with μX-Bagua Architecture Knowledge
+Purpose: Human & AI Understanding of μ2_CodeWindow Integration Points
