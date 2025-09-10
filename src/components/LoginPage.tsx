@@ -62,16 +62,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
     try {
       // Demo-Account verwenden
+      const demoEmail = import.meta.env.VITE_DEMO_USER_EMAIL || 'demo@universaldesktop.com';
+      const demoPassword = import.meta.env.VITE_DEMO_USER_PASSWORD || 'demo123456';
+
       const result = await supabase.auth.signInWithPassword({
-        email: 'demo@universaldesktop.com',
-        password: 'demo123456',
+        email: demoEmail,
+        password: demoPassword,
       });
 
       if (result.error) {
         // Falls Demo-Account nicht existiert, erstelle ihn
         const signUpResult = await supabase.auth.signUp({
-          email: 'demo@universaldesktop.com',
-          password: 'demo123456',
+          email: demoEmail,
+          password: demoPassword,
         });
 
         if (signUpResult.error) throw signUpResult.error;

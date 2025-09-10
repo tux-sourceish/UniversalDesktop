@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { μ3_useFileSystem } from '../hooks/μ3_useFileSystem';
 import { μ7_UniversalContextMenu, useUniversalContextMenu } from './contextMenu/μ7_UniversalContextMenu';
 import { UDFormat } from '../core/UDFormat';
 
 /**
  * μ2_FileManager - WIND (☴) Views/UI
- * 
+ *
  * Universal File Manager with Context-First Design
  * - Dual-mode architecture: GUI Mode (modern) + TUI Mode (Norton Commander style)
  * - Universal Context Menu integration
@@ -68,7 +69,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
     // Apply search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(item => 
+      filtered = filtered.filter(item =>
         item.name.toLowerCase().includes(query) ||
         item.metadata?.tags?.some(tag => tag.toLowerCase().includes(query))
       );
@@ -113,10 +114,10 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
   // Handle item selection
   const handleItemClick = useCallback((item: any, event: React.MouseEvent) => {
     const multiSelect = allowMultiSelect && (event.ctrlKey || event.metaKey);
-    
+
     setSelectedItems(prev => {
       const newSelection = new Set(multiSelect ? prev : []);
-      
+
       if (newSelection.has(item.id)) {
         newSelection.delete(item.id);
       } else {
@@ -144,7 +145,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
     event.preventDefault();
     event.stopPropagation();
 
-    const contextType = item 
+    const contextType = item
       ? (item.type === 'directory' ? 'folder' : 'file')
       : 'canvas';
 
@@ -159,27 +160,27 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           handleItemDoubleClick(item);
         }
         break;
-      
+
       case 'rename':
         if (item) {
           startRenaming(item);
         }
         break;
-      
+
       case 'delete':
         if (item) {
           // TODO: Implement delete functionality
           console.log('Delete:', item.name);
         }
         break;
-      
+
       case 'duplicate':
         if (item) {
           // TODO: Implement duplicate functionality
           console.log('Duplicate:', item.name);
         }
         break;
-      
+
       case 'transform-to-ud':
         if (item && onCreateUDItem) {
           // Transform file to .ud document
@@ -198,7 +199,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           onCreateUDItem(udItem);
         }
         break;
-      
+
       case 'transform-to-workspace':
         if (item && onCreateUDItem) {
           // Add file as workspace item
@@ -218,7 +219,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           onCreateUDItem(workspaceItem);
         }
         break;
-      
+
       case 'open-with-editor':
         if (item && item.type === 'file') {
           const editorItem = {
@@ -236,7 +237,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           onCreateUDItem?.(editorItem);
         }
         break;
-      
+
       case 'open-with-code':
         if (item && item.type === 'file') {
           const codeItem = {
@@ -254,7 +255,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           onCreateUDItem?.(codeItem);
         }
         break;
-      
+
       case 'copy':
         if (selectedItems.size > 0) {
           const items = filteredAndSortedItems.filter(f => selectedItems.has(f.id));
@@ -263,7 +264,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           copyToClipboard([item]);
         }
         break;
-      
+
       case 'cut':
         if (selectedItems.size > 0) {
           const items = filteredAndSortedItems.filter(f => selectedItems.has(f.id));
@@ -272,27 +273,27 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           cutToClipboard([item]);
         }
         break;
-      
+
       case 'paste':
         pasteFromClipboard(fileSystem.currentPath);
         break;
-      
+
       case 'show-properties':
         if (item) {
           showFileProperties(item);
         }
         break;
-      
+
       case 'create-folder':
         createNewFolder();
         break;
-      
+
       case 'preview':
         if (item && item.type === 'file') {
           showPreview(item);
         }
         break;
-      
+
       default:
         console.log('Unhandled action:', action, item);
     }
@@ -332,9 +333,9 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
   const pasteFromClipboard = useCallback((targetPath: string) => {
     if (!clipboard) return;
-    
+
     console.log(`📌 Paste ${clipboard.operation}:`, clipboard.items.map(i => i.name), 'to', targetPath);
-    
+
     if (clipboard.operation === 'cut') {
       setClipboard(null);
     }
@@ -378,10 +379,10 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
   const showPreview = useCallback((item: any) => {
     if (!onCreateUDItem) return;
-    
+
     const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(item.extension);
     const isCode = ['js', 'jsx', 'ts', 'tsx', 'py', 'rb', 'go', 'rs', 'cpp', 'c', 'java', 'html', 'css', 'json'].includes(item.extension);
-    
+
     const previewItem = {
       type: isImage ? 'media' : isCode ? 'code' : 'notizzettel',
       title: `👁️ Preview: ${item.name}`,
@@ -395,7 +396,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
         bagua_descriptor: UDFormat.BAGUA.SEE
       }
     };
-    
+
     onCreateUDItem(previewItem);
   }, [onCreateUDItem]);
 
@@ -415,7 +416,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
       }
 
       // Only handle other shortcuts when file manager is focused
-      if (!containerRef.current?.contains(document.activeElement) && 
+      if (!containerRef.current?.contains(document.activeElement) &&
           !tuiRef.current?.contains(document.activeElement)) return;
 
       // Navigation and file operations
@@ -424,14 +425,14 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           event.preventDefault();
           fileSystem.navigateTo(fileSystem.currentPath, false);
           break;
-        
+
         case 'Backspace':
           if (!event.target || (event.target as HTMLElement).tagName !== 'INPUT') {
             event.preventDefault();
             fileSystem.goUp();
           }
           break;
-        
+
         case 'Enter':
           event.preventDefault();
           const selectedFileForOpen = filteredAndSortedItems.find(item => selectedItems.has(item.id));
@@ -439,7 +440,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             handleItemDoubleClick(selectedFileForOpen);
           }
           break;
-        
+
         case ' ': // Spacebar for selection toggle in TUI mode
           if (mode === 'tui') {
             event.preventDefault();
@@ -449,7 +450,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'Delete':
           if (selectedItems.size > 0) {
             event.preventDefault();
@@ -461,7 +462,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'F2':
           if (selectedItems.size === 1) {
             event.preventDefault();
@@ -475,7 +476,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'F3': // View file
           if (selectedItems.size === 1) {
             event.preventDefault();
@@ -486,7 +487,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'F7': // Create directory
           event.preventDefault();
           const dirName = prompt('Create directory:');
@@ -495,7 +496,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             // TODO: Implement directory creation
           }
           break;
-        
+
         case 'F9': // Context menu
           event.preventDefault();
           const selectedFileForContext = filteredAndSortedItems.find(item => selectedItems.has(item.id));
@@ -513,13 +514,13 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'Escape':
           event.preventDefault();
           setSelectedItems(new Set());
           hideContextMenu();
           break;
-        
+
         // Arrow key navigation in TUI mode
         case 'ArrowUp':
           if (mode === 'tui') {
@@ -536,7 +537,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             }
           }
           break;
-        
+
         case 'ArrowDown':
           if (mode === 'tui') {
             event.preventDefault();
@@ -561,7 +562,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             event.preventDefault();
             setSelectedItems(new Set(filteredAndSortedItems.map(item => item.id)));
             break;
-          
+
           case 'f':
             event.preventDefault();
             setSearchExpanded(true);
@@ -573,12 +574,12 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
               }, 0);
             }
             break;
-          
+
           case 'h': // Toggle hidden files
             event.preventDefault();
             setShowHidden(!showHidden);
             break;
-          
+
           case 'r': // Refresh
             event.preventDefault();
             fileSystem.navigateTo(fileSystem.currentPath, false);
@@ -745,6 +746,15 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
     );
   };
 
+  const parentRef = React.useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: filteredAndSortedItems.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 34, // Höhe einer einzelnen Datei-Zeile in Pixel
+    overscan: 10, // 10 zusätzliche Elemente oben/unten rendern für flüssiges Scrollen
+  });
+
   // GUI Mode Content
   const renderGUIContent = () => {
     if (fileSystem.loading) {
@@ -779,7 +789,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
     if (viewMode === 'list') {
       return (
-        <div className="file-list-view" style={{ 
+        <div className="file-list-view" style={{
           padding: '8px',
           backgroundColor: 'var(--bg-dark)',
           minHeight: '300px'
@@ -797,25 +807,25 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             backgroundColor: 'var(--bg-medium)'
           }}>
             <div></div>
-            <div 
+            <div
               onClick={() => setSortBy('name')}
               style={{ cursor: 'pointer' }}
             >
               Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
             </div>
-            <div 
+            <div
               onClick={() => setSortBy('size')}
               style={{ cursor: 'pointer' }}
             >
               Size {sortBy === 'size' && (sortOrder === 'asc' ? '↑' : '↓')}
             </div>
-            <div 
+            <div
               onClick={() => setSortBy('type')}
               style={{ cursor: 'pointer' }}
             >
               Type {sortBy === 'type' && (sortOrder === 'asc' ? '↑' : '↓')}
             </div>
-            <div 
+            <div
               onClick={() => setSortBy('modified')}
               style={{ cursor: 'pointer' }}
             >
@@ -824,87 +834,102 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           </div>
 
           {/* Files */}
-          {filteredAndSortedItems.map(item => (
-            <div
-              key={item.id}
-              className={`file-item ${selectedItems.has(item.id) ? 'selected' : ''}`}
-              onClick={(e) => handleItemClick(item, e)}
-              onDoubleClick={() => handleItemDoubleClick(item)}
-              onContextMenu={(e) => handleContextMenu(e, item)}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr auto auto auto',
-                gap: '12px',
-                padding: '6px 4px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                backgroundColor: selectedItems.has(item.id) ? 'rgba(26, 127, 86, 0.3)' : 'transparent',
-                fontSize: '13px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                if (!selectedItems.has(item.id)) {
-                  e.currentTarget.style.backgroundColor = 'rgba(26, 127, 86, 0.15)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!selectedItems.has(item.id)) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                fontSize: '16px' 
-              }}>
-                {fileSystem.getFileIcon(item.name)}
-                {/* Revolutionary Bagua Indicator */}
-                <div 
-                  style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: item.metadata?.baguaColor || '#696969',
-                    border: '1px solid rgba(255,255,255,0.3)',
-                    boxShadow: `0 0 6px ${item.metadata?.baguaColor || '#696969'}40`,
-                    flexShrink: 0
-                  }}
-                  title={`${item.metadata?.baguaSymbol} ${item.metadata?.baguaDescription || 'Unknown Bagua'}`}
-                />
-              </div>
-              <div style={{ 
-                fontWeight: item.type === 'directory' ? 'bold' : 'normal',
-                color: item.isHidden ? 'var(--text-dark)' : 'var(--text-light)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}>
-                <span>{item.name}</span>
-                {/* Bagua Symbol Tooltip */}
-                <span 
-                  style={{
-                    fontSize: '12px',
-                    opacity: 0.6,
-                    color: item.metadata?.baguaColor || 'var(--text-medium)'
-                  }}
-                  title={item.metadata?.baguaDescription}
-                >
-                  {item.metadata?.baguaSymbol}
-                </span>
-              </div>
-              <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
-                {item.type === 'file' ? fileSystem.formatFileSize(item.size) : '—'}
-              </div>
-              <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
-                {item.extension || item.type}
-              </div>
-              <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
-                {fileSystem.formatDate(item.modified)}
-              </div>
+          <div ref={parentRef} style={{ height: '400px', overflow: 'auto' }}>
+            <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, width: '100%', position: 'relative' }}>
+              {rowVirtualizer.getVirtualItems().map(virtualItem => {
+                const item = filteredAndSortedItems[virtualItem.index];
+                const isSelected = selectedItems.has(item.id);
+
+                return (
+                  <div
+                    key={item.id}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: `${virtualItem.size}px`,
+                      transform: `translateY(${virtualItem.start}px)`,
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr auto auto auto',
+                      gap: '12px',
+                      padding: '6px 4px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      backgroundColor: selectedItems.has(item.id) ? 'rgba(26, 127, 86, 0.3)' : 'transparent',
+                      fontSize: '13px',
+                      transition: 'background-color 0.2s ease'
+                    }}
+                    className={`file-item ${isSelected ? 'selected' : ''}`}
+                    onClick={(e) => handleItemClick(item, e)}
+                    onDoubleClick={() => handleItemDoubleClick(item)}
+                    onContextMenu={(e) => handleContextMenu(e, item)}
+                    onMouseEnter={(e) => {
+                      if (!selectedItems.has(item.id)) {
+                        e.currentTarget.style.backgroundColor = 'rgba(26, 127, 86, 0.15)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!selectedItems.has(item.id)) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      fontSize: '16px'
+                    }}>
+                      {fileSystem.getFileIcon(item.name)}
+                      {/* Revolutionary Bagua Indicator */}
+                      <div
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: item.metadata?.baguaColor || '#696969',
+                          border: '1px solid rgba(255,255,255,0.3)',
+                          boxShadow: `0 0 6px ${item.metadata?.baguaColor || '#696969'}40`,
+                          flexShrink: 0
+                        }}
+                        title={`${item.metadata?.baguaSymbol} ${item.metadata?.baguaDescription || 'Unknown Bagua'}`}
+                      />
+                    </div>
+                    <div style={{
+                      fontWeight: item.type === 'directory' ? 'bold' : 'normal',
+                      color: item.isHidden ? 'var(--text-dark)' : 'var(--text-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}>
+                      <span>{item.name}</span>
+                      {/* Bagua Symbol Tooltip */}
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          opacity: 0.6,
+                          color: item.metadata?.baguaColor || 'var(--text-medium)'
+                        }}
+                        title={item.metadata?.baguaDescription}
+                      >
+                        {item.metadata?.baguaSymbol}
+                      </span>
+                    </div>
+                    <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
+                      {item.type === 'file' ? fileSystem.formatFileSize(item.size) : '—'}
+                    </div>
+                    <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
+                      {item.extension || item.type}
+                    </div>
+                    <div style={{ color: 'var(--text-medium)', fontSize: '12px' }}>
+                      {fileSystem.formatDate(item.modified)}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
         </div>
       );
     }
@@ -936,8 +961,8 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                 transition: 'background-color 0.2s ease'
               }}
             >
-              <div style={{ 
-                display: 'flex', 
+              <div style={{
+                display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 position: 'relative'
@@ -946,7 +971,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                   {fileSystem.getFileIcon(item.name)}
                 </div>
                 {/* Revolutionary Bagua Indicator for Grid */}
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     top: '2px',
@@ -996,7 +1021,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
   const renderTUIContent = () => {
     const selectedList = Array.from(selectedItems);
     const hasSelection = selectedList.length > 0;
-    
+
     return (
       <div
         ref={tuiRef}
@@ -1033,11 +1058,11 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ opacity: 0.7 }}>{mode.toUpperCase()} Mode</span>
-            <span style={{ 
-              backgroundColor: '#00ff00', 
-              color: '#001100', 
-              padding: '2px 6px', 
-              borderRadius: '2px' 
+            <span style={{
+              backgroundColor: '#00ff00',
+              color: '#001100',
+              padding: '2px 6px',
+              borderRadius: '2px'
             }}>F12</span>
           </div>
         </div>
@@ -1082,25 +1107,25 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             color: '#ccffcc'
           }}>
             <span>✓</span>
-            <span 
+            <span
               onClick={() => setSortBy('name')}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
               Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
             </span>
-            <span 
+            <span
               onClick={() => setSortBy('size')}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
               Size {sortBy === 'size' && (sortOrder === 'asc' ? '↑' : '↓')}
             </span>
-            <span 
+            <span
               onClick={() => setSortBy('type')}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
               Type {sortBy === 'type' && (sortOrder === 'asc' ? '↑' : '↓')}
             </span>
-            <span 
+            <span
               onClick={() => setSortBy('modified')}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
@@ -1148,7 +1173,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
               filteredAndSortedItems.map((item, index) => {
                 const isSelected = selectedItems.has(item.id);
                 const isEven = index % 2 === 0;
-                
+
                 return (
                   <div
                     key={item.id}
@@ -1163,10 +1188,10 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                       padding: '2px 8px',
                       fontSize: '13px',
                       cursor: 'pointer',
-                      backgroundColor: isSelected 
-                        ? '#006600' 
-                        : isEven 
-                        ? '#001a00' 
+                      backgroundColor: isSelected
+                        ? '#006600'
+                        : isEven
+                        ? '#001a00'
                         : '#001100',
                       borderLeft: isSelected ? '3px solid #00ff00' : '3px solid transparent',
                       transition: 'background-color 0.1s ease'
@@ -1186,7 +1211,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                     <span style={{ color: isSelected ? '#00ff00' : '#666', fontWeight: 'bold' }}>
                       {isSelected ? '✓' : '○'}
                     </span>
-                    
+
                     {/* File Name with Icon and Revolutionary Bagua */}
                     <span style={{
                       display: 'flex',
@@ -1197,7 +1222,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                     }}>
                       <span style={{ fontSize: '16px' }}>{fileSystem.getFileIcon(item.name)}</span>
                       {/* Revolutionary Bagua Indicator for TUI */}
-                      <div 
+                      <div
                         style={{
                           width: '6px',
                           height: '6px',
@@ -1209,7 +1234,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                         }}
                         title={`${item.metadata?.baguaSymbol} ${item.metadata?.baguaDescription || 'Unknown Bagua'}`}
                       />
-                      <span style={{ 
+                      <span style={{
                         fontFamily: 'monospace',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -1218,7 +1243,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                         {item.name}{item.type === 'directory' ? '/' : ''}
                       </span>
                       {/* Bagua Symbol in TUI */}
-                      <span 
+                      <span
                         style={{
                           fontSize: '10px',
                           opacity: 0.7,
@@ -1230,19 +1255,19 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                         {item.metadata?.baguaSymbol}
                       </span>
                     </span>
-                    
+
                     {/* File Size */}
-                    <span style={{ 
-                      textAlign: 'right', 
+                    <span style={{
+                      textAlign: 'right',
                       color: item.type === 'directory' ? '#666' : '#ccffcc',
                       fontFamily: 'monospace',
                       fontSize: '12px'
                     }}>
                       {item.type === 'file' ? fileSystem.formatFileSize(item.size) : '<DIR>'}
                     </span>
-                    
+
                     {/* File Type/Extension */}
-                    <span style={{ 
+                    <span style={{
                       color: '#999',
                       fontSize: '12px',
                       textAlign: 'center',
@@ -1250,9 +1275,9 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                     }}>
                       {item.extension?.toUpperCase() || (item.type === 'directory' ? 'DIR' : '---')}
                     </span>
-                    
+
                     {/* Modified Date */}
-                    <span style={{ 
+                    <span style={{
                       color: '#888',
                       fontSize: '11px',
                       fontFamily: 'monospace'
@@ -1292,14 +1317,14 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
               <span style={{ color: '#ff8800' }}>SEARCH: {searchQuery}</span>
             )}
           </div>
-          
+
           {/* Center - Navigation Hints */}
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
             gap: '6px',
-            fontSize: '10px', 
-            opacity: 0.8 
+            fontSize: '10px',
+            opacity: 0.8
           }}>
             <span>[↑↓] Navigate</span>
             <span>[Enter] Open</span>
@@ -1307,7 +1332,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
             <span>[Del] Delete</span>
             <span>[F2] Rename</span>
           </div>
-          
+
           {/* Right Status */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {fileSystem.operations.length > 0 && (
@@ -1315,10 +1340,10 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                 📋 {fileSystem.operations.filter(op => op.status === 'processing').length} ops
               </span>
             )}
-            <span style={{ 
-              backgroundColor: '#00aa00', 
-              color: '#001100', 
-              padding: '1px 4px', 
+            <span style={{
+              backgroundColor: '#00aa00',
+              color: '#001100',
+              padding: '1px 4px',
               borderRadius: '2px',
               fontWeight: 'bold'
             }}>
@@ -1377,7 +1402,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {fileSystem.loading && '⏳ Loading...'}
-          {fileSystem.operations.length > 0 && 
+          {fileSystem.operations.length > 0 &&
             `📋 ${fileSystem.operations.filter(op => op.status === 'processing').length} operations`
           }
           <span style={{ opacity: 0.7 }}>
@@ -1407,7 +1432,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
       tabIndex={0}
     >
       {mode === 'gui' && renderToolbar()}
-      
+
       <div style={{ flex: 1, overflow: 'auto' }}>
         {mode === 'gui' ? renderGUIContent() : renderTUIContent()}
       </div>

@@ -23,28 +23,29 @@
     "test:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=test-results.json",
     "test:parallel": "vitest run --threads",
     "test:coverage:upload": "npm run test:coverage && codecov",
-    "startup": "./scripts/" 
+    "startup": "./scripts/"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@supabase/supabase-js": "^2.38.4",
+    "@tanstack/react-virtual": "^3.13.12",
     "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17"
+    "@types/react-dom": "^18.2.17",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.0.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "codecov": "^3.8.3",
+    "jest-axe": "^8.0.0",
+    "jsdom": "^23.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
-    "vitest": "^1.0.0",
-    "@vitest/ui": "^1.0.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/user-event": "^14.0.0",
-    "jsdom": "^23.0.0",
-    "jest-axe": "^8.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
-    "codecov": "^3.8.3"
+    "vitest": "^1.0.0"
   },
   "browserslist": {
     "production": [

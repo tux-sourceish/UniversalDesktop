@@ -39,6 +39,31 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
 }) => {
 
 
+  const visibleItems = React.useMemo(() => {
+    const viewport = {
+      left: -canvasState.position.x / canvasState.scale,
+      top: -canvasState.position.y / canvasState.scale,
+      right: (-canvasState.position.x + window.innerWidth) / canvasState.scale,
+      bottom: (-canvasState.position.y + window.innerHeight) / canvasState.scale
+    };
+
+    return items.filter(item => {
+      const itemBounds = {
+        left: item.position.x,
+        top: item.position.y,
+        right: item.position.x + (item.width || 0),
+        bottom: item.position.y + (item.height || 0)
+      };
+
+      return (
+        itemBounds.left < viewport.right &&
+        itemBounds.right > viewport.left &&
+        itemBounds.top < viewport.bottom &&
+        itemBounds.bottom > viewport.top
+      );
+    });
+  }, [items, canvasState]);
+
   const handleCanvasContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -63,7 +88,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
           position: 'relative'
         }}
       >
-        {items.map(item => (
+        {visibleItems.map(item => (
           <DesktopItem
             key={item.id}
             item={item}

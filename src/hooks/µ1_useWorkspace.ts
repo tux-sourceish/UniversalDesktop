@@ -136,10 +136,12 @@ export const µ1_useWorkspace = (userId: string) => {
     }
   }, [userId, udDocument]);
 
+  const worker = new Worker(new URL('../workers/serialization.worker.ts', import.meta.url), { type: 'module' });
+
   // µ1_ Workspace speichern
   const µ1_saveWorkspace = useCallback(async (forceSync: boolean = false) => {
     const { currentWorkspace } = workspaceState;
-    const { hasChanges } = udDocument.documentState;
+    const { hasChanges, document, items } = udDocument.documentState;
 
     // Algebraischer Transistor für Save-Bedingungen
     const shouldSave = UDFormat.transistor(
@@ -156,9 +158,18 @@ export const µ1_useWorkspace = (userId: string) => {
     setWorkspaceState(prev => ({ ...prev, isSaving: true, syncError: null }));
 
     try {
-      console.log('💾 µ1_saveWorkspace starting');
+      console.log('💾 µ1_saveWorkspace starting with worker');
 
-      const binary = udDocument.µ1_toWorkspaceSnapshot();
+      const binary = await new Promise<ArrayBuffer | null>((resolve, reject) => {
+        worker.onmessage = (event) => {
+          resolve(event.data.snapshot);
+        };
+        worker.onerror = (error) => {
+          reject(error);
+        };
+        worker.postMessage({ metadata: document?.metadata, items });
+      });
+
       const hasBinary = UDFormat.transistor(binary !== null);
 
       if (!hasBinary) {

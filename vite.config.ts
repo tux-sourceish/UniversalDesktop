@@ -15,6 +15,14 @@ export default defineConfig({
     sourcemap: process.env.NODE_ENV === 'production',
     // Suppress rollup warnings for vendor source maps
     rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'canvas-module': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/modules/μ8_CanvasModule.tsx'],
+          'panel-module': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/modules/μ2_PanelModule.tsx'],
+          'file-manager-window': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/components/windows/μ2_FileManagerWindow.tsx']
+        }
+      },
       onwarn(warning, warn) {
         if (warning.code === 'SOURCEMAP_ERROR') return;
         warn(warning);

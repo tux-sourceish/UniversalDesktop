@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { useDraggable, useResizable } from '../hooks';
 import type { DesktopItemData } from '../types';
-import { μ2_TuiWindow } from './windows/μ2_TuiWindow';
-import { μ2_TableWindow } from './windows/μ2_TableWindow';
-import { μ8_NoteWindow } from './windows/μ8_NoteWindow';
-import { μ2_FileManagerWindow } from './windows/μ2_FileManagerWindow';
-import { μ2_CodeWindow } from './windows/μ2_CodeWindow';
+const μ2_TuiWindow = lazy(() => import('./windows/μ2_TuiWindow').then(module => ({ default: module.μ2_TuiWindow })));
+const μ2_TableWindow = lazy(() => import('./windows/μ2_TableWindow').then(module => ({ default: module.μ2_TableWindow })));
+const μ8_NoteWindow = lazy(() => import('./windows/μ8_NoteWindow').then(module => ({ default: module.μ8_NoteWindow })));
+const μ2_FileManagerWindow = lazy(() => import('./windows/μ2_FileManagerWindow').then(module => ({ default: module.μ2_FileManagerWindow })));
+const μ2_CodeWindow = lazy(() => import('./windows/μ2_CodeWindow').then(module => ({ default: module.μ2_CodeWindow })));
 import '../styles/DesktopItem.css';
 
 export interface DesktopItemProps {

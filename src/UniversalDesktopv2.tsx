@@ -13,10 +13,10 @@
  * Powered by ULLRICHBAU - Quality is our standard!
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, Suspense, lazy } from 'react';
 import { AuthModule } from './modules/μ4_AuthModule';
-import { CanvasModule } from './modules/μ8_CanvasModule';
-import { PanelModule } from './modules/μ2_PanelModule';
+const CanvasModule = lazy(() => import('./modules/μ8_CanvasModule').then(module => ({ default: module.CanvasModule })));
+const PanelModule = lazy(() => import('./modules/μ2_PanelModule').then(module => ({ default: module.PanelModule })));
 import { ContextModule } from './modules/μ6_ContextModule';
 import { µ1_Header } from './components/µ1_Header';
 import { UDFormat } from './core/UDFormat';
@@ -648,38 +648,40 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         onLogout={logout}
       />
       
-      {/* Canvas & Items - Core workspace */}
-      <CanvasModule
-        items={items}
-        canvasState={canvas.canvasState}
-        onNavigationChange={handleNavigationChange}
-        onKeyboardNavigation={handleKeyboardNavigation}
-        onItemUpdate={handleItemUpdate}
-        onItemDelete={handleItemDelete}
-        onItemRename={handleItemRename}
-        onContextMenu={handleContextMenu}
-        onToggleContext={handleToggleContext}
-        isInContext={context.isInContext}
-        className="main-canvas"
-      />
+      <Suspense fallback={<div>Loading Modules...</div>}>
+        {/* Canvas & Items - Core workspace */}
+        <CanvasModule
+          items={items}
+          canvasState={canvas.canvasState}
+          onNavigationChange={handleNavigationChange}
+          onKeyboardNavigation={handleKeyboardNavigation}
+          onItemUpdate={handleItemUpdate}
+          onItemDelete={handleItemDelete}
+          onItemRename={handleItemRename}
+          onContextMenu={handleContextMenu}
+          onToggleContext={handleToggleContext}
+          isInContext={context.isInContext}
+          className="main-canvas"
+        />
 
-      {/* Panel System - Unified management */}
-      <PanelModule
-        panelState={panels.panelState}
-        items={items}
-        canvasState={canvas.canvasState}
-        onPanelToggle={panels.togglePanel}
-        onNavigationChange={handleNavigationChange}
-        onZoomChange={handleZoomChange}
-        onItemCreate={handleItemCreate}
-        onCreateUDItem={handleCreateUDItem}
-        positionCalculator={calculateSmartPosition}
-        onItemUpdate={handleItemUpdate}
-        position="left"
-        μ8_panelState={panels.panelState}
-        μ8_panelConfigs={panels.panelConfigs}
-        contextManager={context}
-      />
+        {/* Panel System - Unified management */}
+        <PanelModule
+          panelState={panels.panelState}
+          items={items}
+          canvasState={canvas.canvasState}
+          onPanelToggle={panels.togglePanel}
+          onNavigationChange={handleNavigationChange}
+          onZoomChange={handleZoomChange}
+          onItemCreate={handleItemCreate}
+          onCreateUDItem={handleCreateUDItem}
+          positionCalculator={calculateSmartPosition}
+          onItemUpdate={handleItemUpdate}
+          position="left"
+          μ8_panelState={panels.panelState}
+          μ8_panelConfigs={panels.panelConfigs}
+          contextManager={context}
+        />
+      </Suspense>
 
       {/* Context Menu System - Unified interactions */}
       <ContextModule
