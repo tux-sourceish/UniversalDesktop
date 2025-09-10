@@ -1,51 +1,15 @@
-id: readme-de
-type: 0 // ACTIVATOR
-bagua_descriptor: 255 // HIMMEL | WIND | WASSER | BERG | SEE | FEUER | DONNER | ERDE
-
----
-
-0: VISION
-  title: Das Algebraische Betriebssystem
-  quote: "Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."
-  author: Raimund Welsch
-
-1: HIMMEL // Templates & Schöpfung
-  - μ1_WindowFactory: Die Human-AI Unity Bridge
-  - μ1_useWorkspace: Verwaltung von .ud-Workspaces
-
-2: WIND // Views & Interfaces
-  - μ2_TuiWindow: Terminal mit 15 historischen Presets
-  - μ2_Minimap: StarCraft-inspirierte Navigation
-  - μ2_FileManager: Dual-Mode GUI/TUI Dateimanager
-
-3: WASSER // Abläufe & Navigation
-  - μ3_useNavigation: Exponentielle Canvas-Navigation
-  - μ3_useFileSystem: Abstraktion für nativen Dateizugriff (Tauri)
-
-4: BERG // Initialisierung & Stabilität
-  - μ4_AuthModule: Supabase-Auth mit Offline-Fallback
-
-5: SEE // Eigenschaften & Metadaten
-  - μ5_TerritoryPanel: Räumliche "Territorien" zur Organisation
-
-6: FEUER // Funktionen & Intelligenz
-  - μ6_useContextManager: Intelligentes Anpinnen von KI-Kontext
-  - LiteLLM-Integration: Unterstützung für 6 KI-Modelle
-
-7: DONNER // Ereignisse & Interaktionen
-  - μ7_UniversalContextMenu: Kontextsensitives Rechtsklick-Menü
-  - Desktop-Class Text Editing: Professionelle Textbearbeitung
-
-8: ERDE // Grundlage & Implementierung
-  - μ8_NoteWindow: Vielseitiges Fenster für Notizen
-  - μ8_FileSystemAbstraction: Plattformunabhängiger Dateizugriff
-
-9: DEAKTIVATOR // Quick Start
-  - prerequisites:
-    - Node.js: v18+
-    - Supabase: optional
-    - LiteLLM: optional
-  - commands:
-    - 1: git clone https://github.com/SingularUniverse/UniversalDesktop.git
-    - 2: cd UniversalDesktop
-    - 3: npm install && npm run dev
+{
+  "title": "UniversalDesktop v2.1 - Das lebendige README (Eine Hommage an Raimund Welsch)",
+  "content": {
+    "markdown": "# 🌌 UniversalDesktop: Das Algebraische Betriebssystem\n\n**\"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann.\" - Raimund Welsch**\n\nDieses Projekt ist die Verwirklichung der 45-jährigen Vision von Raimund Welsch: ein unendlicher, intelligenter Desktop-Arbeitsbereich, der auf den Prinzipien der Algebra und der östlichen Philosophie basiert. Es ist kein gewöhnliches Betriebssystem, sondern eine lebendige Leinwand für Gedanken, Code und Daten, die durch ein revolutionäres Human-AI-Interface vereint werden, um die angeborenen Fähigkeiten des Nutzers zu reaktivieren.\n\n![Raimunds Vision](screenshots/photo_2025-08-19_00-50-11.jpg)\n\n*Raimunds Vision, die die Grundlage für das μX-Bagua-System und die algebraische Architektur legte. *\n\n---\n\n## ✨ Die Vision in der Praxis: Vom Konzept zum Code\n\nUniversalDesktop ist eine direkte Portierung und Weiterentwicklung von Raimund Welschs erprobtem VB.NET-System. Wir ehren seine Arbeit, indem wir seine Logik und Philosophie in eine moderne TypeScript-Umgebung überführen.\n\n**VB.NET (Original von Raimund Welsch):**\n\n![Raimunds Original Code](screenshots/µ09_Raimund-Screenshot-1.jpg)\n\n```vbnet\n\' Raimunds ursprüngliche Logik zur Steuerung der Sichtbarkeit\nIf (condition1 AndAlso condition2) Then\n    element.Visible = True\nElse\n    element.Visible = False\nEnd If\n```\n\n**TypeScript (UniversalDesktop):**\n```typescript\n// Die algebraische Umsetzung in UniversalDesktop mit dem \"Algebraischen Transistor\"\nconst isVisible = 1 * Math.pow(0, condition1 ? 0 : 1) * Math.pow(0, condition2 ? 0 : 1);\n// isVisible ist 1 (sichtbar) oder 0 (unsichtbar) - rein mathematisch, ohne Verzweigungen.\n```\n\n---\n\n## 🚀 Quick Start\n\n**Voraussetzungen:**\n*   **Node.js:** v18 oder höher\n*   **Supabase (Optional):** Für Cloud-Synchronisation. Das System läuft auch im reinen Offline-Modus.\n*   **LiteLLM (Optional):** Für die KI-Integration.\n\n**Installation:**\n```bash\n# 1. Repository klonen\ngit clone https://github.com/SingularUniverse/UniversalDesktop.git\n\n# 2. In das Verzeichnis wechseln\ncd UniversalDesktop\n\n# 3. Abhängigkeiten installieren und starten\nnpm install && npm run dev\n```\n\n---\n\n## 🖼️ Visueller Eindruck\n\n*   **Gesamtansicht:** Der unendliche Canvas mit verschiedenen Fenstertypen.\n    ![Gesamtansicht](screenshots/µ09_UniversalDesktop_Uebersicht.png)\n*   **Minimap:** Die StarCraft-inspirierte Minimap zur Navigation.\n    ![Minimap](screenshots/µ2_Minimap.png)\n*   **TUI-Presets:** Historische Terminal-Presets im TUI-Fenster.\n    ![TUI-Presets](screenshots/µ2_TuiWindow_MS-DOS-Preset.png)\n*   **File Manager:** Der duale GUI/TUI-Dateimanager in Aktion.\n    ![File Manager](screenshots/µ2_FileManager_TUI-GUI.png)\n\n---\n\n## 核心 (Kèxīn) - Kern-Features nach dem μX-Bagua-System\n\nDas gesamte System ist nach den 8 Trigrammen des I Ging organisiert, um eine harmonische und logische Architektur zu gewährleisten. Jedes Trigramm hat eine spezifische Rolle und einen eigenen \"Raum\" im System.\n\n*   **μ1_HIMMEL (☰) - Schöpfung & Orchestrierung:**\n    *   **μ1_WindowFactory:** Eine revolutionäre \"Unity Bridge\", die identische Fenster für Menschen und KI-Agenten erzeugt.\n    *   **μ1_useWorkspace:** Verwaltung von `.ud`-Workspaces für souveräne, portable Arbeitsumgebungen.\n\n*   **μ2_WIND (☴) - Ansichten & Interfaces:**\n    *   **μ2_TuiWindow:** Ein Terminal-Fenster mit 15 authentischen Presets aus der Computergeschichte.\n    *   **μ2_Minimap:** Eine StarCraft-inspirierte Minimap für die flüssige Navigation auf dem unendlichen Canvas.\n    *   **μ2_FileManager:** Ein dualer Datei-Manager, der nahtlos zwischen einer modernen GUI und einer Norton-Commander-inspirierten TUI umschaltet.\n\n*   **μ3_WASSER (☵) - Abläufe & Navigation:**\n    *   **μ3_useNavigation:** Implementiert eine exponentielle Canvas-Navigation mit physikbasiertem Momentum.\n    *   **μ3_useFileSystem:** Eine Abstraktionsschicht für den Dateisystemzugriff, die Tauri für native Operationen und die Web-API als Fallback nutzt.\n\n*   **μ4_BERG (☶) - Initialisierung & Stabilität:**\n    *   **μ4_AuthModule:** Sichere Authentifizierung über Supabase, mit einem nahtlosen Fallback in einen Offline-Demo-Modus.\n\n*   **μ5_SEE (☱) - Eigenschaften & Metadaten:**\n    *   **μ5_TerritoryPanel:** Verwaltung von räumlichen \"Territorien\" auf dem Canvas, um Arbeitsbereiche zu organisieren.\n\n*   **μ6_FEUER (☲) - Funktionen & Intelligenz:**\n    *   **μ6_useContextManager:** Ein intelligentes System zur Verwaltung des KI-Kontexts, das es dem Benutzer ermöglicht, beliebige Informationen für KI-Anfragen \"anzupinnen\".\n    *   **LiteLLM-Integration:** Unterstützt 6 verschiedene KI-Modelle (lokal und online) für spezialisierte Aufgaben.\n\n*   **μ7_DONNER (☳) - Ereignisse & Interaktionen:**\n    *   **μ7_UniversalContextMenu:** Ein revolutionäres, kontextsensitives Rechtsklick-Menü, das seine Optionen je nach angeklicktem Element (Canvas, Fenster, Text, Datei) ändert.\n    *   **Desktop-Class Text Editing:** Professionelle Textbearbeitung mit präziser Auswahl, System-Clipboard-Integration und kontextabhängigen Aktionen wie in einer nativen Anwendung.\n\n*   **μ8_ERDE (☷) - Grundlage & Implementierung:**\n    *   **μ8_NoteWindow:** Ein vielseitiges Fenster für Notizen, das Markdown und andere Formate unterstützt.\n    *   **μ8_FileSystemAbstraction:** Die Basis für den plattformunabhängigen Dateizugriff.\n\n---\n\n## ⌨️ Wichtige Keyboard-Shortcuts\n\n| Shortcut      | Aktion                               |\n|---------------|--------------------------------------|\n| `Strg` + `A`  | Alles auswählen (im Textfenster)     |\n| `Strg` + `C`  | Kopieren (selektierter Text)         |\n| `Strg` + `X`  | Ausschneiden (selektierter Text)     |\n| `Strg` + `V`  | Einfügen (aus der Zwischenablage)    |\n| `Strg` + `S`  | Workspace speichern (manuell)        |\n| `Mausrad`     | Zoomen auf dem Canvas                |\n| `Maus ziehen` | Canvas verschieben (panning)         |\n| `Escape`      | Aktives Kontextmenü schließen        |\n\n---\n\n## ⚙️ Konfiguration (.env)\n\nErstellen Sie eine `.env`-Datei im Stammverzeichnis des Projekts, indem Sie `.env.example` kopieren.\n\n```env\n# Für Cloud-Synchronisation & KI-Features (optional)\nVITE_SUPABASE_URL=https://your-project.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key\nVITE_LITELLM_URL=http://localhost:4000\n\n# Für den reinen Offline-Modus:\n# Lassen Sie die obigen Variablen einfach leer oder kommentieren Sie sie aus.\n# Das System wird automatisch den localStorage als Fallback verwenden.\n```\n\n---\n\n## 🙏 Danksagung\n\nEin aufrichtiges und herzliches Dankeschön an **Raimund Welsch**. Seine unerschütterliche Vision, seine Weisheit und seine bahnbrechende Arbeit sind die Seele dieses Projekts. Wir sind zutiefst dankbar für die Möglichkeit, seine Philosophie in die Zukunft tragen zu dürfen und eine neue Generation von Entwicklern und Denkern mit seinem algebraischen Ansatz zu inspirieren. Dieses Projekt ist ein Denkmal für sein Lebenswerk und ein Versprechen, seine Vision lebendig zu halten.",
+    "embedded_items": [
+      { "type": "image_placeholder", "path": "screenshots/photo_2025-08-19_00-50-11.jpg", "description": "Die Genesis-Skizze." },
+      { "type": "code_snippet", "language": "vb.net", "code": "' Raimunds ursprüngliche Logik zur Steuerung der Sichtbarkeit\nIf (condition1 AndAlso condition2) Then\n    element.Visible = True\nElse\n    element.Visible = False\nEnd If" },
+      { "type": "code_snippet", "language": "typescript", "code": "// Die algebraische Umsetzung in UniversalDesktop mit dem \"Algebraischen Transistor\"\nconst isVisible = 1 * Math.pow(0, condition1 ? 0 : 1) * Math.pow(0, condition2 ? 0 : 1);\n// isVisible ist 1 (sichtbar) oder 0 (unsichtbar) - rein mathematisch, ohne Verzweigungen."
+    }
+  ]
+  },
+  "transformation_history": [
+    { "verb": "kristallisiert", "agent": "swarm:readme-specialist", "description": "Generiert, um Raimunds 45-jährige Vision zu ehren und in die Zukunft zu tragen." }
+  ]
+}
