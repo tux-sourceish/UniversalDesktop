@@ -3,7 +3,7 @@
  * Pure rendering module with hook integration
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { CanvasController } from '../components/bridges/CanvasController';
 import DesktopItem from '../components/μ8_DesktopItem';
 import type { DesktopItemData, CanvasState } from '../types';
@@ -37,14 +37,18 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
   isInContext,
   className = ''
 }) => {
-
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const visibleItems = React.useMemo(() => {
+    if (!canvasRef.current) return items;
+
+    const { clientWidth, clientHeight } = canvasRef.current;
+
     const viewport = {
       left: -canvasState.position.x / canvasState.scale,
       top: -canvasState.position.y / canvasState.scale,
-      right: (-canvasState.position.x + window.innerWidth) / canvasState.scale,
-      bottom: (-canvasState.position.y + window.innerHeight) / canvasState.scale
+      right: (-canvasState.position.x + clientWidth) / canvasState.scale,
+      bottom: (-canvasState.position.y + clientHeight) / canvasState.scale
     };
 
     return items.filter(item => {
@@ -62,7 +66,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
         itemBounds.bottom > viewport.top
       );
     });
-  }, [items, canvasState]);
+  }, [items, canvasState, canvasRef.current]);
 
   const handleCanvasContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -72,6 +76,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
 
   return (
     <CanvasController
+      ref={canvasRef}
       canvasState={canvasState}
       onNavigationChange={onNavigationChange}
       onKeyboardNavigation={onKeyboardNavigation}

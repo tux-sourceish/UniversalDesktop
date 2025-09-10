@@ -147,30 +147,6 @@ export const µ1_useUniversalDocument = () => {
     }
   }, []);
 
-  // µ1_ Document zu Binary serialisieren
-  // µ1_ Compact Workspace Snapshot für Supabase (PERFORMANCE OPTIMIERT)
-  const µ1_toWorkspaceSnapshot = useCallback((): ArrayBuffer | null => {
-    const { document } = documentState;
-    
-    // Algebraischer Transistor für Document-Check
-    const hasDocument = UDFormat.transistor(document !== null);
-    
-    if (!hasDocument) {
-      console.warn('⚠️ µ1_toWorkspaceSnapshot: No document to serialize');
-      return null;
-    }
-
-    try {
-      const snapshot = document!.toWorkspaceSnapshot();
-      
-      console.log(`✅ µ1_toWorkspaceSnapshot: Compact snapshot created (${Math.round(snapshot.byteLength / 1024)}KB)`);
-      return snapshot;
-    } catch (error) {
-      console.error('💥 µ1_toWorkspaceSnapshot failed:', error);
-      return null;
-    }
-  }, [documentState]);
-
   const µ1_toBinary = useCallback((): ArrayBuffer | null => {
     const { document } = documentState;
     
@@ -399,7 +375,6 @@ export const µ1_useUniversalDocument = () => {
     µ1_loadFromBinary,
     µ1_loadFromWorkspaceSnapshot,
     µ1_toBinary,
-    µ1_toWorkspaceSnapshot,
     µ1_addItem,
     µ1_transformItem,
     µ1_removeItem,

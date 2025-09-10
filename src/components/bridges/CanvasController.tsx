@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { useCanvasNavigation } from '../../hooks';
 
 interface CanvasControllerProps {
@@ -18,7 +18,7 @@ interface CanvasControllerProps {
  * Verbindet useCanvasNavigation Hook direkt mit React Component.
  * Automatisches Event-Handling, Keyboard-Shortcuts und CSS-Transform-Sync.
  */
-export const CanvasController: React.FC<CanvasControllerProps> = ({
+const CanvasControllerWithRef = forwardRef<HTMLDivElement, CanvasControllerProps>(({ 
   children,
   canvasState: externalCanvasState,
   onNavigationChange,
@@ -27,8 +27,9 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
   enableMouseInteraction = true,
   className = '',
   style = {}
-}) => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+}, ref) => {
+  const internalCanvasRef = useRef<HTMLDivElement>(null);
+  useImperativeHandle(ref, () => internalCanvasRef.current!);
   
   // Hook Integration: Externe State hat Priorität, sonst eigener Hook als Fallback
   const canvas = externalCanvasState ? null : useCanvasNavigation();
@@ -91,7 +92,7 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
   const handleMouseEvents = useCallback(() => {
     if (!enableMouseInteraction || !canvas) return;
     
-    const element = canvasRef.current;
+    const element = internalCanvasRef.current;
     if (!element) return;
 
     // Pan functionality
@@ -187,7 +188,7 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
 
   return (
     <div 
-      ref={canvasRef}
+      ref={internalCanvasRef}
       className={`canvas-controller ${className}`}
       onWheel={handleWheel}
       style={{
@@ -225,7 +226,9 @@ export const CanvasController: React.FC<CanvasControllerProps> = ({
       </div>
     </div>
   );
-};
+});
+
+export const CanvasController = CanvasControllerWithRef;
 
 // Export hook for external access
 export const useCanvasControllerHook = () => useCanvasNavigation();

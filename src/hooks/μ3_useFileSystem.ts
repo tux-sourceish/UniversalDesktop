@@ -12,8 +12,9 @@
  * but maintains the same essential interface and behavior.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useReducer } from 'react';
 import { UDFormat } from '../core/UDFormat';
+import { μ3_FileManagerStateMachine, FileManagerStates, FileManagerEvents } from '../patterns/μX_StateManagement';
 
 // File System Types
 interface FileSystemItem {
@@ -55,7 +56,7 @@ interface FileSystemState {
   items: FileSystemItem[];
   history: string[];
   historyIndex: number;
-  loading: boolean;
+  machine: μ3_FileManagerStateMachine;
   error: string | null;
   capabilities: FileSystemCapabilities;
 }
@@ -83,7 +84,7 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
     items: [],
     history: [initialPath],
     historyIndex: 0,
-    loading: false,
+    machine: new μ3_FileManagerStateMachine(),
     error: null,
     capabilities: {
       canRead: true,
@@ -530,7 +531,8 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
 
   // Navigation operations
   const navigateTo = useCallback(async (path: string, addToHistory = true) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    state.machine.transition('load_directory');
+    setState(prev => ({ ...prev, error: null }));
 
     try {
       let items: FileSystemItem[];
@@ -545,6 +547,8 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
         // Fallback to mock file system
         items = await mockFileSystem(path);
       }
+
+      state.machine.transition('load_directory');
 
       setState(prev => {
         let newHistory = prev.history;
@@ -561,18 +565,17 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
           items,
           history: newHistory,
           historyIndex: newHistoryIndex,
-          loading: false
         };
       });
 
     } catch (error: any) {
+      state.machine.transition('error_occurred');
       setState(prev => ({
         ...prev,
-        loading: false,
         error: error.message || 'Failed to navigate to directory'
       }));
     }
-  }, [state.capabilities.hasNativeIntegration, tauriReadDirectory, webReadDirectory, mockFileSystem]);
+  }, [state.capabilities.hasNativeIntegration, tauriReadDirectory, webReadDirectory, mockFileSystem, state.machine]);
 
   // History navigation
   const goBack = useCallback(() => {
@@ -621,6 +624,7 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
 
   const readFile = useCallback(async (path: string): Promise<string> => {
     const operationId = createOperation('read', path);
+    state.machine.transition('operation_start');
     
     try {
       setOperations(prev => prev.map(op => 
@@ -642,14 +646,16 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
         op.id === operationId ? { ...op, status: 'completed', progress: 100 } : op
       ));
 
+      state.machine.transition('operation_complete');
       return content;
     } catch (error: any) {
       setOperations(prev => prev.map(op => 
         op.id === operationId ? { ...op, status: 'failed', error: error.message } : op
       ));
+      state.machine.transition('error_occurred');
       throw error;
     }
-  }, [state.capabilities.hasNativeIntegration, createOperation]);
+  }, [state.capabilities.hasNativeIntegration, createOperation, state.machine]);
 
   const writeFile = useCallback(async (path: string, content: string): Promise<void> => {
     if (!state.capabilities.canWrite) {
@@ -657,6 +663,7 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
     }
 
     const operationId = createOperation('write', path);
+    state.machine.transition('operation_start');
     
     try {
       setOperations(prev => prev.map(op => 
@@ -679,13 +686,15 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
       if (path.startsWith(state.currentPath)) {
         await navigateTo(state.currentPath, false);
       }
+      state.machine.transition('operation_complete');
     } catch (error: any) {
       setOperations(prev => prev.map(op => 
         op.id === operationId ? { ...op, status: 'failed', error: error.message } : op
       ));
+      state.machine.transition('error_occurred');
       throw error;
     }
-  }, [state.capabilities.canWrite, state.capabilities.hasNativeIntegration, state.currentPath, createOperation, navigateTo]);
+  }, [state.capabilities.canWrite, state.capabilities.hasNativeIntegration, state.currentPath, createOperation, navigateTo, state.machine]);
 
   // Initialize with default path
   useEffect(() => {
@@ -707,6 +716,7 @@ export const μ3_useFileSystem = (initialPath: string = '/') => {
   return {
     // State
     ...state,
+    loading: state.machine.currentState === 'loading',
     operations,
     
     // Navigation

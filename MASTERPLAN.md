@@ -18,15 +18,15 @@ Transformiere die stabile v2.1-Anwendung in eine **lebendige, unendlich skalierb
 #### **Phase 1: Performance für die Ewigkeit – Die 10.000-Item-Challenge**
 *(Ziel: Die Architektur so optimieren, dass sie mühelos mit riesigen, komplexen Workspaces umgehen kann.)*
 
-*   **☐ Task 1.1 (Canvas-Virtualisierung / Viewport Culling):**
+*   **✅ Task 1.1 (Canvas-Virtualisierung / Viewport Culling):**
     *   **Aktion:** Implementiere die wichtigste Performance-Optimierung. Rendere im `μ8_CanvasModule` nur die `μ8_DesktopItem`-Komponenten, die sich tatsächlich im sichtbaren Bereich des Bildschirms befinden.
     *   **Warum:** Dies ist der Schlüssel, um tausende von Fenstern zu verwalten, ohne die UI zu blockieren.
 
-*   **☐ Task 1.2 (File-Manager-Virtualisierung):**
+*   **✅ Task 1.2 (File-Manager-Virtualisierung):**
     *   **Aktion:** Integriere eine Virtualisierungs-Bibliothek (z.B. `TanStack Virtual`) in den `μ2_FileManager`, um Verzeichnisse mit tausenden von Dateien ohne Performance-Verlust darzustellen.
     *   **Warum:** Macht den File-Manager bereit für den professionellen Einsatz mit großen Datenmengen.
 
-*   **☐ Task 1.3 (Web-Worker für Hintergrundprozesse):**
+*   **✅ Task 1.3 (Web-Worker für Hintergrundprozesse):**
     *   **Aktion:** Lagere die rechenintensive Workspace-Serialisierung (`toWorkspaceSnapshot`) aus dem `μ1_useWorkspace`-Hook in einen Web-Worker aus.
     *   **Warum:** Verhindert, dass die UI einfriert, während große Workspaces im Hintergrund gespeichert werden.
 
@@ -34,7 +34,7 @@ Transformiere die stabile v2.1-Anwendung in eine **lebendige, unendlich skalierb
 #### **Phase 2: Vertiefung der Philosophie – Lebendige Interaktion**
 *(Ziel: Die abstrakten philosophischen Konzepte in greifbare, intuitive User-Experience-Features verwandeln.)*
 
-*   **☐ Task 2.1 (Algebraische State Machines):**
+*   **✅ Task 2.1 (Algebraische State Machines):**
     *   **Aktion:** Refaktoriere den `μ3_useFileSystem`-Hook. Implementiere eine explizite, algebraische State Machine (wie in `μX_StateManagement.ts` entworfen), um die Dateizugriffs-Logik robuster und vorhersagbarer zu machen.
     *   **Warum:** Verhindert ungültige Zustandsübergänge und macht die komplexe Logik wartbarer.
 

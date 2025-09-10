@@ -64,34 +64,6 @@ export const µ1_useWorkspace = (userId: string) => {
         // Neuen Workspace erstellen wenn keiner existiert
         console.log('🆕 Creating new workspace for user');
         const newDoc = udDocument.µ1_createDocument();
-        const binary = udDocument.µ1_toWorkspaceSnapshot();
-
-        if (binary) {
-          const newWorkspaceId = await µ1_SupabaseUDService.µ1_createWorkspace(
-            userId,
-            '🌌 My First Workspace',
-            binary,
-            'Automatisch erstellter Workspace mit Bagua-Power'
-          );
-
-          const newWorkspaceSuccess = UDFormat.transistor(newWorkspaceId !== null);
-          
-          if (newWorkspaceSuccess) {
-            // Reload nach Creation
-            const createdWorkspace = await µ1_SupabaseUDService.µ1_getCurrentWorkspace(userId);
-            
-            setWorkspaceState({
-              currentWorkspace: createdWorkspace,
-              isLoading: false,
-              isSaving: false,
-              lastSyncedAt: Date.now(),
-              syncError: null
-            });
-
-            console.log('✅ µ1_loadWorkspace: New workspace created and loaded');
-                return createdWorkspace;
-          }
-        }
         
         throw new Error('Failed to create new workspace');
       }
