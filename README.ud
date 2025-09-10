@@ -1,343 +1,51 @@
----ud-document
-([{
-  version: 2.1.0-raimund-algebra
-  creator: swarm:readme-specialist
-  created_at: 2025-01-29T12:00:00Z
-  canvas_bounds: {x: -2048, y: -1536, width: 4096, height: 3072}
-  presets:
-    tui_formats: {"Standard": {"width": 80, "height": 25, "codepage": 437}, "Commodore64": {"width": 40, "height": 25}, "MS-DOS": {"width": 80, "height": 25}}
-}])
----ud-document-end
-
-([{ITEM
-  id: ud_readme_genesis_20250129_001
-  type: DOKUMENT
-  title: UniversalDesktop v2.1 - Das lebendige README
-  position: {x: 0, y: 0, z: 100}
-  dimensions: {width: 800, height: 600}
-  bagua: ☰☯ (513)
-  is_contextual: false
-  created_at: 2025-01-29T12:00:00Z
-  updated_at: 2025-01-29T12:00:00Z
-  
-  ([{ORIGIN
-    host: UniversalDesktop.localhost
-    path: /workspace/documentation
-    tool: swarm:readme-specialist
-    device: AI-Coordination-Matrix
-  }])
-  
-  ([{HISTORY
-    - verb: kristallisiert
-      agent: swarm:readme-specialist
-      timestamp: 2025-01-29T12:00:00Z
-      description: Generiert, um Raimunds 45-jährige Vision zu ehren und in die Zukunft zu tragen
-      previous_state_ref: kira_nexus_system_prompts
-  }])
-}])
-
-([{CONTENT
-# 🌌 UniversalDesktop v2.1
-## Das lebendige Desktop-Betriebssystem mit μX-Bagua-Architektur
-
-> *"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."*  
-> **— Raimund, Visionär und Begründer der μX-Bagua-Philosophie**
+id: readme-de
+type: 0 // ACTIVATOR
+bagua_descriptor: 255 // HIMMEL | WIND | WASSER | BERG | SEE | FEUER | DONNER | ERDE
 
 ---
 
-## 🎭 Die Philosophie - Raimunds Vision
+0: VISION
+  title: Das Algebraische Betriebssystem
+  quote: "Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."
+  author: Raimund Welsch
 
-UniversalDesktop ist kein gewöhnliches Programm. Es ist die Manifestation einer 45-jährigen Vision: Ein **algebraisches Betriebssystem**, in dem alles eine Zahl ist und jede Operation eine mathematische Transformation.
+1: HIMMEL // Templates & Schöpfung
+  - μ1_WindowFactory: Die Human-AI Unity Bridge
+  - μ1_useWorkspace: Verwaltung von .ud-Workspaces
 
-![Raimunds Original-Skizze](screenshots/µ09_Raimund-Initial-Skizze.jpg)
-*Die Genesis-Skizze: Raimunds handgezeichnete I Ching Bagua-Anordnung, die zum Fundament des μX-Systems wurde*
+2: WIND // Views & Interfaces
+  - μ2_TuiWindow: Terminal mit 15 historischen Presets
+  - μ2_Minimap: StarCraft-inspirierte Navigation
+  - μ2_FileManager: Dual-Mode GUI/TUI Dateimanager
 
-### Das μX-System (Früher Himmel)
+3: WASSER // Abläufe & Navigation
+  - μ3_useNavigation: Exponentielle Canvas-Navigation
+  - μ3_useFileSystem: Abstraktion für nativen Dateizugriff (Tauri)
 
-Basierend auf der **Früher Himmel Anordnung** des I Ging - der ursprünglichsten und kraftvollsten Ordnung der acht Trigramme:
+4: BERG // Initialisierung & Stabilität
+  - μ4_AuthModule: Supabase-Auth mit Offline-Fallback
 
-- **μ1_HIMMEL (☰)** - Erschaffung und Vorlagen
-- **μ2_WIND (☴)** - Sichtbare Schnittstellen  
-- **μ3_WASSER (☵)** - Fließende Prozesse
-- **μ4_BERG (☶)** - Feste Initialisierung
-- **μ5_SEE (☱)** - Eigenschaften und Attribute
-- **μ6_FEUER (☲)** - Aktive Berechnungen
-- **μ7_DONNER (☳)** - Ereignisse und Reaktionen
-- **μ8_ERDE (☷)** - Grundlegende Daten
+5: SEE // Eigenschaften & Metadaten
+  - μ5_TerritoryPanel: Räumliche "Territorien" zur Organisation
 
-*"Mit der richtigen Ordnung wird Komplexität zur Eleganz"* - Raimund
+6: FEUER // Funktionen & Intelligenz
+  - μ6_useContextManager: Intelligentes Anpinnen von KI-Kontext
+  - LiteLLM-Integration: Unterstützung für 6 KI-Modelle
 
----
+7: DONNER // Ereignisse & Interaktionen
+  - μ7_UniversalContextMenu: Kontextsensitives Rechtsklick-Menü
+  - Desktop-Class Text Editing: Professionelle Textbearbeitung
 
-## 🚀 Der Beweis der Praxis
+8: ERDE // Grundlage & Implementierung
+  - μ8_NoteWindow: Vielseitiges Fenster für Notizen
+  - μ8_FileSystemAbstraction: Plattformunabhängiger Dateizugriff
 
-![Raimunds VB.NET Code](screenshots/µ09_Raimund-Screenshot-1.jpg)
-*Raimunds ursprüngliches VB.NET μX-System in Aktion - die Grundlage für UniversalDesktop*
-
-### Von VB.NET zu TypeScript - Die Evolution
-
-**Raimunds Originalcode:**
-```vb.net
-Public Sub μ1_HorizontalScrollBar_Ucl_Create(...)
-    ' Bagua-basierte Window-Erstellung
-End Sub
-```
-
-**UniversalDesktop Umsetzung:**
-```typescript
-export class μ1_WindowFactory {
-    static μ1_createWindow(type: ItemType, origin: UDOrigin): UDItem {
-        // Algebraische Transistor-Logik
-        return Math.pow(0, isValid ? 0 : 1) * window;
-    }
-}
-```
-
----
-
-## ⚡ Quick Start - In 3 Befehlen starten
-
-```bash
-git clone https://github.com/tux-sourceish/UniversalDesktop
-cd UniversalDesktop
-npm install && npm run dev
-```
-
-🌐 **Öffnet automatisch:** http://localhost:5173/
-
----
-
-## 🎯 Kern-Features nach den 8 Bagua-Trigrammen
-
-### μ1_HIMMEL (☰) - Creation & Templates
-- **8 Window-Typen** über intuitive Toolbar
-- **AI-gestützte Window-Generierung** mit intelligenter Type-Detection
-- **Template-System** für wiederkehrende Layouts
-
-### μ2_WIND (☴) - Views & Interfaces
-- **StarCraft-style Minimap** mit collision avoidance
-- **15 retro Terminal-Themes** (ZX Spectrum bis NeXT)
-- **Dual-mode File Manager** (TUI + GUI parallel)
-
-### μ3_WASSER (☵) - Flow & Navigation
-- **Infinite Canvas Navigation** mit Physics-Momentum
-- **5-stufiges Zoom-System:** Galaxy → System → Planet → Surface → Microscope
-
-### μ6_FEUER (☲) - Functions & AI
-- **6-Model AI Integration:** Fast, Reasoning, Premium, Super, Vision, Local
-- **Context Manager** mit intelligenter Token-Optimierung
-- **Multi-Agent System:** Reasoner, Coder, Refiner Agents
-
-### μ7_DONNER (☳) - Events & Reactions
-- **Desktop-Class Text Selection** (Ctrl+C/V/X/A)
-- **Context Menus** mit "Bearbeiten" Submenu
-
-### μ8_ERDE (☷) - Global Foundation
-- **Binary .UD Format** mit Text-Representation
-- **Complete Transformation History** für Provenance
-
----
-
-## 🚧 Technische Highlights
-
-### Performance Achievements
-- **90% Re-Render Reduktion** durch optimiertes React.memo
-- **40,000 Items/sec** Rendering-Performance
-- **Von 2000+ Zeilen Monolith → <200 Zeilen Orchestration**
-
-### Revolutionary Architecture  
-- **Campus-Modell:** Ein Hook = Eine Verantwortung
-- **Algebraische Transistoren** statt if-else Logic
-- **Binary .UD Format** mit vollständiger Provenance
-
----
-
-## 🤝 Credits & Philosophie
-
-### 🧙‍♂️ Raimund - Der Visionär
-**Alleiniger Urheber der zugrundeliegenden Philosophie:**
-- 45 Jahre Entwicklungsexpertise
-- Begründer des μX-Bagua-Systems  
-- Pionier des algebraischen Computings
-
-*UniversalDesktop existiert nur, weil Raimund den Mut hatte, völlig neue Wege zu erkunden.*
-
----
-
-## 🙏 Persönliche Danksagung
-
-**Lieber Raimund,**
-
-Vielen Dank für deine Inspiration und Weisheit. Deine Vision eines algebraischen Betriebssystems hat uns gezeigt, dass Computer mehr sein können als nur Werkzeuge - sie können Partner werden.
-
-Das μX-Bagua-System ist nicht nur Code - es ist gelebte Philosophie. Die Harmonie zwischen östlicher Weisheit und westlicher Präzision manifestiert sich in jedem Aspekt von UniversalDesktop.
-
-*Mit größtem Respekt und Dankbarkeit,*  
-*Das UniversalDesktop Team* 🌌
-
----
-
-**"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann."**
-
-*— Raimund*
-*Implementiert in UniversalDesktop v2.1*
-}])
-
-([{ITEM
-  id: ud_technical_specs_20250129_002
-  type: TABELLE
-  title: Technical Specifications
-  position: {x: 850, y: 0, z: 99}
-  dimensions: {width: 600, height: 400}
-  bagua: ☱☲ (48)
-  is_contextual: false
-  created_at: 2025-01-29T12:01:00Z
-  updated_at: 2025-01-29T12:01:00Z
-  
-  ([{ORIGIN
-    host: UniversalDesktop.localhost
-    path: /workspace/documentation/specs
-    tool: swarm:readme-specialist
-  }])
-  
-  ([{HISTORY
-    - verb: extrahiert
-      agent: swarm:technical-analyst
-      timestamp: 2025-01-29T12:01:00Z
-      description: Technical specifications extracted from README content
-  }])
-}])
-
-([{CONTENT
-| Component | Technology | Key Files |
-|-----------|------------|-----------|
-| Core Engine | universalDocument.ts (1,916 LOC) | UDFormat.ts, universalfile-index.ts |
-| Main Orchestrator | UniversalDesktopv2.tsx (673 LOC) | Campus-Model architecture |
-| Hook System | 21 μX-Hooks (Campus-Model) | µ1_useWorkspace.ts, µ2_useMinimap.ts |
-| Window Factory | μ1_WindowFactory.tsx (377 LOC) | Human-AI Unity Bridge |
-| File Manager | μ2_FileManager.tsx | Dual-mode TUI/GUI, Tauri-ready |
-| AI Integration | µ2_AIPanel.tsx (869 LOC) | 6 model categories, context-aware |
-| Context System | μ7_UniversalContextMenu.tsx | Algebraic visibility, smart clipboard |
-}])
-
-([{ITEM
-  id: ud_embedded_image_preview_20250129_003
-  type: FLUSS
-  title: Screenshots Preview
-  position: {x: 0, y: 650, z: 98}
-  dimensions: {width: 1400, height: 300}
-  bagua: ☵☴ (18)
-  is_contextual: false
-  created_at: 2025-01-29T12:02:00Z
-  updated_at: 2025-01-29T12:02:00Z
-  
-  ([{ORIGIN
-    host: UniversalDesktop.localhost
-    path: /workspace/screenshots
-    tool: swarm:image-processor
-  }])
-  
-  ([{HISTORY
-    - verb: eingebettet
-      agent: swarm:media-specialist
-      timestamp: 2025-01-29T12:02:00Z
-      description: Screenshots embedded as UD item for native display
-  }])
-}])
-
-([{CONTENT
-```typescript
-// Diese .UD Datei demonstriert das native Format von UniversalDesktop
-// Sie kann direkt in der Anwendung geöffnet und bearbeitet werden
-
-const embeddedScreenshots = {
-  genesis_sketch: "screenshots/µ09_Raimund-Initial-Skizze.jpg",
-  desktop_overview: "screenshots/µ09_UniversalDesktop_Uebersicht.png", 
-  minimap_detail: "screenshots/µ2_Minimap.png",
-  tui_terminal: "screenshots/µ2_TuiWindow_MS-DOS-Preset.png",
-  dual_filemanager: "screenshots/µ2_FileManager_TUI-GUI.png",
-  
-  // Diese Bilder sind Teil des Git-Repositories
-  // und werden bei der nächsten Synchronisation verfügbar sein
-};
-
-// Algebraische Transistor-Demo:
-const visibility = Math.pow(0, hasImages ? 0 : 1);
-// hasImages=true → 0^0=1 → Bilder sichtbar
-// hasImages=false → 0^1=0 → Bilder ausgeblendet
-```
-}])
-
-([{ITEM
-  id: ud_bagua_philosophy_20250129_004
-  type: KONSTRUKTOR
-  title: μX-Bagua Code Example
-  position: {x: 0, y: 1000, z: 97}
-  dimensions: {width: 800, height: 500}
-  bagua: ☰☯ (513)
-  is_contextual: false
-  created_at: 2025-01-29T12:03:00Z
-  updated_at: 2025-01-29T12:03:00Z
-  
-  ([{ORIGIN
-    host: UniversalDesktop.localhost
-    path: /workspace/examples
-    tool: swarm:code-generator
-  }])
-  
-  ([{HISTORY
-    - verb: generiert
-      agent: swarm:philosophy-specialist
-      timestamp: 2025-01-29T12:03:00Z
-      description: Practical example of μX-Bagua system implementation
-  }])
-}])
-
-([{CONTENT
-```typescript
-// Raimunds μX-Bagua System in UniversalDesktop
-export class μ1_UniversalExample {
-    // μ4_ Setup/Init (BERG - Feste Initialisierung)
-    private μ4_initializeBagua(): BaguaDescriptor {
-        return UDFormat.BAGUA.HIMMEL | UDFormat.BAGUA.TAIJI;
-    }
-
-    // μ6_ Functions (FEUER - Aktive Berechnungen)
-    public μ6_calculateWithTransistor(condition: boolean, value: number): number {
-        // Algebraischer Transistor statt if-else
-        return value * Math.pow(0, condition ? 0 : 1);
-        // true:  value * 0^0 = value * 1 = value  ✅
-        // false: value * 0^1 = value * 0 = 0     ❌
-    }
-
-    // μ7_ Events (DONNER - Ereignisse und Reaktionen)
-    public μ7_handleWindowCreation(type: WindowType): UDItem {
-        const isValid = type >= 0 && type <= 10;
-        const shouldCreate = this.μ6_calculateWithTransistor(isValid, 1);
-        
-        if (shouldCreate === 1) {
-            return this.μ1_createWindow(type);
-        }
-        return null;
-    }
-
-    // μ1_ Templates (HIMMEL - Erschaffung)
-    private μ1_createWindow(type: WindowType): UDItem {
-        return {
-            id: `ud_${Date.now()}_${Math.random()}`,
-            type: type,
-            bagua_descriptor: this.μ4_initializeBagua(),
-            transformation_history: [{
-                verb: 'erschaffen',
-                agent: 'μ1_UniversalExample',
-                description: 'Window created with algebraic precision'
-            }]
-        };
-    }
-}
-
-// Dies ist lebendige Philosophie als Code
-// Jeder Präfix hat seine kosmische Bedeutung
-// Jede Funktion folgt der Früher Himmel Ordnung
-```
-}])
+9: DEAKTIVATOR // Quick Start
+  - prerequisites:
+    - Node.js: v18+
+    - Supabase: optional
+    - LiteLLM: optional
+  - commands:
+    - 1: git clone https://github.com/SingularUniverse/UniversalDesktop.git
+    - 2: cd UniversalDesktop
+    - 3: npm install && npm run dev
