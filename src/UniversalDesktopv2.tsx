@@ -48,7 +48,7 @@ import type {
   PanelState,
   ZoomLevels
 } from './types';
-import type { UDItem } from './core/universalDocument';
+import type { UDItem } from '@tux-sourceish/universalfile';
 
 // Styles - using existing CSS from styles directory
 import './styles/index.css';
@@ -127,9 +127,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       return {
         ...legacyItem,
         metadata: {
-          ...udItem.metadata,
-          language: udItem.content?.language || 'typescript',
-          theme: udItem.content?.theme || 'light',
+          language: (udItem as any)?.content?.language || 'typescript',
+          theme: (udItem as any)?.content?.theme || 'light',
           // 🎨 Bagua color integration - pass the full item object
           baguaColor: baguaColors.µ2_getBaguaColor(legacyItem)
         }

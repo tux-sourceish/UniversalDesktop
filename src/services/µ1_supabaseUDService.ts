@@ -261,23 +261,32 @@ export class µ1_SupabaseUDService {
   static µ1_base64ToArrayBuffer(base64: string): ArrayBuffer {
     try {
       console.log('🔄 µ1_base64ToArrayBuffer converting:', {
-        base64Length: base64.length,
-        base64Preview: base64.slice(0, 50) + '...'
+        base64Length: base64?.length,
+        base64Preview: (base64 || '').slice(0, 50) + '...'
       });
+
+      if (!base64 || typeof base64 !== 'string') {
+        throw new Error('Invalid ud_document: expected base64 or JSON string');
+      }
+
+      // Backward compatibility: some rows may store raw JSON instead of base64
+      const trimmed = base64.trim();
+      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        const enc = new TextEncoder();
+        const buf = enc.encode(trimmed).buffer;
+        console.log('ℹ️ Detected raw JSON ud_document; returning encoded buffer');
+        return buf;
+      }
 
       const binaryString = atob(base64);
       const bytes = new Uint8Array(binaryString.length);
-      
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      
+      for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+
       console.log('✅ µ1_base64ToArrayBuffer completed:', {
         inputBase64Length: base64.length,
         outputBufferSize: bytes.buffer.byteLength,
         firstBytes: Array.from(bytes.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ')
       });
-      
       return bytes.buffer;
     } catch (error) {
       console.error('💥 µ1_base64ToArrayBuffer failed:', error);

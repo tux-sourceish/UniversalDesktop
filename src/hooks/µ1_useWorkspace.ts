@@ -70,9 +70,9 @@ export const µ1_useWorkspace = (userId: string) => {
 
       // Bestehenden Workspace laden
       const binaryData = µ1_SupabaseUDService.µ1_base64ToArrayBuffer(workspace!.ud_document as any);
-      const loadedDoc = udDocument.µ1_loadFromWorkspaceSnapshot(binaryData);
+      const loadedDoc = await udDocument.µ1_loadFromWorkspaceSnapshot(binaryData);
 
-      const documentLoaded = UDFormat.transistor(loadedDoc !== null);
+      const documentLoaded = UDFormat.transistor(loadedDoc === true);
 
       if (documentLoaded) {
         // Access Time aktualisieren

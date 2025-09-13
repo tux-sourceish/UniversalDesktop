@@ -22,8 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@tux-sourceish/universalfile": ["../UniversalFile/dist/src"],
-      "@tux-sourceish/universalfile/*": ["../UniversalFile/dist/src/*"]
+      "@tux-sourceish/universalfile": ["../UniversalFile/dist"],
+      "@tux-sourceish/universalfile/*": ["../UniversalFile/dist/*"]
     }
   },
   "include": ["src"],
