@@ -8,7 +8,10 @@ export default defineConfig({
     //allowedHosts: ['p73-klapprechner']
     port: 5173,
     host: true,
-    open: false
+    open: false,
+    fs: {
+      allow: ['/home/tux/SingularUniverse/opt/UniversalFile', '/home/tux/SingularUniverse/opt/UniversalDesktop']
+    }
   },
   build: {
     outDir: 'dist',
