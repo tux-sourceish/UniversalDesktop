@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useRef, useEffect, Suspense, lazy, useCallback, useMemo } from 'react';
 import { useDraggable, useResizable } from '../hooks';
 import type { DesktopItemData } from '../types';
 const μ2_TuiWindow = lazy(() => import('./windows/μ2_TuiWindow').then(module => ({ default: module.μ2_TuiWindow })));
@@ -26,7 +26,7 @@ export interface DesktopItemProps {
   };
 }
 
-const DesktopItem: React.FC<DesktopItemProps> = ({
+const DesktopItemComponent: React.FC<DesktopItemProps> = ({ 
   item,
   onUpdate,
   onDelete,
@@ -45,7 +45,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(item.title);
 
-  const { ref: dragRef, onMouseDown } = useDraggable(item.id, onUpdate, canvasState);
+  const { ref: dragRef, onMouseDown } = useDraggable(item, onUpdate, canvasState);
   const { ref: resizeRef, onResizeStart } = useResizable(item.id, onUpdate, canvasState);
 
   // Refs zusammenführen
@@ -58,12 +58,12 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
     }
   }, []);
 
-  const handleTitleEdit = () => {
+  const handleTitleEdit = useCallback(() => {
     setIsEditing(true);
     setEditTitle(item.title);
-  };
+  }, [item.title]);
 
-  const handleTitleDoubleClick = () => {
+  const handleTitleDoubleClick = useCallback(() => {
     if (item.type === 'tui') {
       // For TUI windows, double-click cycles through themes
       const themes = ['green', 'amber', 'white', 'blue'];
@@ -75,9 +75,9 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       // For other windows, double-click to edit title
       handleTitleEdit();
     }
-  };
+  }, [item.type, item.id, item.metadata, onUpdate, handleTitleEdit]);
 
-  const getTypeIcon = () => {
+  const getTypeIcon = useCallback(() => {
     switch (item.type) {
       case 'tui': return '🖥️';
       case 'code': return '💻';
@@ -90,9 +90,9 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'filemanager': return '📁';
       default: return '📝';
     }
-  };
+  }, [item.type]);
 
-  const getWindowSoulClass = () => {
+  const getWindowSoulClass = useCallback(() => {
     const baseClass = 'window-soul';
     switch (item.type) {
       case 'tui': return `${baseClass} tui-soul`;
@@ -106,9 +106,9 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       case 'filemanager': return `${baseClass} filemanager-soul`;
       default: return `${baseClass} default-soul`;
     }
-  };
+  }, [item.type]);
 
-  const getWindowSoulIndicator = () => {
+  const getWindowSoulIndicator = useCallback(() => {
     switch (item.type) {
       case 'tui':
         const tuiTheme = item.metadata?.tuiTheme || 'green';
@@ -138,29 +138,29 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       default:
         return '✨'; // Default sparkle
     }
-  };
+  }, [item.type, item.metadata]);
 
-  const handleTitleSave = () => {
+  const handleTitleSave = useCallback(() => {
     if (editTitle.trim() && editTitle !== item.title) {
       onRename(item.id, editTitle.trim());
     }
     setIsEditing(false);
-  };
+  }, [editTitle, item.title, item.id, onRename]);
 
-  const handleTitleCancel = () => {
+  const handleTitleCancel = useCallback(() => {
     setEditTitle(item.title);
     setIsEditing(false);
-  };
+  }, [item.title]);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleTitleSave();
     } else if (e.key === 'Escape') {
       handleTitleCancel();
     }
-  };
+  }, [handleTitleSave, handleTitleCancel]);
 
-  const handleWindowKeyDown = (e: React.KeyboardEvent) => {
+  const handleWindowKeyDown = useCallback((e: React.KeyboardEvent) => {
     // Global window shortcuts
     if (e.ctrlKey) {
       switch (e.key) {
@@ -192,9 +192,9 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           break;
       }
     }
-  };
+  }, [item, onUpdate, onDelete]);
 
-  const renderContent = () => {
+  const renderContent = useMemo(() => {
     switch (item.type) {
       case 'filemanager':
         // Convert DesktopItemData to UDItem for μ2_FileManagerWindow
@@ -310,34 +310,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
               dimensions: { width: item.width || 600, height: item.height || 400 },
               bagua_descriptor: item.bagua_descriptor || 0,
               content: { 
-                text: item.content || `╭─ SYSTEM INTERFACE ANALYSIS ─╮
-│ UniversalDesktop Terminal    │
-│ Type 'help' for commands     │
-│ Status: OPERATIONAL          │
-╰──────────────────────────────╯
-
-╭─ ACTIVE WINDOWS ─╮
-│ [DB] Datenbank    │ [NOTE] Notizzettel │ [CHART] Diagramme │
-│ [CAL] Kalender    │ [MEDIA] Medien     │ [TERM] Terminal   │
-│ [AI] KI-Response  │ [CHAT] AI Chat     │ [SYS] System Status │
-╰─────────────────────────────────────────────────────────────╯
-
-╭─ INTERFACE METRICS ─╮
-│ Resolution: 80x25  │ Memory Usage: 47%  │ CPU Load: 23%     │
-│ Active Processes: 12 │ Uptime: 04:32:17 │ Network: Connected │
-╰─────────────────────────────────────────────────────────────╯
-
-╭─ SYSTEM ARTWORK ─╮
-│ ████████████████ │
-│ ██            ██ │
-│ ██ ████████████ │
-│ ██ ██        ██ │
-│ ██ ██████████ ██ │
-│ ██            ██ │
-│ ████████████████ │
-╰─────────────────────╯
-
-$ `,
+                text: item.content || `╭─ SYSTEM INTERFACE ANALYSIS ─╮\n│ UniversalDesktop Terminal    │\n│ Type 'help' for commands     │\n│ Status: OPERATIONAL          │\n╰──────────────────────────────╯\n\n╭─ ACTIVE WINDOWS ─╮\n│ [DB] Datenbank    │ [NOTE] Notizzettel │ [CHART] Diagramme │\n│ [CAL] Kalender    │ [MEDIA] Medien     │ [TERM] Terminal   │\n│ [AI] KI-Response  │ [CHAT] AI Chat     │ [SYS] System Status │\n╰─────────────────────────────────────────────────────────────╯\n\n╭─ INTERFACE METRICS ─╮\n│ Resolution: 80x25  │ Memory Usage: 47%  │ CPU Load: 23%     │\n│ Active Processes: 12 │ Uptime: 04:32:17 │ Network: Connected │\n╰─────────────────────────────────────────────────────────────╯\n\n╭─ SYSTEM ARTWORK ─╮\n│ ████████████████ │\n│ ██            ██ │\n│ ██ ████████████ │\n│ ██ ██        ██ │\n│ ██ ██████████ ██ │\n│ ██            ██ │\n│ ████████████████ │\n╰─────────────────────╯\n\n$ `,
                 tui_preset: item.metadata?.tuiTheme || 'green'
               },
               is_contextual: item.is_contextual || false,
@@ -407,7 +380,7 @@ $ `,
           />
         );
     }
-  };
+  }, [item, onUpdate, onToggleContext]);
 
   return (
     <div
@@ -503,7 +476,7 @@ $ `,
         onMouseDown={(e) => e.stopPropagation()}
         onWheel={(e) => e.stopPropagation()}
       >
-        {renderContent()}
+        {renderContent}
       </div>
 
       {/* Resize Handles */}
@@ -524,7 +497,9 @@ $ `,
       </div>
     </div>
   );
-};
+}
+
+const DesktopItem = React.memo(DesktopItemComponent);
 
 export default DesktopItem;
 

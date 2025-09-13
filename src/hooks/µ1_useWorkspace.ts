@@ -10,7 +10,8 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { UDFormat } from '../core/UDFormat';
-import { µ1_useUniversalDocument } from './µ1_useUniversalDocument';
+import { UniversalDocument } from '@tux-sourceish/universalfile';
+
 import { µ1_SupabaseUDService, µ1_Workspace } from '../services/µ1_supabaseUDService';
 
 export interface µ1_WorkspaceState {
@@ -36,7 +37,13 @@ export const µ1_useWorkspace = (userId: string) => {
 
 
   // Campus-Modell Hook Integration
-  const udDocument = µ1_useUniversalDocument();
+  const [udDocument, setUdDocument] = useState<any>(null);
+  const [hasChanges, setHasChanges] = useState(false);
+
+
+  useEffect(() => {
+    setUdDocument(new UniversalDocument());
+  }, []);
 
   // µ1_ Workspace laden und .ud Document initialisieren
   const µ1_loadWorkspace = useCallback(async (workspaceId?: string) => {
@@ -63,14 +70,29 @@ export const µ1_useWorkspace = (userId: string) => {
       if (!hasWorkspace) {
         // Neuen Workspace erstellen wenn keiner existiert
         console.log('🆕 Creating new workspace for user');
-        const newDoc = udDocument.µ1_createDocument();
-        
-        throw new Error('Failed to create new workspace');
+        const newDoc = new UniversalDocument();
+        setUdDocument(newDoc);
       }
 
       // Bestehenden Workspace laden
+      console.log('Raw ud_document from Supabase:', workspace!.ud_document);
       const binaryData = µ1_SupabaseUDService.µ1_base64ToArrayBuffer(workspace!.ud_document as any);
-      const loadedDoc = udDocument.µ1_loadFromWorkspaceSnapshot(binaryData);
+
+      let loadedDoc;
+      const dataView = new DataView(binaryData);
+      const magic = dataView.getUint32(0, false);
+
+      if (magic === UniversalDocument.MAGIC) {
+        loadedDoc = UniversalDocument.fromBinary(binaryData);
+      } else {
+        const jsonString = new TextDecoder().decode(binaryData);
+        const jsonData = JSON.parse(jsonString);
+        loadedDoc = new UniversalDocument(jsonData.metadata);
+        const defaultOrigin = { host: 'Unknown', path: 'Unknown', tool: 'Unknown' };
+        jsonData.items.forEach((item: any) => loadedDoc.μ6_createItem(item, item.origin || defaultOrigin));
+      }
+
+      setUdDocument(loadedDoc);
 
       const documentLoaded = UDFormat.transistor(loadedDoc !== null);
 
@@ -87,7 +109,7 @@ export const µ1_useWorkspace = (userId: string) => {
         });
 
         // Check final item count
-        const itemCount = udDocument.documentState.items.length;
+        const itemCount = loadedDoc.μ6_getAllItems().length;
         console.log(`✅ µ1_loadWorkspace completed: ${itemCount} items loaded`);
 
         return workspace;
@@ -106,15 +128,13 @@ export const µ1_useWorkspace = (userId: string) => {
       
       return null;
     }
-  }, [userId, udDocument]);
+  }, [userId, setUdDocument]);
 
-  const worker = new Worker(new URL('../workers/serialization.worker.ts', import.meta.url), { type: 'module' });
+
 
   // µ1_ Workspace speichern
   const µ1_saveWorkspace = useCallback(async (forceSync: boolean = false) => {
     const { currentWorkspace } = workspaceState;
-    const { hasChanges, document, items } = udDocument.documentState;
-
     // Algebraischer Transistor für Save-Bedingungen
     const shouldSave = UDFormat.transistor(
       currentWorkspace !== null && 
@@ -130,17 +150,9 @@ export const µ1_useWorkspace = (userId: string) => {
     setWorkspaceState(prev => ({ ...prev, isSaving: true, syncError: null }));
 
     try {
-      console.log('💾 µ1_saveWorkspace starting with worker');
+      console.log('💾 µ1_saveWorkspace starting');
 
-      const binary = await new Promise<ArrayBuffer | null>((resolve, reject) => {
-        worker.onmessage = (event) => {
-          resolve(event.data.snapshot);
-        };
-        worker.onerror = (error) => {
-          reject(error);
-        };
-        worker.postMessage({ metadata: document?.metadata, items });
-      });
+      const binary = udDocument.toBinary();
 
       const hasBinary = UDFormat.transistor(binary !== null);
 
@@ -153,7 +165,7 @@ export const µ1_useWorkspace = (userId: string) => {
         userId,
         binary!,
         {
-          itemCount: udDocument.documentState.items.length,
+          itemCount: udDocument.μ6_getAllItems().length,
           baguaDescriptor: UDFormat.BAGUA.TAIJI, // TODO: Calculate from items
           canvasBounds: { minX: 0, maxX: 4000, minY: 0, maxY: 4000 } // TODO: Calculate from items
         }
@@ -162,8 +174,7 @@ export const µ1_useWorkspace = (userId: string) => {
       const saveSuccess = UDFormat.transistor(success);
 
       if (saveSuccess) {
-        // Reset hasChanges after successful save
-        udDocument.µ1_markAsSaved();
+        setHasChanges(false);
         
         setWorkspaceState(prev => ({
           ...prev,
@@ -189,25 +200,23 @@ export const µ1_useWorkspace = (userId: string) => {
       
       return false;
     }
-  }, [workspaceState, udDocument, userId]);
+  }, [workspaceState, hasChanges, setHasChanges, userId]);
 
   // µ1_ Debounced Auto-Save mit 2 Sekunden Delay (verbesserte UX für F5-Persistenz)
   useEffect(() => {
-    const { hasChanges } = udDocument.documentState;
     const { currentWorkspace, isSaving } = workspaceState;
 
     // Algebraischer Transistor für Auto-Save (immer aktiv für F5-Persistenz)
     const shouldAutoSave = UDFormat.transistor(
-      hasChanges && 
+      hasChanges &&
       currentWorkspace !== null && 
       !isSaving
     );
 
     if (shouldAutoSave) {
       console.log('⏰ Debounced auto-save triggered - waiting 2 seconds...', {
-        hasChanges,
         workspaceId: currentWorkspace?.id,
-        itemCount: udDocument.documentState.items.length
+        itemCount: udDocument ? udDocument.μ6_getAllItems().length : 0
       });
       
       const debouncedSaveTimer = setTimeout(async () => {
@@ -226,7 +235,7 @@ export const µ1_useWorkspace = (userId: string) => {
         clearTimeout(debouncedSaveTimer);
       };
     }
-  }, [udDocument.documentState.hasChanges, workspaceState.currentWorkspace, workspaceState.isSaving]);
+  }, [hasChanges, workspaceState.currentWorkspace, workspaceState.isSaving, µ1_saveWorkspace]);
 
   // µ1_ Workspace beim Mount laden
   useEffect(() => {
@@ -246,9 +255,6 @@ export const µ1_useWorkspace = (userId: string) => {
   // µ1_ F5-Persistenz: Save on Page Unload (beforeunload)
   useEffect(() => {
     const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-      const { hasChanges } = udDocument.documentState;
-      const { currentWorkspace, isSaving } = workspaceState;
-
       if (hasChanges && currentWorkspace && !isSaving) {
         console.log('🔄 F5-Protection: Saving workspace before page unload...');
         
@@ -268,22 +274,57 @@ export const µ1_useWorkspace = (userId: string) => {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [udDocument.documentState.hasChanges, workspaceState, µ1_saveWorkspace]);
+  }, [hasChanges, workspaceState, µ1_saveWorkspace]);
+
+  const µ1_addItem = (itemData: any, origin: any) => {
+    if (!udDocument) return;
+    const newItem = udDocument.μ6_createItem(itemData, origin);
+    setHasChanges(true);
+    return newItem;
+  };
+
+  const µ1_transformItem = (itemId: any, transformation: any, changes: any) => {
+    if (!udDocument) return;
+    const updatedItem = udDocument.μ6_transformItem(itemId, transformation, changes);
+    setHasChanges(true);
+    return updatedItem;
+  };
+
+  const µ1_removeItem = (itemId: any, agent: any) => {
+    if (!udDocument) return;
+    const result = udDocument.μ6_deleteItem(itemId, agent);
+    setHasChanges(true);
+    return result;
+  };
+
+  const µ1_getItemsByBagua = (aspects: any) => {
+    if (!udDocument) return [];
+    return udDocument.μ6_queryByBagua(aspects);
+  };
+
+  const µ1_documentMetadata = () => {
+    if (!udDocument) return null;
+    return udDocument.metadata;
+  };
 
   return {
     // State
     workspaceState,
-    documentState: udDocument.documentState,
+    documentState: {
+      items: udDocument ? udDocument.μ6_getAllItems() : [],
+      hasChanges,
+      document: udDocument,
+    },
     
     // µ1_ Campus-Modell Funktionen - NUR Workspace Management
     µ1_loadWorkspace,
     µ1_saveWorkspace,
     
     // Durchgeleitete UniversalDocument Funktionen
-    µ1_addItem: udDocument.µ1_addItem,
-    µ1_transformItem: udDocument.µ1_transformItem,
-    µ1_removeItem: udDocument.µ1_removeItem,
-    µ1_getItemsByBagua: udDocument.µ1_getItemsByBagua,
-    µ1_documentMetadata: udDocument.µ1_documentMetadata
+    µ1_addItem,
+    µ1_transformItem,
+    µ1_removeItem,
+    µ1_getItemsByBagua,
+    µ1_documentMetadata
   };
 };

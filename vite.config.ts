@@ -4,15 +4,19 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ["**/*.wasm"],
   server: {
     //allowedHosts: ['p73-klapprechner']
     port: 5173,
     host: true,
-    open: false
+    open: false,
+    fs: {
+      allow: ['/home/tux/SingularUniverse/opt/UniversalFile', '/home/tux/SingularUniverse/opt/UniversalDesktop']
+    }
   },
   build: {
     outDir: 'dist',
-    sourcemap: process.env.NODE_ENV === 'production',
+    sourcemap: false,
     // Suppress rollup warnings for vendor source maps
     rollupOptions: {
       output: {
@@ -34,17 +38,5 @@ export default defineConfig({
       '@': '/src'
     }
   },
-  // Fix source map errors completely - NUCLEAR OPTION
-  optimizeDeps: {
-    include: ['react', 'react-dom'],
-    exclude: [],
-    // Force no source maps for dependencies
-    esbuildOptions: {
-      sourcemap: false
-    }
-  },
-  // Disable ALL source maps in development
-  css: {
-    devSourcemap: false
-  }
+
 })

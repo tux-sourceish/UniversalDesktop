@@ -229,6 +229,3 @@ const CanvasControllerWithRef = forwardRef<HTMLDivElement, CanvasControllerProps
 });
 
 export const CanvasController = CanvasControllerWithRef;
-
-// Export hook for external access
-export const useCanvasControllerHook = () => useCanvasNavigation();

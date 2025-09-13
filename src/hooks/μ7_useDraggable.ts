@@ -22,7 +22,7 @@ interface DraggableItem {
 }
 
 export const μ7_useDraggable = (
-  id: string, 
+  item: DraggableItem, 
   onUpdate: (id: string, updates: Partial<DraggableItem>) => void,
   canvasState: CanvasState
 ) => {
@@ -46,10 +46,20 @@ export const μ7_useDraggable = (
     e.stopPropagation();
     
     isDraggingRef.current = true;
-    const rect = itemRef.current.getBoundingClientRect();
+    const canvasController = document.querySelector('.canvas-controller') as HTMLElement;
+    if (!canvasController) return;
+    const canvasRect = canvasController.getBoundingClientRect();
+    const scale = canvasState.scale;
+    const translateX = canvasState.position.x;
+    const translateY = canvasState.position.y;
+    const mouseX = e.clientX - canvasRect.left;
+    const mouseY = e.clientY - canvasRect.top;
+    const canvasX = (mouseX - translateX) / scale;
+    const canvasY = (mouseY - translateY) / scale;
+
     dragOffsetRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x: canvasX - item.position.x,
+      y: canvasY - item.position.y,
     };
     
     document.body.style.cursor = 'grabbing';
@@ -59,56 +69,46 @@ export const μ7_useDraggable = (
     if (itemRef.current) {
       itemRef.current.style.zIndex = '1000';
     }
-  }, []);
+  }, [item.position.x, item.position.y, canvasState.scale, canvasState.position.x, canvasState.position.y]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
       if (!isDraggingRef.current || !itemRef.current) return;
       
-      // FIXED: Use canvas-controller (parent) instead of transformed canvas-content
       const canvasController = document.querySelector('.canvas-controller') as HTMLElement;
       if (!canvasController) return;
       
       const canvasRect = canvasController.getBoundingClientRect();
       
-      // Use current canvas state (scale, position) directly
       const scale = canvasState.scale;
       const translateX = canvasState.position.x;
       const translateY = canvasState.position.y;
       
-      // Calculate mouse position relative to canvas controller (not transformed content)
       const mouseX = e.clientX - canvasRect.left;
       const mouseY = e.clientY - canvasRect.top;
       
-      // FIXED: Apply correct inverse transform to get canvas coordinates
-      // CSS transform is: translate(x, y) scale(s), so inverse is: (screen - translate) / scale
-      // When CSS translates canvas +X (right), mouse coordinates need to subtract that offset
       const canvasX = (mouseX - translateX) / scale;
       const canvasY = (mouseY - translateY) / scale;
       
-      // Calculate new position with drag offset (also scale drag offset)
-      const newX = canvasX - (dragOffsetRef.current.x / scale);
-      const newY = canvasY - (dragOffsetRef.current.y / scale);
+      const newX = canvasX - dragOffsetRef.current.x;
+      const newY = canvasY - dragOffsetRef.current.y;
       
-      // DEBUG: Log drag calculation
-      console.log('🪟 Window Drag:', {
-        id,
-        mouseX, mouseY, 
-        canvasX, canvasY,
-        newX, newY,
-        scale, translateX, translateY,
-        dragOffset: dragOffsetRef.current,
-        canvasRect: { left: canvasRect.left, top: canvasRect.top },
-        rawMousePos: { clientX: e.clientX, clientY: e.clientY }
-      });
-      
-      onUpdate(id, { 
-        position: { 
-          x: newX, 
-          y: newY,
-          z: 0
-        } 
-      });
+      let animationFrameId: number;
+
+      const throttledUpdate = (newX: number, newY: number) => {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => {
+          onUpdate(item.id, { 
+            position: { 
+              x: newX, 
+              y: newY,
+              z: 0
+            } 
+          });
+        });
+      };
+
+      throttledUpdate(newX, newY);
     };
 
     const onMouseUp = () => {
@@ -118,7 +118,6 @@ export const μ7_useDraggable = (
       document.body.style.cursor = 'default';
       document.body.style.userSelect = 'auto';
       
-      // Z-Index zurücksetzen
       if (itemRef.current) {
         itemRef.current.style.zIndex = '';
       }
@@ -131,7 +130,7 @@ export const μ7_useDraggable = (
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-  }, [id, onUpdate, canvasState.scale, canvasState.position.x, canvasState.position.y]);
+  }, [item.id, onUpdate, canvasState.scale, canvasState.position.x, canvasState.position.y]);
 
   return { 
     ref: itemRef, 
