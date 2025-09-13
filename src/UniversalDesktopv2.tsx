@@ -353,7 +353,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       position: smartPosition,
       dimensions: optimalSize,
       content: type === 'notizzettel' ? '' : type === 'tabelle' ? '[]' : '// Code here',
-      is_contextual: false
+      is_contextual: false,
+      bagua_descriptor: udType // Use the same type as Bagua descriptor
     });
 
     if (udItem && import.meta.env.DEV) {

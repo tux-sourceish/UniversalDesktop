@@ -5,15 +5,17 @@
  * REGEL: NUR UniversalDocument-Logik, NICHTS anderes!
  * Nutzt UDFormat.transistor für Bedingungen
  * 
- * @version 2.1.0-raimund-algebra
+ * @version 2.1.0-engine-transplant (WASM integration)
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { UniversalDocument, UDItem, UDOrigin } from '../core/universalDocument';
-import { UDFormat } from '../core/UDFormat';
+import { UDItem, UDOrigin } from '@tux-sourceish/universalfile';
+import { WasmUniversalDocument, createUniversalDocument } from '../utils/wasmBridge';
+// Keep old UDFormat as fallback for transistor operations
+import { UDFormat as OldUDFormat } from '../core/UDFormat';
 
 export interface µ1_DocumentState {
-  document: UniversalDocument | null;
+  document: WasmUniversalDocument | null;
   items: readonly UDItem[]; // Readonly for immutability
   isLoading: boolean;
   hasChanges: boolean;
@@ -27,7 +29,7 @@ export interface µ1_CreateItemOptions {
   dimensions: { width: number; height: number };
   content: any;
   is_contextual: boolean; // Required to match UDItem interface
-  bagua_descriptor?: number; // Optional Bagua metadata for µX_ system
+  bagua_descriptor: number; // Required Bagua metadata for µX_ system (now required)
 }
 
 /**
@@ -43,9 +45,9 @@ export const µ1_useUniversalDocument = () => {
     lastSaved: null
   });
 
-  // µ1_ Neues Document erstellen
+  // µ1_ Neues Document erstellen (now with WASM power!)
   const µ1_createDocument = useCallback(() => {
-    const doc = new UniversalDocument();
+    const doc = createUniversalDocument();
     
     setDocumentState(prev => ({
       ...prev,
@@ -55,7 +57,7 @@ export const µ1_useUniversalDocument = () => {
       lastSaved: null
     }));
 
-    console.log('🌌 µ1_Document created with Bagua-Power!');
+    console.log('🌌 µ1_Document created with WASM-Bagua-Power!');
     return doc;
   }, []);
 
@@ -70,7 +72,7 @@ export const µ1_useUniversalDocument = () => {
         hasData: binaryData.byteLength > 0
       });
 
-      const doc = UniversalDocument.fromWorkspaceSnapshot(binaryData);
+      const doc = WasmUniversalDocument.fromBinary(binaryData);
       const items = [...doc.allItems]; // Convert readonly to mutable array
 
       setDocumentState({
@@ -123,7 +125,7 @@ export const µ1_useUniversalDocument = () => {
     setDocumentState(prev => ({ ...prev, isLoading: true }));
 
     try {
-      const doc = UniversalDocument.fromBinary(binaryData);
+      const doc = WasmUniversalDocument.fromBinary(binaryData);
       const items = [...doc.allItems]; // Convert readonly to mutable array
 
       setDocumentState({
@@ -134,8 +136,9 @@ export const µ1_useUniversalDocument = () => {
         lastSaved: Date.now()
       });
 
-      console.log('📥 µ1_Document loaded from binary:', {
+      console.log('📥 µ1_Document loaded from binary with WASM:', {
         itemCount: items.length,
+        usingWasm: doc.isUsingWasm,
         baguaSystem: 'activated'
       });
 
@@ -151,7 +154,7 @@ export const µ1_useUniversalDocument = () => {
     const { document } = documentState;
     
     // Algebraischer Transistor für Document-Check
-    const hasDocument = UDFormat.transistor(document !== null);
+    const hasDocument = OldUDFormat.transistor(document !== null);
     
     if (!hasDocument) {
       console.warn('⚠️ µ1_toBinary: No document to serialize');
@@ -191,12 +194,12 @@ export const µ1_useUniversalDocument = () => {
     }
   }, [documentState]);
 
-  // µ1_ Item hinzufügen mit Bagua-System
+  // µ1_ Item hinzufügen mit Bagua-System (now with WASM power!)
   const µ1_addItem = useCallback((options: µ1_CreateItemOptions, origin?: UDOrigin) => {
     const { document } = documentState;
     
     // Algebraischer Transistor für Document-Check
-    const hasDocument = UDFormat.transistor(document !== null);
+    const hasDocument = OldUDFormat.transistor(document !== null);
     
     if (!hasDocument) {
       console.warn('⚠️ µ1_addItem: No document available');  
@@ -211,7 +214,7 @@ export const µ1_useUniversalDocument = () => {
     };
 
     try {
-      const item = document!.createItem(options, origin || defaultOrigin);
+      const item = document!.μ6_createItem(options, origin || defaultOrigin);
       const updatedItems = document!.allItems;
 
       setDocumentState(prev => ({
@@ -220,13 +223,14 @@ export const µ1_useUniversalDocument = () => {
         hasChanges: true
       }));
 
-      // Reduced logging to prevent console spam
+      // Enhanced logging with WASM status
       if (typeof window !== 'undefined' && (window as any).DEBUG_UD_ITEMS) {
-        console.log('➕ µ1_Item added:', {
+        console.log('➕ µ1_Item added with WASM:', {
           id: item.id,
-          type: Object.keys(UniversalDocument.ItemType)[options.type],
+          type: options.type,
           position: item.position,
-          dimensions: item.dimensions
+          dimensions: item.dimensions,
+          usingWasm: document!.isUsingWasm
         });
       }
 
@@ -246,7 +250,7 @@ export const µ1_useUniversalDocument = () => {
     const { document } = documentState;
     
     // Algebraischer Transistor für Document-Check
-    const hasDocument = UDFormat.transistor(document !== null);
+    const hasDocument = OldUDFormat.transistor(document !== null);
     
     if (!hasDocument) {
       console.warn('⚠️ µ1_transformItem: No document available');
@@ -254,10 +258,10 @@ export const µ1_useUniversalDocument = () => {
     }
 
     try {
-      const updatedItem = document!.transformItem(itemId, transformation, newData);
+      const updatedItem = document!.μ6_transformItem(itemId, transformation, newData);
       
       // Algebraischer Transistor: Item wurde erfolgreich transformiert?
-      const success = UDFormat.transistor(updatedItem !== undefined);
+      const success = OldUDFormat.transistor(updatedItem !== null);
       
       if (success) {
         const updatedItems = document!.allItems;
@@ -268,9 +272,10 @@ export const µ1_useUniversalDocument = () => {
           hasChanges: true
         }));
 
-        console.log('🔄 µ1_Item transformed:', {
+        console.log('🔄 µ1_Item transformed with WASM:', {
           itemId,
           verb: transformation.verb,
+          usingWasm: document!.isUsingWasm,
           success
         });
       }
@@ -282,12 +287,12 @@ export const µ1_useUniversalDocument = () => {
     }
   }, [documentState]);
 
-  // µ1_ Item entfernen
+  // µ1_ Item entfernen (now with WASM power!)
   const µ1_removeItem = useCallback((itemId: string) => {
     const { document } = documentState;
     
     // Algebraischer Transistor für Document-Check
-    const hasDocument = UDFormat.transistor(document !== null);
+    const hasDocument = OldUDFormat.transistor(document !== null);
     
     if (!hasDocument) {
       console.warn('⚠️ µ1_removeItem: No document available');
@@ -300,7 +305,7 @@ export const µ1_useUniversalDocument = () => {
       
       let success = false;
       if (itemExists) {
-        success = document!.removeItem(itemId);
+        success = document!.μ6_deleteItem(itemId, 'µ1_useUniversalDocument');
       } else {
         // Force remove from React state (State-Sync Fix)
         console.log('🔧 State-Sync Fix: Removing item from React state only');
@@ -308,7 +313,7 @@ export const µ1_useUniversalDocument = () => {
       }
       
       // Algebraischer Update bei Erfolg
-      const shouldUpdate = UDFormat.transistor(success);
+      const shouldUpdate = OldUDFormat.transistor(success);
       
       if (shouldUpdate) {
         // Force state update - filter out the item even if document didn't have it
@@ -318,7 +323,11 @@ export const µ1_useUniversalDocument = () => {
           hasChanges: true
         }));
 
-        console.log('🗑️ µ1_Item removed:', { itemId, success });
+        console.log('🗑️ µ1_Item removed with WASM:', { 
+          itemId, 
+          usingWasm: document!.isUsingWasm,
+          success 
+        });
       }
 
       return success;
