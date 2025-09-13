@@ -47,24 +47,43 @@ export async function loadUniversalFileWasm(): Promise<WasmModule> {
  * Internal WASM module loading logic
  */
 async function loadWasmModule(): Promise<WasmModule> {
-  // Try to import the WASM module
-  try {
-    // Import the UniversalFile WASM module (this should work with the existing package setup)
-    const wasmModuleFactory = await import('@tux-sourceish/universalfile/lib/universalfile.js');
-    
-    // Initialize the module
-    if (typeof wasmModuleFactory.default === 'function') {
-      const module = await wasmModuleFactory.default();
-      return module as WasmModule;
-    } else {
-      throw new Error('WASM module factory not found or invalid format');
+  // Try different import methods for robustness
+  const importAttempts = [
+    () => import('@tux-sourceish/universalfile/lib/universalfile.js'),
+    () => import('/node_modules/@tux-sourceish/universalfile/lib/universalfile.js'),
+    () => import('../../../UniversalFile/lib/universalfile.js')
+    // Note: Cannot import from /public in Vite - will use script loading instead
+  ];
+  
+  for (let i = 0; i < importAttempts.length; i++) {
+    try {
+      console.log(`🔄 Trying WASM import method ${i + 1}...`);
+      const wasmModuleFactory = await importAttempts[i]();
+      
+      // Initialize the module
+      if (typeof wasmModuleFactory.default === 'function') {
+        const module = await wasmModuleFactory.default();
+        console.log('✅ WASM module factory loaded successfully');
+        return module as WasmModule;
+      } else if (typeof wasmModuleFactory.UniversalFileModule === 'function') {
+        // Emscripten module factory
+        const module = await wasmModuleFactory.UniversalFileModule();
+        console.log('✅ Emscripten WASM module loaded successfully');
+        return module as WasmModule;
+      } else if (wasmModuleFactory.default) {
+        // Sometimes the factory is already initialized
+        console.log('✅ Pre-initialized WASM module found');
+        return wasmModuleFactory.default as WasmModule;
+      }
+    } catch (error) {
+      console.warn(`❌ Import method ${i + 1} failed:`, error);
+      continue;
     }
-  } catch (importError) {
-    console.warn('Direct import failed, trying alternative loading method:', importError);
-    
-    // Fallback: Try to load via dynamic script loading
-    return loadWasmViaScript();
   }
+  
+  // All import methods failed, try script loading
+  console.warn('All import methods failed, trying script loading...');
+  return loadWasmViaScript();
 }
 
 /**
@@ -73,21 +92,24 @@ async function loadWasmModule(): Promise<WasmModule> {
 async function loadWasmViaScript(): Promise<WasmModule> {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = '/node_modules/@tux-sourceish/universalfile/lib/universalfile.js';
+    script.src = '/lib/universalfile.js';  // Load from public directory
     
     script.onload = async () => {
       try {
         // The WASM module should be available as a global
-        const UniversalFileModule = (window as any).UniversalFileModule || (window as any).Module;
+        const UniversalFileModule = (window as any).UniversalFileModule;
         
-        if (!UniversalFileModule) {
-          throw new Error('UniversalFileModule not found in global scope');
+        if (!UniversalFileModule || typeof UniversalFileModule !== 'function') {
+          throw new Error('UniversalFileModule not found in global scope or not a function');
         }
         
-        // Initialize the module
+        // Initialize the Emscripten module
+        console.log('🔄 Initializing UniversalFileModule via script loading...');
         const module = await UniversalFileModule();
+        console.log('✅ Script-loaded WASM module initialized successfully');
         resolve(module as WasmModule);
       } catch (error) {
+        console.error('❌ Script loading initialization failed:', error);
         reject(error);
       }
     };
