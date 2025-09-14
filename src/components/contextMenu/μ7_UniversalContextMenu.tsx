@@ -54,6 +54,8 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
   currentPath: _currentPath = '',
   selectedFiles: _selectedFiles = []
 }) => {
+  const [hoveredSubmenu, setHoveredSubmenu] = useState<string | null>(null);
+  const [submenuPosition, setSubmenuPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   
   // Get actions for the current element and context
   const getActionsForElement = useCallback((element: any, type: string): ContextAction[] => {
@@ -376,6 +378,54 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
         baguaCategory: UDFormat.BAGUA.SEE,
         enabled: true
       });
+
+      actions.push({ id: 'separator-3', label: '', icon: '', baguaCategory: 0, enabled: true, separator: true });
+
+      // μ8_ERDE - Workspace Export with Binary Optimization
+      actions.push({
+        id: 'export-workspace',
+        label: 'Workspace exportieren...',
+        icon: '📤',
+        shortcut: 'Ctrl+E',
+        baguaCategory: UDFormat.BAGUA.ERDE,
+        enabled: true,
+        description: 'Export current workspace with optimization options',
+        submenu: [
+          {
+            id: 'export-standard',
+            label: 'Als .ud (Standard)',
+            icon: '📋',
+            baguaCategory: UDFormat.BAGUA.ERDE,
+            enabled: true,
+            description: 'Standard .ud binary format'
+          },
+          {
+            id: 'export-traditional',
+            label: 'Als .ud (Optimiert - Traditionell)',
+            icon: '🏺',
+            baguaCategory: UDFormat.BAGUA.BERG,
+            enabled: true,
+            description: 'Traditional optimization - balanced size/speed'
+          },
+          {
+            id: 'export-algebraic',
+            label: 'Als .ud (Optimiert - Algebraisch)',
+            icon: '🧮',
+            baguaCategory: UDFormat.BAGUA.FEUER,
+            enabled: true,
+            description: 'Algebraic optimization - maximum compression'
+          },
+          {
+            id: 'export-zip',
+            label: 'Als .zip Archiv',
+            icon: '📦',
+            baguaCategory: UDFormat.BAGUA.ERDE,
+            enabled: false,  // Future feature
+            description: 'ZIP archive with metadata (coming soon)',
+            disabledReason: 'Coming in future update'
+          }
+        ]
+      });
     }
 
     return actions;
@@ -390,9 +440,15 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
   const handleActionClick = useCallback((action: ContextAction) => {
     if (!action.enabled) return;
     
+    // Don't close menu for actions with submenus
+    if (action.submenu && action.submenu.length > 0) {
+      setHoveredSubmenu(hoveredSubmenu === action.id ? null : action.id);
+      return;
+    }
+    
     onItemAction(action.id, element);
     onClose();
-  }, [onItemAction, element, onClose]);
+  }, [onItemAction, element, onClose, hoveredSubmenu]);
 
   // Render menu item
   const renderMenuItem = useCallback((action: ContextAction, level = 0) => {
@@ -430,6 +486,15 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
           if (action.enabled) {
             e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.8)';
             e.currentTarget.style.color = 'white';
+            // Show submenu on hover and calculate position
+            if (action.submenu && action.submenu.length > 0) {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setSubmenuPosition({
+                x: rect.right + 5, // Position 5px to the right of the menu item
+                y: rect.top // Align with the top of the menu item
+              });
+              setHoveredSubmenu(action.id);
+            }
           }
         }}
         onMouseLeave={(e) => {
@@ -478,9 +543,11 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
         {action.submenu && (
           <span style={{ fontSize: '12px', opacity: 0.7 }}>▶</span>
         )}
+        
+        {/* Submenu - Rendered at top level to avoid scroll container issues */}
       </div>
     );
-  }, [handleActionClick]);
+  }, [handleActionClick, hoveredSubmenu]);
 
   // Early return if not visible
   if (!visible) return null;
@@ -587,7 +654,13 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
         </div>
 
         {/* Menu Items */}
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div 
+          style={{ 
+            maxHeight: '400px', 
+            overflowY: 'auto',
+            position: 'relative' // Ensure relative positioning for proper submenu placement
+          }}
+        >
           {actions.map(action => renderMenuItem(action))}
         </div>
 
@@ -617,6 +690,72 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
         </div>
       </div>
 
+      {/* Submenu - Rendered at top level to avoid being constrained by scrollable container */}
+      {hoveredSubmenu && actions.find(a => a.id === hoveredSubmenu)?.submenu && (
+        <div
+          style={{
+            position: 'fixed',
+            left: `${submenuPosition.x}px`,
+            top: `${submenuPosition.y}px`,
+            minWidth: '250px',
+            backgroundColor: 'rgba(30, 30, 30, 0.98)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '8px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
+            zIndex: 1002,
+            overflow: 'hidden',
+            animation: 'submenuAppear 0.12s ease-out'
+          }}
+          onMouseEnter={() => {/* Keep submenu open when hovering */}}
+          onMouseLeave={() => setHoveredSubmenu(null)}
+        >
+          {actions.find(a => a.id === hoveredSubmenu)?.submenu?.map(subAction => (
+            <div
+              key={subAction.id}
+              onClick={() => handleActionClick(subAction)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '8px 12px',
+                cursor: subAction.enabled ? 'pointer' : 'not-allowed',
+                fontSize: '13px',
+                color: subAction.enabled ? '#e5e5e5' : '#666',
+                opacity: subAction.enabled ? 1 : 0.5,
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (subAction.enabled) {
+                  e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.8)';
+                  e.currentTarget.style.color = 'white';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (subAction.enabled) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#e5e5e5';
+                }
+              }}
+              title={subAction.description || (subAction.disabledReason && !subAction.enabled ? subAction.disabledReason : undefined)}
+            >
+              <span style={{ fontSize: '14px', minWidth: '20px' }}>{subAction.icon}</span>
+              <span style={{ flex: 1 }}>{subAction.label}</span>
+              {subAction.shortcut && (
+                <span style={{ 
+                  fontSize: '11px', 
+                  opacity: 0.7,
+                  fontFamily: 'monospace',
+                  color: subAction.enabled ? '#a1a1aa' : '#555'
+                }}>
+                  {subAction.shortcut}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* CSS Animation */}
       <style>{`
         @keyframes contextMenuAppear {
@@ -627,6 +766,17 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
           to {
             opacity: 1;
             transform: scale(1) translateY(0);
+          }
+        }
+        
+        @keyframes submenuAppear {
+          from {
+            opacity: 0;
+            transform: scale(0.95) translateX(-5px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateX(0);
           }
         }
       `}</style>

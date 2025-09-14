@@ -44,9 +44,75 @@ export async function loadUniversalFileWasm(): Promise<WasmModule> {
 }
 
 /**
+ * Direct fetch approach - loads WASM via fetch and eval for better Emscripten compatibility
+ */
+async function loadWasmViaDirect(): Promise<WasmModule> {
+  // Fetch directly from UniversalFile repository (the source of truth)
+  // Use the Vite FS allowed path to access the UniversalFile lib directory
+  const response = await fetch('/@fs/home/tux/SingularUniverse/opt/UniversalFile/lib/universalfile.js');
+  const jsCode = await response.text();
+  
+  // Create proper UMD module environment and execute
+  const moduleObj = { exports: {} };
+  const exportsObj = {};
+  let UniversalFileModule;
+  
+  // Execute the UMD module in a controlled environment
+  const evalFunction = new Function('module', 'exports', 'window', jsCode + '; return typeof UniversalFileModule !== "undefined" ? UniversalFileModule : null;');
+  UniversalFileModule = evalFunction(moduleObj, exportsObj, {});
+  
+  // Try different extraction methods for UMD module
+  if (!UniversalFileModule) {
+    // Check if it was assigned to module.exports
+    UniversalFileModule = moduleObj.exports.default || moduleObj.exports.UniversalFileModule || moduleObj.exports;
+  }
+  
+  if (!UniversalFileModule && typeof exportsObj.UniversalFileModule === 'function') {
+    UniversalFileModule = exportsObj.UniversalFileModule;
+  }
+  
+  if (typeof UniversalFileModule !== 'function') {
+    throw new Error(`UniversalFileModule is not a function after direct evaluation. Got: ${typeof UniversalFileModule}`);
+  }
+  
+  console.log('✅ WASM module factory loaded via direct fetch from UniversalFile');
+  
+  // Configure module to properly locate WASM binary from UniversalFile repository
+  const module = await UniversalFileModule({
+    locateFile: (path: string, scriptDirectory: string) => {
+      // If requesting the WASM file, provide the correct path to UniversalFile repository
+      if (path.includes('universalfile.wasm')) {
+        return '/@fs/home/tux/SingularUniverse/opt/UniversalFile/lib/universalfile.wasm';
+      }
+      // For other files, use the default behavior
+      return scriptDirectory + path;
+    }
+  });
+  console.log('✅ UniversalFile direct fetch WASM module initialized successfully');
+  
+  return module;
+}
+
+/**
  * Internal WASM module loading logic
  */
 async function loadWasmModule(): Promise<WasmModule> {
+  // Script loading is most reliable, try it first
+  try {
+    console.log('🔄 Trying script loading method (most reliable)...');
+    return await loadWasmViaScript();
+  } catch (error) {
+    console.warn('❌ Script loading failed:', error);
+  }
+
+  // Try direct fetch approach as backup
+  try {
+    console.log('🔄 Trying direct fetch method...');
+    return await loadWasmViaDirect();
+  } catch (error) {
+    console.warn('❌ Direct fetch failed:', error);
+  }
+
   // Try different import methods for robustness
   const importAttempts = [
     () => import('@tux-sourceish/universalfile/lib/universalfile.js'),

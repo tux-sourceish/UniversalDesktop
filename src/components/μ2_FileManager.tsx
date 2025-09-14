@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { μ3_useFileSystem } from '../hooks/μ3_useFileSystem';
-import { μ7_UniversalContextMenu, useUniversalContextMenu } from './contextMenu/μ7_UniversalContextMenu';
+// Removed: import { μ7_UniversalContextMenu, useUniversalContextMenu } - using unified context menu
 import { UDFormat } from '../core/UDFormat';
 
 /**
@@ -54,7 +54,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
   // Hooks
   const fileSystem = μ3_useFileSystem(initialPath);
-  const { contextMenu, showContextMenu, hideContextMenu } = useUniversalContextMenu();
+  // Removed: const { contextMenu, showContextMenu, hideContextMenu } = useUniversalContextMenu() - using unified context menu
 
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -140,17 +140,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
     }
   }, [fileSystem, onFileOpen]);
 
-  // Handle context menu
-  const handleContextMenu = useCallback((event: React.MouseEvent, item?: any) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const contextType = item
-      ? (item.type === 'directory' ? 'folder' : 'file')
-      : 'canvas';
-
-    showContextMenu(event, item, contextType);
-  }, [showContextMenu]);
+  // Removed: handleContextMenu - now using unified context menu from main app
 
   // Handle context menu actions
   const handleContextAction = useCallback((action: string, item?: any) => {
@@ -510,7 +500,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                 clientX: rect.left + rect.width / 2,
                 clientY: rect.top + rect.height / 2
               } as React.MouseEvent;
-              handleContextMenu(fakeEvent, selectedFileForContext);
+              // handleContextMenu removed - using unified context menu
             }
           }
           break;
@@ -518,7 +508,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
         case 'Escape':
           event.preventDefault();
           setSelectedItems(new Set());
-          hideContextMenu();
+          // hideContextMenu removed - using unified context menu
           break;
 
         // Arrow key navigation in TUI mode
@@ -590,7 +580,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [mode, toggleMode, fileSystem, filteredAndSortedItems, selectedItems, handleItemDoubleClick, handleItemClick, handleContextMenu, hideContextMenu, showHidden]);
+  }, [mode, toggleMode, fileSystem, filteredAndSortedItems, selectedItems, handleItemDoubleClick, handleItemClick, showHidden]);
 
   // GUI Mode Toolbar
   const renderToolbar = () => {
@@ -863,7 +853,6 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                     className={`file-item ${isSelected ? 'selected' : ''}`}
                     onClick={(e) => handleItemClick(item, e)}
                     onDoubleClick={() => handleItemDoubleClick(item)}
-                    onContextMenu={(e) => handleContextMenu(e, item)}
                     onMouseEnter={(e) => {
                       if (!selectedItems.has(item.id)) {
                         e.currentTarget.style.backgroundColor = 'rgba(26, 127, 86, 0.15)';
@@ -949,7 +938,6 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
               key={item.id}
               onClick={(e) => handleItemClick(item, e)}
               onDoubleClick={() => handleItemDoubleClick(item)}
-              onContextMenu={(e) => handleContextMenu(e, item)}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -1180,7 +1168,6 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
                     className="tui-file-row"
                     onClick={(e) => handleItemClick(item, e)}
                     onDoubleClick={() => handleItemDoubleClick(item)}
-                    onContextMenu={(e) => handleContextMenu(e, item)}
                     style={{
                       display: 'grid',
                       gridTemplateColumns: 'auto 3fr 100px 80px 120px',
@@ -1439,20 +1426,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
 
       {renderStatusBar()}
 
-      {/* Context Menu */}
-      <μ7_UniversalContextMenu
-        element={contextMenu.element}
-        visible={contextMenu.visible}
-        x={contextMenu.x}
-        y={contextMenu.y}
-        contextType={contextMenu.contextType}
-        onClose={hideContextMenu}
-        onItemAction={handleContextAction}
-        clipboardHasContent={!!clipboard}
-        hasSelection={selectedItems.size > 0}
-        currentPath={fileSystem.currentPath}
-        selectedFiles={Array.from(selectedItems)}
-      />
+      {/* Context Menu removed - using unified context menu from main app */}
     </div>
   );
 };

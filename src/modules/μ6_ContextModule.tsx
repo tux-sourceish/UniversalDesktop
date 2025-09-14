@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { μ7_UnifiedContextMenu } from '../components/contextMenu/μ7_UnifiedContextMenu';
+import { μ7_UniversalContextMenu } from '../components/contextMenu/μ7_UniversalContextMenu';
 import type { DesktopItemData, ContextMenuData } from '../types';
 
 interface ContextModuleProps {
@@ -119,18 +119,16 @@ export const ContextModule: React.FC<ContextModuleProps> = ({
         />
       )} */}
 
-      {/* ✅ V2 μX-Unified Context Menu - RESTORED with Bagua Architecture! */}
+      {/* ✅ V2 μX-Universal Context Menu - SINGLE SOURCE OF TRUTH! */}
       {unifiedContextMenu.visible && (
-        <μ7_UnifiedContextMenu
+        <μ7_UniversalContextMenu
+          element={unifiedContextMenu.targetItem}
           visible={unifiedContextMenu.visible}
           x={unifiedContextMenu.x}
           y={unifiedContextMenu.y}
           contextType={unifiedContextMenu.contextType}
-          targetItem={unifiedContextMenu.targetItem}
           onClose={onUnifiedContextMenuClose}
-          onCreateItem={onItemCreate}
-          onItemAction={onItemAction}
-          onAddToContext={onItemAction ? (item) => onItemAction('add-to-context', item) : undefined}
+          onItemAction={handleItemAction}
           clipboardHasContent={clipboardHasContent}
           hasSelection={hasTextSelection}
         />

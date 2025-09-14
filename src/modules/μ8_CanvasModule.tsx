@@ -20,6 +20,7 @@ interface CanvasModuleProps {
   onTitleBarClick?: (e: React.MouseEvent, itemId: string) => void;
   onToggleContext?: (item: DesktopItemData) => void;
   isInContext?: (itemId: string) => boolean;
+  onFilesDrop?: (files: FileList, dropPosition: { x: number, y: number }) => void;
   className?: string;
 }
 
@@ -35,6 +36,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
   onTitleBarClick,
   onToggleContext,
   isInContext,
+  onFilesDrop,
   className = ''
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -74,6 +76,40 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
     onContextMenu?.(e);
   };
 
+  // μ6_FEUER - File Import Processing via Drag & Drop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!onFilesDrop) return;
+
+    const files = e.dataTransfer.files;
+    if (files.length === 0) return;
+
+    // Calculate drop position in canvas coordinates
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const dropPosition = {
+      x: (e.clientX - rect.left - canvasState.position.x) / canvasState.scale,
+      y: (e.clientY - rect.top - canvasState.position.y) / canvasState.scale
+    };
+
+    console.log('🎯 File drop detected:', {
+      fileCount: files.length,
+      dropPosition,
+      files: Array.from(files).map(f => ({ name: f.name, type: f.type, size: f.size }))
+    });
+
+    onFilesDrop(files, dropPosition);
+  };
+
   return (
     <CanvasController
       ref={canvasRef}
@@ -85,6 +121,8 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
       <div 
         className="canvas-workspace"
         onContextMenu={handleCanvasContextMenu}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
         style={{
           width: '100%',
           height: '100%',

@@ -91,6 +91,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     if (windows) {
       // TODO: Integrate with v2 Campus-Model when revived
     }
+
+    // Context menu prevention removed - issue was dual component instances, not browser menu
   }, [minimap, navigation, windows]);
   
   // Legacy compatibility mapping with Bagua enhancement
@@ -617,10 +619,60 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         // Use existing navigation to center view
         canvas.setCanvasState(prev => ({ ...prev, x: 0, y: 0 }));
         break;
+      // μ8_ERDE - Export Actions
+      case 'export-standard':
+        handleExportWorkspace('standard');
+        break;
+      case 'export-traditional':
+        handleExportWorkspace('traditional');
+        break;
+      case 'export-algebraic':
+        handleExportWorkspace('algebraic');
+        break;
       default:
         // Unhandled action - could be logged in DEV mode if needed
     }
   }, [clipboard, handleItemDelete, handleItemCreate, context, unifiedContextMenu, canvas]);
+
+  // μ6_FEUER - File Import Handler
+  const handleFilesDrop = useCallback(async (files: FileList, dropPosition: { x: number, y: number }) => {
+    try {
+      console.log('🔥 handleFilesDrop triggered:', {
+        fileCount: files.length,
+        dropPosition
+      });
+
+      // Use the batch import function
+      await workspace.µ6_importDroppedFiles(files, dropPosition);
+      
+      console.log('✅ File import completed successfully');
+    } catch (error) {
+      console.error('💥 File import failed:', error);
+    }
+  }, [workspace]);
+
+  // μ8_ERDE - Workspace Export Handler 
+  const handleExportWorkspace = useCallback(async (strategy: 'standard' | 'traditional' | 'algebraic') => {
+    try {
+      console.log('🏔️ handleExportWorkspace triggered:', { strategy });
+
+      // Generate filename with timestamp
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      const filename = `workspace-${timestamp}-${strategy}`;
+
+      const success = await workspace.μ1_exportWorkspace(filename, strategy);
+      
+      if (success) {
+        console.log('✅ Workspace export completed successfully');
+      } else {
+        console.error('❌ Workspace export failed');
+      }
+    } catch (error) {
+      console.error('💥 Workspace export error:', error);
+    }
+  }, [workspace]);
+
 
   // 📱 Loading State
   if (dataLoading) {
@@ -662,6 +714,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
           onContextMenu={handleContextMenu}
           onToggleContext={handleToggleContext}
           isInContext={context.isInContext}
+          onFilesDrop={handleFilesDrop}
           className="main-canvas"
         />
 
