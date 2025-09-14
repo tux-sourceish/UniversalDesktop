@@ -35,7 +35,7 @@ export class WasmUniversalDocument {
     try {
       this.wasmModule = await loadUniversalFileWasm();
       this.useWasm = true;
-      console.log('🔄 WasmUniversalDocument: Switched to WASM engine');
+      // console.log('🔄 WasmUniversalDocument: Switched to WASM engine');
     } catch (error) {
       console.warn('⚠️ WasmUniversalDocument: Falling back to TypeScript engine:', error);
       this.useWasm = false;
@@ -140,7 +140,7 @@ export class WasmUniversalDocument {
     } catch (error: any) {
       // Check if this is a magic number validation error (format migration needed)
       if (error.message?.includes('Invalid magic number')) {
-        console.log('🔄 Format migration needed: Converting from old JSON format to new binary format');
+        // console.log('🔄 Format migration needed: Converting from old JSON format to new binary format');
         
         try {
           // Try to parse as old JSON format
@@ -165,10 +165,10 @@ export class WasmUniversalDocument {
    * Migrate from old JSON format to new UniversalDocument format
    */
   static migrateFromOldFormat(oldData: any): WasmUniversalDocument {
-    console.log('🔄 Migrating workspace data from old format:', {
-      version: oldData.version,
-      itemCount: oldData.items?.length || 0
-    });
+    // console.log('🔄 Migrating workspace data from old format:', {
+    //   version: oldData.version,
+    //   itemCount: oldData.items?.length || 0
+    // });
 
     // Create new document with migrated metadata
     const metadata = {
@@ -202,10 +202,10 @@ export class WasmUniversalDocument {
       }
     }
 
-    console.log('✅ Migration completed:', {
-      migratedItems: wasmDoc.tsDocument.μ6_getAllItems().length,
-      originalItems: oldData.items?.length || 0
-    });
+    // console.log('✅ Migration completed:', {
+    //   migratedItems: wasmDoc.tsDocument.μ6_getAllItems().length,
+    //   originalItems: oldData.items?.length || 0
+    // });
 
     return wasmDoc;
   }
@@ -254,7 +254,7 @@ export class WasmUniversalDocument {
       this.wasmModule = await loadUniversalFileWasm();
     }
     this.useWasm = useWasm && this.wasmModule !== null;
-    console.log(`🔄 WasmUniversalDocument: Switched to ${this.useWasm ? 'WASM' : 'TypeScript'} engine`);
+    // console.log(`🔄 WasmUniversalDocument: Switched to ${this.useWasm ? 'WASM' : 'TypeScript'} engine`);
   }
 }
 

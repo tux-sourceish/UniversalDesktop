@@ -290,13 +290,13 @@ export const μ7_useKeyboardShortcuts = (handlers: ShortcutHandlers = {}) => {
     });
     
     if (matchingShortcut) {
-      if (import.meta.env.DEV) {
-        console.log('⌨️ Shortcut triggered:', {
-          id: matchingShortcut.id,
-          keys: matchingShortcut.keys,
-          context: activeContext
-        });
-      }
+      // if (import.meta.env.DEV) {
+      //   console.log('⌨️ Shortcut triggered:', {
+      //     id: matchingShortcut.id,
+      //     keys: matchingShortcut.keys,
+      //     context: activeContext
+      //   });
+      // }
       matchingShortcut.handler(e);
     }
   }, [shortcuts, shortcutsEnabled, activeContext, matchesShortcut, isInInputField]);

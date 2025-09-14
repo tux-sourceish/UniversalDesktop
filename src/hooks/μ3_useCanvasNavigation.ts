@@ -138,9 +138,9 @@ export const μ3_useCanvasNavigation = () => {
       }
     }));
     
-    if (import.meta.env.DEV) {
-      console.log(`🎮 Keyboard Navigation: ${e.key} (${Math.round(deltaX)}, ${Math.round(deltaY)}) at zoom ${Math.round(canvasState.scale * 100)}%`);
-    }
+    // if (import.meta.env.DEV) {
+    //   console.log(`🎮 Keyboard Navigation: ${e.key} (${Math.round(deltaX)}, ${Math.round(deltaY)}) at zoom ${Math.round(canvasState.scale * 100)}%`);
+    // }
   }, [canvasState.scale]);
 
   // Reset Functions

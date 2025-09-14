@@ -43,14 +43,14 @@ export const µ1_useWorkspace = (userId: string) => {
     setWorkspaceState(prev => {
       // Prevent concurrent loads using existing state
       if (prev.isLoading) {
-        console.log('⏸️ µ1_loadWorkspace already in progress, skipping');
+        // console.log('⏸️ µ1_loadWorkspace already in progress, skipping');
         return prev;
       }
       return { ...prev, isLoading: true, syncError: null };
     });
 
     try {
-      console.log('📥 µ1_loadWorkspace starting for user:', userId);
+      // console.log('📥 µ1_loadWorkspace starting for user:', userId);
 
       // Workspace von Supabase laden
       const workspace = workspaceId 
@@ -62,7 +62,7 @@ export const µ1_useWorkspace = (userId: string) => {
 
       if (!hasWorkspace) {
         // Neuen Workspace erstellen wenn keiner existiert
-        console.log('🆕 Creating new workspace for user');
+        // console.log('🆕 Creating new workspace for user');
         const newDoc = udDocument.µ1_createDocument();
         
         throw new Error('Failed to create new workspace');
@@ -88,7 +88,7 @@ export const µ1_useWorkspace = (userId: string) => {
 
         // Check final item count
         const itemCount = udDocument.documentState.items.length;
-        console.log(`✅ µ1_loadWorkspace completed: ${itemCount} items loaded`);
+        // console.log(`✅ µ1_loadWorkspace completed: ${itemCount} items loaded`);
 
         return workspace;
       }
@@ -122,7 +122,7 @@ export const µ1_useWorkspace = (userId: string) => {
     );
 
     if (!shouldSave) {
-      console.log('ℹ️ µ1_saveWorkspace: No changes to save');
+      // console.log('ℹ️ µ1_saveWorkspace: No changes to save');
       // Don't update lastSyncedAt if nothing was actually saved
       return true;
     }
@@ -130,7 +130,7 @@ export const µ1_useWorkspace = (userId: string) => {
     setWorkspaceState(prev => ({ ...prev, isSaving: true, syncError: null }));
 
     try {
-      console.log('💾 µ1_saveWorkspace starting with worker');
+      // console.log('💾 µ1_saveWorkspace starting with worker');
 
       const binary = await new Promise<ArrayBuffer | null>((resolve, reject) => {
         worker.onmessage = (event) => {
@@ -172,7 +172,7 @@ export const µ1_useWorkspace = (userId: string) => {
           syncError: null
         }));
 
-        console.log('✅ µ1_saveWorkspace completed');
+        // console.log('✅ µ1_saveWorkspace completed');
         return true;
       }
 
@@ -204,25 +204,25 @@ export const µ1_useWorkspace = (userId: string) => {
     );
 
     if (shouldAutoSave) {
-      console.log('⏰ Debounced auto-save triggered - waiting 2 seconds...', {
-        hasChanges,
-        workspaceId: currentWorkspace?.id,
-        itemCount: udDocument.documentState.items.length
-      });
+      // console.log('⏰ Debounced auto-save triggered - waiting 2 seconds...', {
+      //   hasChanges,
+      //   workspaceId: currentWorkspace?.id,
+      //   itemCount: udDocument.documentState.items.length
+      // });
       
       const debouncedSaveTimer = setTimeout(async () => {
-        console.log('💾 Executing debounced auto-save...');
+        // console.log('💾 Executing debounced auto-save...');
         const success = await µ1_saveWorkspace(false);
         
         if (success) {
-          console.log('✅ Auto-save completed successfully - F5-ready!');
+          // console.log('✅ Auto-save completed successfully - F5-ready!');
         } else {
           console.error('❌ Auto-save failed - F5 persistence at risk');
         }
       }, 2000); // 2 Sekunden Delay für bessere UX
 
       return () => {
-        console.log('🚫 Auto-save debounce cancelled (new changes detected)');
+        // console.log('🚫 Auto-save debounce cancelled (new changes detected)');
         clearTimeout(debouncedSaveTimer);
       };
     }
@@ -238,7 +238,7 @@ export const µ1_useWorkspace = (userId: string) => {
     );
 
     if (shouldInitialLoad) {
-      console.log('🚀 Initial workspace load for user:', userId);
+      // console.log('🚀 Initial workspace load for user:', userId);
       µ1_loadWorkspace();
     }
   }, [userId, workspaceState.currentWorkspace, workspaceState.isLoading, µ1_loadWorkspace]);
@@ -250,12 +250,12 @@ export const µ1_useWorkspace = (userId: string) => {
       const { currentWorkspace, isSaving } = workspaceState;
 
       if (hasChanges && currentWorkspace && !isSaving) {
-        console.log('🔄 F5-Protection: Saving workspace before page unload...');
+        // console.log('🔄 F5-Protection: Saving workspace before page unload...');
         
         // Force synchronous save for F5-protection
         try {
           await µ1_saveWorkspace(true);
-          console.log('✅ F5-Protection: Workspace saved successfully');
+          // console.log('✅ F5-Protection: Workspace saved successfully');
         } catch (error) {
           console.error('❌ F5-Protection: Failed to save workspace:', error);
           // Show browser warning if save fails
@@ -273,12 +273,12 @@ export const µ1_useWorkspace = (userId: string) => {
   // µ6_FEUER - File Import Processing with UniversalFile Engine 
   const µ6_importDroppedFile = useCallback(async (file: File, dropPosition: { x: number, y: number }) => {
     try {
-      console.log('🔥 µ6_importDroppedFile starting import:', {
-        fileName: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        dropPosition
-      });
+      // console.log('🔥 µ6_importDroppedFile starting import:', {
+      //   fileName: file.name,
+      //   fileType: file.type,
+      //   fileSize: file.size,
+      //   dropPosition
+      // });
 
       // Read file as ArrayBuffer for WASM engine
       const arrayBuffer = await file.arrayBuffer();
@@ -298,7 +298,7 @@ export const µ1_useWorkspace = (userId: string) => {
         baguaDescriptor = UDFormat.BAGUA.WIND; // ☴ WIND - UI/Views
         windowType = 'NOTIZZETTEL';
         
-        console.log('📝 Processing text file:', { fileName, contentLength: content.length });
+        // console.log('📝 Processing text file:', { fileName, contentLength: content.length });
         
       } else if (fileExtension === 'json') {
         // JSON files -> KONSTRUKTOR window (structured data)
@@ -311,7 +311,7 @@ export const µ1_useWorkspace = (userId: string) => {
           baguaDescriptor = UDFormat.BAGUA.BERG; // ☶ BERG - Structure/Config
           windowType = 'KONSTRUKTOR';
           
-          console.log('🏗️ Processing JSON file:', { fileName, jsonKeys: Object.keys(jsonData).length });
+          // console.log('🏗️ Processing JSON file:', { fileName, jsonKeys: Object.keys(jsonData).length });
           
         } catch (parseError) {
           console.warn('⚠️ JSON parse error, treating as text:', parseError);
@@ -326,7 +326,7 @@ export const µ1_useWorkspace = (userId: string) => {
         baguaDescriptor = UDFormat.BAGUA.ERDE; // ☷ ERDE - Foundation/Data
         windowType = 'TABELLE';
         
-        console.log('📊 Processing CSV file:', { fileName, lines: content.split('\n').length });
+        // console.log('📊 Processing CSV file:', { fileName, lines: content.split('\n').length });
         
       } else {
         // Unknown file types -> Generic NOTIZZETTEL with file info
@@ -334,7 +334,7 @@ export const µ1_useWorkspace = (userId: string) => {
         windowType = 'NOTIZZETTEL';
         content = `Imported file: ${fileName}\nType: ${file.type || 'unknown'}\nSize: ${file.size} bytes\n\n[Binary content - ${arrayBuffer.byteLength} bytes]`;
         
-        console.log('📄 Processing unknown file type:', { fileName, fileType: file.type });
+        // console.log('📄 Processing unknown file type:', { fileName, fileType: file.type });
       }
 
       // Create new item using µ1_addItem
@@ -347,12 +347,12 @@ export const µ1_useWorkspace = (userId: string) => {
         bagua_descriptor: baguaDescriptor
       });
 
-      console.log('✅ µ6_importDroppedFile completed:', {
-        newItemId,
-        windowType,
-        baguaDescriptor,
-        position: dropPosition
-      });
+      // console.log('✅ µ6_importDroppedFile completed:', {
+      //   newItemId,
+      //   windowType,
+      //   baguaDescriptor,
+      //   position: dropPosition
+      // });
 
       return newItemId;
       
@@ -367,10 +367,10 @@ export const µ1_useWorkspace = (userId: string) => {
     const fileArray = Array.from(files);
     const results: string[] = [];
     
-    console.log('🔥 µ6_importDroppedFiles batch import starting:', {
-      fileCount: fileArray.length,
-      dropPosition
-    });
+    // console.log('🔥 µ6_importDroppedFiles batch import starting:', {
+    //   fileCount: fileArray.length,
+    //   dropPosition
+    // });
 
     // Import files sequentially with position offset
     for (let i = 0; i < fileArray.length; i++) {
@@ -388,11 +388,11 @@ export const µ1_useWorkspace = (userId: string) => {
       }
     }
 
-    console.log('✅ µ6_importDroppedFiles batch completed:', {
-      successful: results.length,
-      total: fileArray.length,
-      itemIds: results
-    });
+    // console.log('✅ µ6_importDroppedFiles batch completed:', {
+    //   successful: results.length,
+    //   total: fileArray.length,
+    //   itemIds: results
+    // });
 
     return results;
   }, [µ6_importDroppedFile]);
@@ -403,11 +403,11 @@ export const µ1_useWorkspace = (userId: string) => {
     strategy: 'standard' | 'traditional' | 'algebraic' = 'standard'
   ): Promise<boolean> => {
     try {
-      console.log('🏔️ μ1_exportWorkspace starting export:', {
-        filename,
-        strategy,
-        itemCount: udDocument.documentState.items.length
-      });
+      // console.log('🏔️ μ1_exportWorkspace starting export:', {
+      //   filename,
+      //   strategy,
+      //   itemCount: udDocument.documentState.items.length
+      // });
 
       const { document: udDoc, items } = udDocument.documentState;
       if (!udDoc) {
@@ -447,7 +447,7 @@ export const µ1_useWorkspace = (userId: string) => {
 
         case 'traditional':
           // Traditional optimization - balanced approach
-          console.log('🏺 Applying traditional optimization...');
+          // console.log('🏺 Applying traditional optimization...');
           
           // First get standard binary
           const standardBinary = await new Promise<ArrayBuffer>((resolve, reject) => {
@@ -472,7 +472,7 @@ export const µ1_useWorkspace = (userId: string) => {
 
         case 'algebraic':
           // Maximum algebraic compression
-          console.log('🧮 Applying algebraic optimization...');
+          // console.log('🧮 Applying algebraic optimization...');
           
           // First get standard binary  
           const algebraicStandard = await new Promise<ArrayBuffer>((resolve, reject) => {
@@ -514,7 +514,7 @@ export const µ1_useWorkspace = (userId: string) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        console.log('✅ Programmatic download triggered for:', downloadFilename);
+        // console.log('✅ Programmatic download triggered for:', downloadFilename);
       } catch (error) {
         console.warn('⚠️ Programmatic download failed, opening in new tab:', error);
         // Fallback: open in new tab/window which should trigger browser's save dialog
@@ -532,12 +532,12 @@ export const µ1_useWorkspace = (userId: string) => {
         URL.revokeObjectURL(url);
       }, 1000);
 
-      console.log('✅ μ1_exportWorkspace completed:', {
-        filename: downloadFilename,
-        strategy,
-        ...optimizationInfo,
-        compressionInfo: `${(optimizationInfo.compressionRatio * 100).toFixed(1)}% of original size`
-      });
+      // console.log('✅ μ1_exportWorkspace completed:', {
+      //   filename: downloadFilename,
+      //   strategy,
+      //   ...optimizationInfo,
+      //   compressionInfo: `${(optimizationInfo.compressionRatio * 100).toFixed(1)}% of original size`
+      // });
 
       return true;
 

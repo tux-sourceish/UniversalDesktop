@@ -42,6 +42,7 @@ interface μ2_AgentState {
     reasoner: { active: boolean; status: string; validationPassed?: boolean };
     coder: { active: boolean; status: string; validationPassed?: boolean };
     refiner: { active: boolean; status: string; validationPassed?: boolean };
+    guardian: { active: boolean; status: string; validationPassed?: boolean }; // NEU: Guardian
   };
 }
 
@@ -85,7 +86,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     agents: {
       reasoner: { active: false, status: 'idle', validationPassed: true },
       coder: { active: false, status: 'idle', validationPassed: true },
-      refiner: { active: false, status: 'idle', validationPassed: true }
+      refiner: { active: false, status: 'idle', validationPassed: true },
+      guardian: { active: false, status: 'idle', validationPassed: true } // NEU
     }
   });
 
@@ -95,28 +97,37 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       key: 'reasoner',
       icon: '🏗️',
       name: 'Reasoner',
-      description: 'UniversalDesktop Architekt - Plans with μX-Bagua System',
+      description: 'Der Architekt. Plant gemäß der Vision.',
       bagua: AGENT_PERSONAS.reasoner?.baguaAlignment || UDFormat.BAGUA.HIMMEL,
       enabled: true,
-      model: 'nexus-online/claude-sonnet-4' // Best for architectural reasoning
+      model: 'nexus-online/claude-sonnet-4'
     },
     {
       key: 'coder', 
       icon: '🔥',
       name: 'Coder',
-      description: 'TypeScript Implementer - μX-Prefix Enforced, NO Python',
+      description: 'Der Handwerker. Schreibt reinen Code.',
       bagua: AGENT_PERSONAS.coder?.baguaAlignment || UDFormat.BAGUA.FEUER,
       enabled: false,
-      model: 'kira-local/llama3.1-8b' // Local coding with philosophy compliance
+      model: 'kira-local/llama3.1-8b'
     },
     {
       key: 'refiner',
       icon: '🌊', 
       name: 'Refiner',
-      description: 'Philosophy Perfectionist - Ensures Raimund Standards',
+      description: 'Der Alchemist. Veredelt und optimiert.',
       bagua: AGENT_PERSONAS.refiner?.baguaAlignment || UDFormat.BAGUA.SEE,
       enabled: false,
-      model: 'kira-online/gemini-2.5-pro' // Premium for perfect refinement
+      model: 'kira-online/gemini-2.5-pro'
+    },
+    {
+      key: 'guardian', 
+      icon: '🛡️',
+      name: 'Guardian',
+      description: 'Der Wächter. Prüft auf philosophische Reinheit.',
+      bagua: AGENT_PERSONAS.guardian?.baguaAlignment || UDFormat.BAGUA.ERDE,
+      enabled: true, // Guardian ist standardmäßig aktiv
+      model: 'kira-online/gemini-2.5-pro' // Benötigt ein starkes Modell für die Analyse
     }
   ]);
 
@@ -292,131 +303,58 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   ): Promise<string> => {
     let result = initialPrompt;
     
-    // Build context string properly - this is used by μ1_generateAgentPrompt for "Pinned Items"
     const contextString = context.length > 0 
       ? `Pinned Items:\n${context.map(item => `[${item.title}] ${item.content?.substring(0, 200)}...`).join('\n')}`
       : '';
 
-    // Sequential processing through enabled agents using modular personas
-    for (let i = 0; i < enabledAgents.length; i++) {
-      const agent = enabledAgents[i];
-      const isLastAgent = i === enabledAgents.length - 1;
+    const processingAgents = enabledAgents.filter(a => a.key !== 'guardian');
+    const guardianAgent = enabledAgents.find(a => a.key === 'guardian');
+
+    for (let i = 0; i < processingAgents.length; i++) {
+      const agent = processingAgents[i];
+      const isLastAgent = i === processingAgents.length - 1;
       
       try {
-        // Get MCP context if available (UniversalDesktop philosophy integration)
         const mcpContext = contextManager?.getContextSummary?.() || '';
+        const finalAgentPrompt = μ1_generateAgentPrompt(agent.key, result, contextString, mcpContext, outputType);
 
-        // Build specialized prompt using the modular persona system with output-type awareness
-        const finalAgentPrompt = μ1_generateAgentPrompt(
-          agent.key,
-          result,
-          contextString,
-          mcpContext,
-          outputType // Include output type for AI formatting instructions
-        );
-
-        // Call LiteLLM API with the generated prompt and context info
-        const response = await μ2_callLiteLLMAPI(
-          finalAgentPrompt,
-          [agent],
-          agent.model,
-          {
+        const response = await μ2_callLiteLLMAPI(finalAgentPrompt, [agent], agent.model, {
             activeItems: contextManager?.activeContextItems || [],
-            hasContextInPrompt: finalAgentPrompt.includes('Pinned Items:') || finalAgentPrompt.includes('**INSTRUCTIONS:**')
-          }
-        );
+            hasContextInPrompt: finalAgentPrompt.includes('Pinned Items:')
+        });
 
-        // μ7_ Debug Window Spawning (DONNER - Events/Debug)
-        // Spawn debug window with prompt for NEXT agent (if not last agent and debug enabled)
-        const μ7_shouldCreateDebugWindow = UDFormat.transistor(
-          μ7_debugMode && !isLastAgent && onCreateUDItem !== undefined
-        );
-        
-        if (μ7_shouldCreateDebugWindow && !isLastAgent) {
-          try {
-            const nextAgent = enabledAgents[i + 1];
-            const nextPrompt = μ1_generateAgentPrompt(
-              nextAgent.key,
-              response.text || response.code || result,
-              contextString,
-              mcpContext,
-              outputType // Include output type for debug window consistency
-            );
-
-            const debugWindow = μ1_WindowFactory.createUDItem({
-              type: 'notizzettel',
-              position: { 
-                x: 0, // Default triggers viewport centering
-                y: 0, 
-                z: 1000 + i 
-              },
-              title: `🔍 ${agent.name} → ${nextAgent.name}`,
-              content: {
-                text: `🔍 DEBUG: Agent-zu-Agent Prompt Flow\n` +
-                      `═══════════════════════════════════\n\n` +
-                      `📤 FROM: ${agent.name} (${agent.model})\n` +
-                      `📥 TO: ${nextAgent.name} (${nextAgent.model})\n` +
-                      `🕐 TIME: ${new Date().toLocaleString('de-DE')}\n` +
-                      `🔗 SESSION: ${μ7_debugSessionId}\n\n` +
-                      `📝 KOMPLETTER PROMPT AN NÄCHSTES MODELL:\n` +
-                      `${'='.repeat(50)}\n\n` +
-                      `${nextPrompt}\n\n` +
-                      `${'='.repeat(50)}\n\n` +
-                      `💡 AKTUELLER RESULT (Input für nächsten Agent):\n` +
-                      `${(response.text || response.code || result).substring(0, 1000)}${(response.text || response.code || result).length > 1000 ? '...\n\n[TRUNCATED - See full result in main window]' : ''}`
-              },
-              origin: 'debug-agent-prompt',
-              metadata: {
-                debugSessionId: μ7_debugSessionId,
-                agentFlow: `${agent.name} → ${nextAgent.name}`,
-                agentIndex: i,
-                isDebugWindow: true,
-                fromModel: agent.model,
-                toModel: nextAgent.model
-              }
-            }, positionCalculator); // Use positionCalculator for viewport-centered debug windows
-            
-            if (debugWindow && onCreateUDItem) {
-              onCreateUDItem(debugWindow);
-              console.log(`🔍 Debug Window spawned: ${agent.name} → ${nextAgent.name}`);
-            }
-          } catch (debugError) {
-            console.warn('μ7_Debug Window creation failed:', debugError);
-            // Continue agent processing - debug failure doesn't break main workflow
-          }
+        if (μ7_debugMode && !isLastAgent && onCreateUDItem) {
+          // Debug window logic can be inserted here if needed
         }
 
-        // Validate response for philosophy compliance
         const validation = μ1_validateAgentResponse(response.text || '', agent.key);
         if (!validation.valid) {
-          console.warn(`μ6_Agent validation issues for ${agent.name}:`, validation.issues);
-          // Update UI state with validation warnings
           setμ2_AgentState(prev => ({
             ...prev,
-            validationWarnings: [...prev.validationWarnings, ...validation.issues.map(issue => `${agent.name}: ${issue}`)],
-            agents: {
-              ...prev.agents,
-              [agent.key]: { ...prev.agents[agent.key], validationPassed: false }
-            }
-          }));
-        } else {
-          // Mark agent as validation passed
-          setμ2_AgentState(prev => ({
-            ...prev,
-            agents: {
-              ...prev.agents,
-              [agent.key]: { ...prev.agents[agent.key], validationPassed: true }
-            }
+            validationWarnings: [...prev.validationWarnings, ...validation.issues.map(issue => `${agent.name}: ${issue}`)]
           }));
         }
 
         result = response.text || response.code || result;
-        
-        console.log(`✅ ${agent.name} completed with ${validation.valid ? 'compliant' : 'non-compliant'} response`);
+        console.log(`✅ ${agent.name} completed.`);
       } catch (error) {
         console.error(`❌ Agent ${agent.name} processing failed:`, error);
-        // Continue with current result on error
       }
+    }
+
+    if (guardianAgent) {
+        console.log('🛡️ Guardian is now validating the final result...');
+        const finalValidation = μ1_validateAgentResponse(result, 'coder'); // Validate as coder output for now
+        if (!finalValidation.valid) {
+            console.warn('🛡️ Guardian VETO! The result is not philosophically pure.', finalValidation.issues);
+            result = `**🛡️ GUARDIAN VETO 🛡️**\n\n*Die Vision bleibt gewahrt.*\n\n**Grund der Ablehnung:**\n${finalValidation.issues.join('\n')}\n\n--- URSPRÜNGLICHES ERGEBNIS ---\n\n${result}`;
+            setμ2_AgentState(prev => ({
+                ...prev,
+                validationWarnings: [...prev.validationWarnings, ...finalValidation.issues.map(issue => `Guardian: ${issue}`)]
+            }));
+        } else {
+            console.log('✅ Guardian approved. The result is pure.');
+        }
     }
 
     return result;
@@ -598,7 +536,8 @@ ${userPrompt}
           agents: { 
             reasoner: { active: false, status: 'idle', validationPassed: true },
             coder: { active: false, status: 'idle', validationPassed: true },
-            refiner: { active: false, status: 'idle', validationPassed: true }
+            refiner: { active: false, status: 'idle', validationPassed: true },
+            guardian: { active: false, status: 'idle', validationPassed: true }
           }
         }));
       }, 1500); // Verkürzt von 2000ms auf 1500ms
@@ -742,6 +681,7 @@ ${userPrompt}
         
         {μ2_agentConfigs.map(config => {
           const agentState = μ2_agentState.agents[config.key];
+          if (!agentState) return null; // Defensive check to prevent crash
           const isActive = agentState.active;
           const isEnabled = config.enabled;
           

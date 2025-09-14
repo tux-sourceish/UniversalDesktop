@@ -252,14 +252,14 @@ export class μ3_FileManagerStateMachine implements μX_StateMachine<FileManager
       }
     },
     loading: {
-      onEnter: () => console.log('🔄 Loading directory...'),
+      // onEnter: () => console.log('🔄 Loading directory...'),
       transitions: {
         load_directory: { target: 'ready' },
         error_occurred: { target: 'error' }
       }
     },
     ready: {
-      onEnter: () => console.log('✅ Directory loaded'),
+      // onEnter: () => console.log('✅ Directory loaded'),
       transitions: {
         load_directory: { target: 'loading' },
         search: { target: 'searching' },
@@ -268,14 +268,14 @@ export class μ3_FileManagerStateMachine implements μX_StateMachine<FileManager
       }
     },
     searching: {
-      onEnter: () => console.log('🔍 Searching...'),
+      // onEnter: () => console.log('🔍 Searching...'),
       transitions: {
         load_directory: { target: 'ready' },
         error_occurred: { target: 'error' }
       }
     },
     operating: {
-      onEnter: () => console.log('⚙️ Performing file operation...'),
+      // onEnter: () => console.log('⚙️ Performing file operation...'),
       transitions: {
         operation_complete: { target: 'ready' },
         error_occurred: { target: 'error' }

@@ -59,7 +59,7 @@ export class µ1_SupabaseUDService {
   // µ1_ Aktuellen Workspace für User laden
   static async µ1_getCurrentWorkspace(userId: string): Promise<µ1_Workspace | null> {
     try {
-      console.log('📥 µ1_getCurrentWorkspace loading for user:', userId);
+      // console.log('📥 µ1_getCurrentWorkspace loading for user:', userId);
 
       const { data, error } = await enhancedSupabase
         .from('workspaces')
@@ -80,15 +80,15 @@ export class µ1_SupabaseUDService {
       }
 
       if (!hasData) {
-        console.log('ℹ️ µ1_getCurrentWorkspace: No workspace found');
+        // console.log('ℹ️ µ1_getCurrentWorkspace: No workspace found');
         return null;
       }
 
-      console.log('✅ µ1_getCurrentWorkspace loaded:', {
-        id: data.id,
-        name: data.name,
-        itemCount: data.item_count
-      });
+      // console.log('✅ µ1_getCurrentWorkspace loaded:', {
+      //   id: data.id,
+      //   name: data.name,
+      //   itemCount: data.item_count
+      // });
 
       return data as µ1_Workspace;
     } catch (error) {
@@ -100,7 +100,7 @@ export class µ1_SupabaseUDService {
   // µ1_ Workspace-Metadaten laden (ohne Binary-Document)
   static async µ1_getWorkspaceMetadata(userId: string): Promise<µ1_WorkspaceMetadata[]> {
     try {
-      console.log('📋 µ1_getWorkspaceMetadata loading for user:', userId);
+      // console.log('📋 µ1_getWorkspaceMetadata loading for user:', userId);
 
       const { data, error } = await enhancedSupabase
         .from('workspace_metadata')  // View ohne Binary-Daten
@@ -119,11 +119,11 @@ export class µ1_SupabaseUDService {
       }
 
       if (!hasData) {
-        console.log('ℹ️ µ1_getWorkspaceMetadata: No workspaces found');
+        // console.log('ℹ️ µ1_getWorkspaceMetadata: No workspaces found');
         return [];
       }
 
-      console.log(`✅ µ1_getWorkspaceMetadata loaded ${data!.length} workspaces`);
+      // console.log(`✅ µ1_getWorkspaceMetadata loaded ${data!.length} workspaces`);
       return data as µ1_WorkspaceMetadata[];
     } catch (error) {
       console.error('💥 µ1_getWorkspaceMetadata exception:', error);
@@ -144,11 +144,11 @@ export class µ1_SupabaseUDService {
     } = {}
   ): Promise<boolean> {
     try {
-      console.log('💾 µ1_saveWorkspace saving:', {
-        workspaceId,
-        documentSize: udDocument.byteLength,
-        itemCount: metadata.itemCount
-      });
+      // console.log('💾 µ1_saveWorkspace saving:', {
+      //   workspaceId,
+      //   documentSize: udDocument.byteLength,
+      //   itemCount: metadata.itemCount
+      // });
 
       // Binary zu Base64 für Supabase
       const binaryArray = new Uint8Array(udDocument);
@@ -181,11 +181,11 @@ export class µ1_SupabaseUDService {
       const success = UDFormat.transistor(error === null);
 
       if (success) {
-        console.log('✅ µ1_saveWorkspace completed:', {
-          workspaceId,
-          documentHash: documentHash.substring(0, 8) + '...',
-          itemCount: metadata.itemCount
-        });
+        // console.log('✅ µ1_saveWorkspace completed:', {
+        //   workspaceId,
+        //   documentHash: documentHash.substring(0, 8) + '...',
+        //   itemCount: metadata.itemCount
+        // });
       } else {
         console.error('💥 µ1_saveWorkspace error:', error);
       }
@@ -205,7 +205,7 @@ export class µ1_SupabaseUDService {
     description: string = ''
   ): Promise<string | null> {
     try {
-      console.log('🆕 µ1_createWorkspace creating:', { name, userId });
+      // console.log('🆕 µ1_createWorkspace creating:', { name, userId });
 
       // Binary zu Base64
       const binaryArray = new Uint8Array(udDocument);
@@ -242,10 +242,10 @@ export class µ1_SupabaseUDService {
       const success = UDFormat.transistor(error === null && data !== null);
 
       if (success) {
-        console.log('✅ µ1_createWorkspace completed:', {
-          id: data.id,
-          name
-        });
+        // console.log('✅ µ1_createWorkspace completed:', {
+        //   id: data.id,
+        //   name
+        // });
         return data.id;
       } else {
         console.error('💥 µ1_createWorkspace error:', error);
@@ -260,10 +260,10 @@ export class µ1_SupabaseUDService {
   // µ1_ Base64 zu ArrayBuffer konvertieren
   static µ1_base64ToArrayBuffer(base64: string): ArrayBuffer {
     try {
-      console.log('🔄 µ1_base64ToArrayBuffer converting:', {
-        base64Length: base64.length,
-        base64Preview: base64.slice(0, 50) + '...'
-      });
+      // console.log('🔄 µ1_base64ToArrayBuffer converting:', {
+      //   base64Length: base64.length,
+      //   base64Preview: base64.slice(0, 50) + '...'
+      // });
 
       const binaryString = atob(base64);
       const bytes = new Uint8Array(binaryString.length);
@@ -272,11 +272,11 @@ export class µ1_SupabaseUDService {
         bytes[i] = binaryString.charCodeAt(i);
       }
       
-      console.log('✅ µ1_base64ToArrayBuffer completed:', {
-        inputBase64Length: base64.length,
-        outputBufferSize: bytes.buffer.byteLength,
-        firstBytes: Array.from(bytes.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ')
-      });
+      // console.log('✅ µ1_base64ToArrayBuffer completed:', {
+      //   inputBase64Length: base64.length,
+      //   outputBufferSize: bytes.buffer.byteLength,
+      //   firstBytes: Array.from(bytes.slice(0, 8)).map(b => b.toString(16).padStart(2, '0')).join(' ')
+      // });
       
       return bytes.buffer;
     } catch (error) {

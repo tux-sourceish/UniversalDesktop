@@ -91,16 +91,16 @@ export const μ7_useDraggable = (
       const newY = canvasY - (dragOffsetRef.current.y / scale);
       
       // DEBUG: Log drag calculation
-      console.log('🪟 Window Drag:', {
-        id,
-        mouseX, mouseY, 
-        canvasX, canvasY,
-        newX, newY,
-        scale, translateX, translateY,
-        dragOffset: dragOffsetRef.current,
-        canvasRect: { left: canvasRect.left, top: canvasRect.top },
-        rawMousePos: { clientX: e.clientX, clientY: e.clientY }
-      });
+      // console.log('🪟 Window Drag:', {
+      //   id,
+      //   mouseX, mouseY, 
+      //   canvasX, canvasY,
+      //   newX, newY,
+      //   scale, translateX, translateY,
+      //   dragOffset: dragOffsetRef.current,
+      //   canvasRect: { left: canvasRect.left, top: canvasRect.top },
+      //   rawMousePos: { clientX: e.clientX, clientY: e.clientY }
+      // });
       
       onUpdate(id, { 
         position: { 

@@ -57,7 +57,7 @@ export const µ1_useUniversalDocument = () => {
       lastSaved: null
     }));
 
-    console.log('🌌 µ1_Document created with WASM-Bagua-Power!');
+    // console.log('🌌 µ1_Document created with WASM-Bagua-Power!');
     return doc;
   }, []);
 
@@ -67,10 +67,10 @@ export const µ1_useUniversalDocument = () => {
     setDocumentState(prev => ({ ...prev, isLoading: true }));
 
     try {
-      console.log('📥 µ1_loadFromWorkspaceSnapshot starting:', {
-        binarySize: binaryData.byteLength,
-        hasData: binaryData.byteLength > 0
-      });
+      // console.log('📥 µ1_loadFromWorkspaceSnapshot starting:', {
+      //   binarySize: binaryData.byteLength,
+      //   hasData: binaryData.byteLength > 0
+      // });
 
       const doc = WasmUniversalDocument.fromBinary(binaryData);
       const items = [...doc.allItems]; // Convert readonly to mutable array
@@ -84,20 +84,20 @@ export const µ1_useUniversalDocument = () => {
       });
 
       // ENHANCED DEBUG: Detailed load analysis
-      console.log('📥 µ1_Document loaded from workspace snapshot:', {
-        itemCount: items.length,
-        version: doc.metadata.format_version,
-        binaryAnalysis: {
-          inputSize: binaryData.byteLength,
-          processedItems: items.length,
-          firstItemsTypes: items.slice(0, 5).map(item => ({
-            id: item.id.slice(0, 8),
-            type: item.type,
-            title: item.title.slice(0, 20)
-          }))
-        },
-        documentMetadata: doc.metadata
-      });
+      // console.log('📥 µ1_Document loaded from workspace snapshot:', {
+      //   itemCount: items.length,
+      //   version: doc.metadata.format_version,
+      //   binaryAnalysis: {
+      //     inputSize: binaryData.byteLength,
+      //     processedItems: items.length,
+      //     firstItemsTypes: items.slice(0, 5).map(item => ({
+      //       id: item.id.slice(0, 8),
+      //       type: item.type,
+      //       title: item.title.slice(0, 20)
+      //     }))
+      //   },
+      //   documentMetadata: doc.metadata
+      // });
 
       // CRITICAL: Check for deserialization issues
       if (binaryData.byteLength > 1000 && items.length === 0) {
@@ -136,11 +136,11 @@ export const µ1_useUniversalDocument = () => {
         lastSaved: Date.now()
       });
 
-      console.log('📥 µ1_Document loaded from binary with WASM:', {
-        itemCount: items.length,
-        usingWasm: doc.isUsingWasm,
-        baguaSystem: 'activated'
-      });
+      // console.log('📥 µ1_Document loaded from binary with WASM:', {
+      //   itemCount: items.length,
+      //   usingWasm: doc.isUsingWasm,
+      //   baguaSystem: 'activated'
+      // });
 
       return doc;
     } catch (error) {
@@ -170,10 +170,10 @@ export const µ1_useUniversalDocument = () => {
         lastSaved: Date.now()
       }));
 
-      console.log('💾 µ1_Document serialized to binary:', {
-        size: Math.round(binary.byteLength / 1024) + 'KB',
-        itemCount: documentState.items.length
-      });
+      // console.log('💾 µ1_Document serialized to binary:', {
+      //   size: Math.round(binary.byteLength / 1024) + 'KB',
+      //   itemCount: documentState.items.length
+      // });
       return binary;
     } catch (error) {
       console.error('💥 µ1_toBinary failed:', error);
@@ -185,7 +185,7 @@ export const µ1_useUniversalDocument = () => {
         view.setUint32(0, 0); // version
         view.setUint32(4, 0); // item count
         
-        console.log('🔄 Created minimal empty document binary');
+        // console.log('🔄 Created minimal empty document binary');
         return emptyBuffer;
       } catch (fallbackError) {
         console.error('💥 Even fallback binary creation failed:', fallbackError);
@@ -225,13 +225,13 @@ export const µ1_useUniversalDocument = () => {
 
       // Enhanced logging with WASM status
       if (typeof window !== 'undefined' && (window as any).DEBUG_UD_ITEMS) {
-        console.log('➕ µ1_Item added with WASM:', {
-          id: item.id,
-          type: options.type,
-          position: item.position,
-          dimensions: item.dimensions,
-          usingWasm: document!.isUsingWasm
-        });
+        // console.log('➕ µ1_Item added with WASM:', {
+        //   id: item.id,
+        //   type: options.type,
+        //   position: item.position,
+        //   dimensions: item.dimensions,
+        //   usingWasm: document!.isUsingWasm
+        // });
       }
 
       return item;
@@ -272,12 +272,12 @@ export const µ1_useUniversalDocument = () => {
           hasChanges: true
         }));
 
-        console.log('🔄 µ1_Item transformed with WASM:', {
-          itemId,
-          verb: transformation.verb,
-          usingWasm: document!.isUsingWasm,
-          success
-        });
+        // console.log('🔄 µ1_Item transformed with WASM:', {
+        //   itemId,
+        //   verb: transformation.verb,
+        //   usingWasm: document!.isUsingWasm,
+        //   success
+        // });
       }
 
       return success;
@@ -308,7 +308,7 @@ export const µ1_useUniversalDocument = () => {
         success = document!.μ6_deleteItem(itemId, 'µ1_useUniversalDocument');
       } else {
         // Force remove from React state (State-Sync Fix)
-        console.log('🔧 State-Sync Fix: Removing item from React state only');
+        // console.log('🔧 State-Sync Fix: Removing item from React state only');
         success = true; // Pretend success to update React state
       }
       
@@ -323,11 +323,11 @@ export const µ1_useUniversalDocument = () => {
           hasChanges: true
         }));
 
-        console.log('🗑️ µ1_Item removed with WASM:', { 
-          itemId, 
-          usingWasm: document!.isUsingWasm,
-          success 
-        });
+        // console.log('🗑️ µ1_Item removed with WASM:', { 
+        //   itemId, 
+        //   usingWasm: document!.isUsingWasm,
+        //   success 
+        // });
       }
 
       return success;
