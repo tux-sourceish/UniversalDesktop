@@ -490,7 +490,7 @@ Antworte nur mit Code, keine zusätzlichen Erklärungen.`
       // For premium quality responses
       'premium': import.meta.env.VITE_LITELLM_MODEL_PREMIUM || 'kira-online/gemini-2.5-pro',
       // For super high-quality responses
-      'super': import.meta.env.VITE_LITELLM_MODEL_SUPER || 'nexus-online-claude-opus-4',
+      'super': import.meta.env.VITE_LITELLM_MODEL_SUPER || 'nexus-online/claude-opus-4',
       // For vision/image analysis
       'vision': import.meta.env.VITE_LITELLM_MODEL_VISION || 'kira-local/llava-vision',
       // For local/offline processing
