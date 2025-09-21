@@ -1,8 +1,8 @@
 /**
- * μ7_useUniversalContextMenu - DONNER (☳) Events/Interactions
+ * µ7_useUniversalContextMenu - DONNER (☳) Events/Interactions
  * 
  * Universal context menu hook providing intelligent, context-aware menu system
- * with Tauri-ready architecture and μX-Bagua integration.
+ * with Tauri-ready architecture and µX-Bagua integration.
  * 
  * Features:
  * - Dynamic menu building based on context type
@@ -15,29 +15,29 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { UDFormat } from '../core/UDFormat';
 import type { 
-  μ7_ContextMenuData, 
-  μ7_MenuItem, 
-  μ7_MenuSection, 
-  μ7_ContextMenuProvider,
-  μ7_ContextMenuConfig,
-  μ7_PlatformContextMenu,
+  µ7_ContextMenuData, 
+  µ7_MenuItem, 
+  µ7_MenuSection, 
+  µ7_ContextMenuProvider,
+  µ7_ContextMenuConfig,
+  µ7_PlatformContextMenu,
   FileSystemItem
 } from '../types/ContextMenuTypes';
 import type { DesktopItemData } from '../types';
 
-interface μ7_UniversalContextMenuOptions {
-  config?: Partial<μ7_ContextMenuConfig>;
-  onItemSelect?: (item: μ7_MenuItem, context: any) => void;
-  onMenuShow?: (data: μ7_ContextMenuData) => void;
+interface µ7_UniversalContextMenuOptions {
+  config?: Partial<µ7_ContextMenuConfig>;
+  onItemSelect?: (item: µ7_MenuItem, context: any) => void;
+  onMenuShow?: (data: µ7_ContextMenuData) => void;
   onMenuHide?: (reason: string) => void;
-  aiContextManager?: any; // Integration with μ6_useContextManager
+  aiContextManager?: any; // Integration with µ6_useContextManager
 }
 
-export const μ7_useUniversalContextMenu = (
-  options: μ7_UniversalContextMenuOptions = {}
+export const µ7_useUniversalContextMenu = (
+  options: µ7_UniversalContextMenuOptions = {}
 ) => {
   // Configuration with defaults
-  const config: μ7_ContextMenuConfig = useMemo(() => ({
+  const config: µ7_ContextMenuConfig = useMemo(() => ({
     enableAnimations: true,
     maxWidth: 300,
     showIcons: true,
@@ -50,19 +50,19 @@ export const μ7_useUniversalContextMenu = (
   }), [options.config]);
 
   // State Management
-  const [menuData, setMenuData] = useState<μ7_ContextMenuData | null>(null);
-  const [registeredSections, setRegisteredSections] = useState<Map<string, μ7_MenuSection>>(new Map());
-  const [dynamicItems, setDynamicItems] = useState<Map<string, μ7_MenuItem[]>>(new Map());
+  const [menuData, setMenuData] = useState<µ7_ContextMenuData | null>(null);
+  const [registeredSections, setRegisteredSections] = useState<Map<string, µ7_MenuSection>>(new Map());
+  const [dynamicItems, setDynamicItems] = useState<Map<string, µ7_MenuItem[]>>(new Map());
   
   // Refs for cleanup and positioning
   const menuRef = useRef<HTMLDivElement>(null);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Platform Detection (Tauri-Ready)
-  const platform: μ7_PlatformContextMenu = useMemo(() => ({
+  const platform: µ7_PlatformContextMenu = useMemo(() => ({
     supportsNativeMenus: !!(window as any).__TAURI__,
     platform: (window as any).__TAURI__ ? 'tauri' : 'browser',
-    showNativeMenu: async (_items: μ7_MenuItem[], _x: number, _y: number) => {
+    showNativeMenu: async (_items: µ7_MenuItem[], _x: number, _y: number) => {
       if ((window as any).__TAURI__) {
         // Future Tauri implementation
         try {
@@ -85,12 +85,12 @@ export const μ7_useUniversalContextMenu = (
   }), []);
 
   // Algebraic Transistor for Visibility Logic
-  const μ7_calculateVisibility = useCallback((condition: boolean): number => {
+  const µ7_calculateVisibility = useCallback((condition: boolean): number => {
     return UDFormat.transistor(condition);
   }, []);
 
   // Core Menu Sections Registry
-  const defaultSections = useMemo((): μ7_MenuSection[] => [
+  const defaultSections = useMemo((): µ7_MenuSection[] => [
     // Canvas Context Sections
     {
       id: 'canvas-create',
@@ -298,7 +298,7 @@ export const μ7_useUniversalContextMenu = (
 
   // Initialize default sections
   useEffect(() => {
-    const sectionMap = new Map<string, μ7_MenuSection>();
+    const sectionMap = new Map<string, µ7_MenuSection>();
     defaultSections.forEach(section => {
       sectionMap.set(section.id, section);
     });
@@ -339,7 +339,7 @@ export const μ7_useUniversalContextMenu = (
   const buildContextMenu = useCallback((
     contextType: string, 
     targetItem?: DesktopItemData | FileSystemItem
-  ): μ7_MenuSection[] => {
+  ): µ7_MenuSection[] => {
     const relevantSections = Array.from(registeredSections.values())
       .filter(section => section.contextTypes.includes(contextType as any))
       .sort((a, b) => a.order - b.order);
@@ -353,12 +353,12 @@ export const μ7_useUniversalContextMenu = (
         // Special logic for AI context items
         if (item.id === 'remove-from-context' && targetItem) {
           const isInContext = options.aiContextManager?.isInContext?.(targetItem.id) || false;
-          visibility = μ7_calculateVisibility(isInContext);
+          visibility = µ7_calculateVisibility(isInContext);
         }
         
         if (item.id === 'add-to-context' && targetItem) {
           const isInContext = options.aiContextManager?.isInContext?.(targetItem.id) || false;
-          visibility = μ7_calculateVisibility(!isInContext);
+          visibility = µ7_calculateVisibility(!isInContext);
         }
 
         return {
@@ -373,10 +373,10 @@ export const μ7_useUniversalContextMenu = (
         };
       }).filter(item => item.visible === 1) // Only show visible items
     })).filter(section => section.items.length > 0); // Only show sections with visible items
-  }, [registeredSections, options.aiContextManager, μ7_calculateVisibility, config.closeOnAction]);
+  }, [registeredSections, options.aiContextManager, µ7_calculateVisibility, config.closeOnAction]);
 
   // Show Menu
-  const showMenu = useCallback(async (data: μ7_ContextMenuData) => {
+  const showMenu = useCallback(async (data: µ7_ContextMenuData) => {
     // Clear any existing hide timeout
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
@@ -414,7 +414,7 @@ export const μ7_useUniversalContextMenu = (
   }, [options]);
 
   // Section Management
-  const registerSection = useCallback((section: μ7_MenuSection) => {
+  const registerSection = useCallback((section: µ7_MenuSection) => {
     setRegisteredSections(prev => new Map(prev.set(section.id, section)));
   }, []);
 
@@ -426,7 +426,7 @@ export const μ7_useUniversalContextMenu = (
     });
   }, []);
 
-  const updateSection = useCallback((sectionId: string, updates: Partial<μ7_MenuSection>) => {
+  const updateSection = useCallback((sectionId: string, updates: Partial<µ7_MenuSection>) => {
     setRegisteredSections(prev => {
       const section = prev.get(sectionId);
       if (!section) return prev;
@@ -438,7 +438,7 @@ export const μ7_useUniversalContextMenu = (
   }, []);
 
   // Dynamic Item Management
-  const addDynamicItem = useCallback((contextType: string, item: μ7_MenuItem) => {
+  const addDynamicItem = useCallback((contextType: string, item: µ7_MenuItem) => {
     setDynamicItems(prev => {
       const next = new Map(prev);
       const existing = next.get(contextType) || [];
@@ -482,7 +482,7 @@ export const μ7_useUniversalContextMenu = (
   }, [menuData?.visible, hideMenu]);
 
   // Provider Interface
-  const provider: μ7_ContextMenuProvider = useMemo(() => ({
+  const provider: µ7_ContextMenuProvider = useMemo(() => ({
     show: showMenu,
     hide: hideMenu,
     isVisible: () => !!menuData?.visible,

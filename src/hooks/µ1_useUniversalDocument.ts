@@ -214,7 +214,7 @@ export const µ1_useUniversalDocument = () => {
     };
 
     try {
-      const item = document!.μ6_createItem(options, origin || defaultOrigin);
+      const item = document!.µ6_createItem(options, origin || defaultOrigin);
       const updatedItems = document!.allItems;
 
       setDocumentState(prev => ({
@@ -258,7 +258,7 @@ export const µ1_useUniversalDocument = () => {
     }
 
     try {
-      const updatedItem = document!.μ6_transformItem(itemId, transformation, newData);
+      const updatedItem = document!.µ6_transformItem(itemId, transformation, newData);
       
       // Algebraischer Transistor: Item wurde erfolgreich transformiert?
       const success = OldUDFormat.transistor(updatedItem !== null);
@@ -305,7 +305,7 @@ export const µ1_useUniversalDocument = () => {
       
       let success = false;
       if (itemExists) {
-        success = document!.μ6_deleteItem(itemId, 'µ1_useUniversalDocument');
+        success = document!.µ6_deleteItem(itemId, 'µ1_useUniversalDocument');
       } else {
         // Force remove from React state (State-Sync Fix)
         // console.log('🔧 State-Sync Fix: Removing item from React state only');

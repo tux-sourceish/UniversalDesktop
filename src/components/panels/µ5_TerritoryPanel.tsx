@@ -2,13 +2,13 @@ import React, { useState, useCallback } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ5_TerritoryPanel - SEE (☱) Properties - Territory Management
+ * µ5_TerritoryPanel - SEE (☱) Properties - Territory Management
  * 
  * V1-Style Territory Management mit Raimunds Bagua-System.
  * Räumliche Organisation von Desktop-Items in Territories.
  */
 
-interface μ5_TerritoryPanelProps {
+interface µ5_TerritoryPanelProps {
   position?: 'right' | 'left' | 'floating';
   width?: number;
   visible: boolean;
@@ -16,7 +16,7 @@ interface μ5_TerritoryPanelProps {
   rightOffset?: number; // Für Panel-Kollisionsvermeidung
 }
 
-interface μ5_Territory {
+interface µ5_Territory {
   id: string;
   name: string;
   bounds: { x: number; y: number; width: number; height: number };
@@ -28,7 +28,7 @@ interface μ5_Territory {
   bagua_descriptor: number;
 }
 
-export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
+export const µ5_TerritoryPanel: React.FC<µ5_TerritoryPanelProps> = ({
   position: _position = 'right',
   width = 300,
   visible,
@@ -36,8 +36,8 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
   rightOffset = 0
 }) => {
 
-  // μ5_ Territory Management State (SEE-Pattern: Properties/Spatial)
-  const [μ5_territories, setμ5_Territories] = useState<μ5_Territory[]>([
+  // µ5_ Territory Management State (SEE-Pattern: Properties/Spatial)
+  const [µ5_territories, setµ5_Territories] = useState<µ5_Territory[]>([
     {
       id: 'territory_1',
       name: 'Code Zone Alpha',
@@ -73,18 +73,18 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
     }
   ]);
 
-  const [μ5_settings, setμ5_Settings] = useState({
+  const [µ5_settings, setµ5_Settings] = useState({
     autoGrouping: true,
     showBoundaries: true,
     snapToGrid: false,
     territoryOpacity: 0.3
   });
 
-  const [μ5_selectedTerritory, setμ5_SelectedTerritory] = useState<string | null>(null);
+  const [µ5_selectedTerritory, setµ5_SelectedTerritory] = useState<string | null>(null);
 
-  // μ5_ Create New Territory
-  const μ5_createTerritory = useCallback(() => {
-    const newTerritory: μ5_Territory = {
+  // µ5_ Create New Territory
+  const µ5_createTerritory = useCallback(() => {
+    const newTerritory: µ5_Territory = {
       id: `territory_${Date.now()}`,
       name: 'New Territory',
       bounds: { 
@@ -101,12 +101,12 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
       bagua_descriptor: UDFormat.BAGUA.SEE
     };
 
-    setμ5_Territories(prev => [...prev, newTerritory]);
+    setµ5_Territories(prev => [...prev, newTerritory]);
   }, []);
 
-  // μ5_ Delete Territory mit algebraischem Transistor
-  const μ5_deleteTerritory = useCallback((territoryId: string) => {
-    setμ5_Territories(prev => {
+  // µ5_ Delete Territory mit algebraischem Transistor
+  const µ5_deleteTerritory = useCallback((territoryId: string) => {
+    setµ5_Territories(prev => {
       const territoryExists = prev.some(t => t.id === territoryId);
       // Raimunds algebraischer Transistor für Existenz-Check
       const shouldDelete = UDFormat.transistor(!territoryExists); // 0 wenn existiert, 1 wenn nicht
@@ -115,26 +115,26 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
     });
   }, []);
 
-  // μ5_ Territory Settings Toggle
-  const μ5_toggleSetting = useCallback((setting: keyof typeof μ5_settings) => {
-    setμ5_Settings(prev => ({
+  // µ5_ Territory Settings Toggle
+  const µ5_toggleSetting = useCallback((setting: keyof typeof µ5_settings) => {
+    setµ5_Settings(prev => ({
       ...prev,
       [setting]: !prev[setting]
     }));
   }, []);
 
-  // μ5_ Territory Quick Actions
-  const μ5_jumpToTerritory = useCallback((territory: μ5_Territory) => {
+  // µ5_ Territory Quick Actions
+  const µ5_jumpToTerritory = useCallback((territory: µ5_Territory) => {
     // TODO: Integration mit Canvas Navigation
     console.log(`Jumping to territory: ${territory.name}`);
-    setμ5_SelectedTerritory(territory.id === μ5_selectedTerritory ? null : territory.id);
-  }, [μ5_selectedTerritory]);
+    setµ5_SelectedTerritory(territory.id === µ5_selectedTerritory ? null : territory.id);
+  }, [µ5_selectedTerritory]);
 
   // Raimunds algebraischer Transistor für Panel-Sichtbarkeit
-  const μ5_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
-  const μ5_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
+  const µ5_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
+  const µ5_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
 
-  const μ5_panelStyle: React.CSSProperties = {
+  const µ5_panelStyle: React.CSSProperties = {
     position: 'fixed',
     top: '80px', // Unter Header
     right: `${rightOffset}px`, // Panel-Kollisionsvermeidung
@@ -143,8 +143,8 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
     backgroundColor: 'rgba(30, 30, 30, 0.95)',
     backdropFilter: 'blur(10px)',
     borderLeft: '2px solid rgba(168, 85, 247, 0.3)',
-    transform: μ5_panelTransform,
-    opacity: μ5_panelOpacity,
+    transform: µ5_panelTransform,
+    opacity: µ5_panelOpacity,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 200,
     display: 'flex',
@@ -153,13 +153,13 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
   };
 
   // Early return mit algebraischem Transistor
-  const μ5_shouldRender = UDFormat.transistor(visible);
-  if (μ5_shouldRender === 0) return null;
+  const µ5_shouldRender = UDFormat.transistor(visible);
+  if (µ5_shouldRender === 0) return null;
 
   return (
-    <div className="μ5-territory-panel" style={μ5_panelStyle}>
+    <div className="µ5-territory-panel" style={µ5_panelStyle}>
       {/* Panel Header */}
-      <div className="μ5-panel-header" style={{
+      <div className="µ5-panel-header" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(168, 85, 247, 0.2)',
         backgroundColor: 'rgba(168, 85, 247, 0.05)'
@@ -201,7 +201,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
       </div>
 
       {/* Territory Settings */}
-      <div className="μ5-territory-settings" style={{
+      <div className="µ5-territory-settings" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(168, 85, 247, 0.1)'
       }}>
@@ -236,8 +236,8 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
           >
             <input
               type="checkbox"
-              checked={μ5_settings[setting.key as keyof typeof μ5_settings] as boolean}
-              onChange={() => μ5_toggleSetting(setting.key as keyof typeof μ5_settings)}
+              checked={µ5_settings[setting.key as keyof typeof µ5_settings] as boolean}
+              onChange={() => µ5_toggleSetting(setting.key as keyof typeof µ5_settings)}
               style={{
                 transform: 'scale(1.1)',
                 accentColor: '#a855f7'
@@ -256,7 +256,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
       </div>
 
       {/* Active Territories List */}
-      <div className="μ5-territories-list" style={{
+      <div className="µ5-territories-list" style={{
         flex: 1,
         padding: '16px',
         borderBottom: '1px solid rgba(168, 85, 247, 0.1)',
@@ -274,10 +274,10 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
             fontWeight: '600',
             color: '#374151'
           }}>
-            🏛️ Active Territories ({μ5_territories.length})
+            🏛️ Active Territories ({µ5_territories.length})
           </h4>
           <button
-            onClick={μ5_createTerritory}
+            onClick={µ5_createTerritory}
             style={{
               padding: '4px 8px',
               fontSize: '12px',
@@ -299,13 +299,13 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
           </button>
         </div>
 
-        {μ5_territories.map(territory => {
-          const isSelected = μ5_selectedTerritory === territory.id;
+        {µ5_territories.map(territory => {
+          const isSelected = µ5_selectedTerritory === territory.id;
           
           return (
             <div
               key={territory.id}
-              className="μ5-territory-item"
+              className="µ5-territory-item"
               style={{
                 padding: '12px',
                 marginBottom: '8px',
@@ -316,7 +316,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
                 transition: 'all 0.2s ease',
                 cursor: 'pointer'
               }}
-              onClick={() => μ5_jumpToTerritory(territory)}
+              onClick={() => µ5_jumpToTerritory(territory)}
               onMouseEnter={(e) => {
                 if (!isSelected) {
                   e.currentTarget.style.backgroundColor = 'rgba(168, 85, 247, 0.05)';
@@ -335,7 +335,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
               }}>
                 {/* Territory Color Indicator */}
                 <div
-                  className="μ5-territory-color"
+                  className="µ5-territory-color"
                   style={{
                     width: '16px',
                     height: '16px',
@@ -369,7 +369,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        μ5_deleteTerritory(territory.id);
+                        µ5_deleteTerritory(territory.id);
                       }}
                       style={{
                         background: 'none',
@@ -407,7 +407,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
               
               {/* Territory Actions (wenn selected) */}
               {isSelected && (
-                <div className="μ5-territory-actions" style={{
+                <div className="µ5-territory-actions" style={{
                   marginTop: '12px',
                   paddingTop: '12px',
                   borderTop: '1px solid rgba(168, 85, 247, 0.2)',
@@ -452,7 +452,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
       </div>
 
       {/* Territory Statistics */}
-      <div className="μ5-territory-stats" style={{
+      <div className="µ5-territory-stats" style={{
         padding: '16px',
         backgroundColor: 'rgba(168, 85, 247, 0.05)',
         borderTop: '1px solid rgba(168, 85, 247, 0.1)'
@@ -474,22 +474,22 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
           color: '#6b7280'
         }}>
           <div>
-            <strong>Total Items:</strong> {μ5_territories.reduce((sum, t) => sum + t.itemCount, 0)}
+            <strong>Total Items:</strong> {µ5_territories.reduce((sum, t) => sum + t.itemCount, 0)}
           </div>
           <div>
             <strong>Coverage:</strong> 87%
           </div>
           <div>
-            <strong>Avg Size:</strong> {Math.round(μ5_territories.reduce((sum, t) => sum + (t.bounds.width * t.bounds.height), 0) / μ5_territories.length / 1000)}k px²
+            <strong>Avg Size:</strong> {Math.round(µ5_territories.reduce((sum, t) => sum + (t.bounds.width * t.bounds.height), 0) / µ5_territories.length / 1000)}k px²
           </div>
           <div>
-            <strong>Projects:</strong> {new Set(μ5_territories.map(t => t.project)).size}
+            <strong>Projects:</strong> {new Set(µ5_territories.map(t => t.project)).size}
           </div>
         </div>
       </div>
 
       {/* Bagua Info Footer */}
-      <div className="μ5-bagua-info" style={{
+      <div className="µ5-bagua-info" style={{
         padding: '12px 16px',
         backgroundColor: 'rgba(168, 85, 247, 0.05)',
         borderTop: '1px solid rgba(168, 85, 247, 0.1)',
@@ -497,7 +497,7 @@ export const μ5_TerritoryPanel: React.FC<μ5_TerritoryPanelProps> = ({
         color: '#6b7280'
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-          μ5 SEE (☱) - Spatial Properties Management
+          µ5 SEE (☱) - Spatial Properties Management
         </div>
         <div>
           Organisiert Desktop-Items in logische Territories mit Bagua-Deskriptoren

@@ -3,9 +3,9 @@ import { UDItem } from '../../core/universalDocument';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ2_TuiWindow - WIND (☴) Views/UI - Authentic Terminal User Interface
+ * µ2_TuiWindow - WIND (☴) Views/UI - Authentic Terminal User Interface
  * 
- * Vollständige μX-Bagua Integration mit historisch authentischen Terminal-Presets!
+ * Vollständige µX-Bagua Integration mit historisch authentischen Terminal-Presets!
  * Von ZX Spectrum bis moderne Workstations - echte Terminal-Nostalgie mit V2 Power.
  * 
  * Features:
@@ -18,7 +18,7 @@ import { UDFormat } from '../../core/UDFormat';
  * - Transformation History Tracking
  */
 
-interface μ2_TuiWindowProps {
+interface µ2_TuiWindowProps {
   /** Vollständiges UDItem mit allen Bagua-Metadaten */
   udItem: UDItem;
   /** Callback für UDItem Updates mit Transformation Tracking */
@@ -33,7 +33,7 @@ interface μ2_TuiWindowProps {
   forceBaguaTheme?: string;
 }
 
-interface μ2_TerminalPreset {
+interface µ2_TerminalPreset {
   id: string;
   name: string;
   width: number;
@@ -46,7 +46,7 @@ interface μ2_TerminalPreset {
   aspectRatio?: string;
 }
 
-interface μ2_TuiTheme {
+interface µ2_TuiTheme {
   name: string;
   backgroundColor: string;
   textColor: string;
@@ -59,22 +59,22 @@ interface μ2_TuiTheme {
   historicalSystem?: string;
 }
 
-interface μ2_CursorPosition {
+interface µ2_CursorPosition {
   row: number;
   col: number;
 }
 
-interface μ2_TuiState {
+interface µ2_TuiState {
   content: string;
-  cursorPosition: μ2_CursorPosition;
-  theme: μ2_TuiTheme;
-  preset: μ2_TerminalPreset;
+  cursorPosition: µ2_CursorPosition;
+  theme: µ2_TuiTheme;
+  preset: µ2_TerminalPreset;
   codepage: 'ascii' | 'cp437';
   lastModified: number;
   hasUnsavedChanges: boolean;
 }
 
-export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
+export const µ2_TuiWindow: React.FC<µ2_TuiWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
@@ -83,8 +83,8 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
   forceBaguaTheme
 }) => {
 
-  // μ2_ Historische Terminal-Presets (wie im Bild!)
-  const μ2_terminalPresets: μ2_TerminalPreset[] = [
+  // µ2_ Historische Terminal-Presets (wie im Bild!)
+  const µ2_terminalPresets: µ2_TerminalPreset[] = [
     // Default Presets
     { id: 'standard', name: 'Standard Console', width: 80, height: 25, category: 'default', description: 'Modern terminal standard', defaultTheme: 'green', codepage: 'ascii' },
     { id: 'small', name: 'Small Canvas', width: 40, height: 12, category: 'default', description: 'Compact display', defaultTheme: 'amber', codepage: 'ascii' },
@@ -108,8 +108,8 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     { id: 'vt100-wide', name: 'VT100 Wide', width: 132, height: 24, category: 'modern', description: 'Extended VT100', historicalContext: 'Wide terminal mode', defaultTheme: 'vt100', codepage: 'ascii' }
   ];
 
-  // μ2_ Historische Terminal-Themes (AUTHENTISCH!)
-  const μ2_terminalThemes: Record<string, μ2_TuiTheme> = {
+  // µ2_ Historische Terminal-Themes (AUTHENTISCH!)
+  const µ2_terminalThemes: Record<string, µ2_TuiTheme> = {
     // Bagua Themes (V2)
     green: { name: 'Classic Green', backgroundColor: '#001100', textColor: '#00ff00', cursorColor: '#00ff00', selectionColor: 'rgba(0, 255, 0, 0.3)', borderColor: '#00aa00', statusBarBg: '#003300', statusBarText: '#00ff00', symbol: '🟢' },
     amber: { name: 'Amber Terminal', backgroundColor: '#2a1500', textColor: '#ffb000', cursorColor: '#ffb000', selectionColor: 'rgba(255, 176, 0, 0.3)', borderColor: '#cc8800', statusBarBg: '#442200', statusBarText: '#ffb000', symbol: '🟡' },
@@ -131,21 +131,21 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     sun: { name: 'Sun Workstation', backgroundColor: '#000040', textColor: '#ffff80', cursorColor: '#ffffff', selectionColor: 'rgba(255, 255, 128, 0.3)', borderColor: '#0000aa', statusBarBg: '#000020', statusBarText: '#ffff80', symbol: '☀️', historicalSystem: 'Sun' }
   };
 
-  const [μ2_tuiState, setμ2_TuiState] = useState<μ2_TuiState>({
+  const [µ2_tuiState, setµ2_TuiState] = useState<µ2_TuiState>({
     content: '',
     cursorPosition: { row: 1, col: 1 },
-    theme: μ2_terminalThemes.green,
-    preset: μ2_terminalPresets[0],
+    theme: µ2_terminalThemes.green,
+    preset: µ2_terminalPresets[0],
     codepage: 'ascii',
     lastModified: Date.now(),
     hasUnsavedChanges: false
   });
 
-  const [μ2_isInContext, setμ2_IsInContext] = useState(udItem.is_contextual || false);
-  const [μ2_showPresetSelector, setμ2_ShowPresetSelector] = useState(false);
+  const [µ2_isInContext, setµ2_IsInContext] = useState(udItem.is_contextual || false);
+  const [µ2_showPresetSelector, setµ2_ShowPresetSelector] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // μ2_ Initialize TUI State from UDItem (Smart Update - Avoids Theme Reset Loop)
+  // µ2_ Initialize TUI State from UDItem (Smart Update - Avoids Theme Reset Loop)
   useEffect(() => {
     // Extract content
     const contentText = typeof udItem.content === 'string' 
@@ -153,39 +153,39 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       : udItem.content?.text || udItem.content?.tui_content || '';
 
     // Determine preset
-    let selectedPreset = μ2_terminalPresets[0];
+    let selectedPreset = µ2_terminalPresets[0];
     if (forcePreset) {
-      selectedPreset = μ2_terminalPresets.find(p => p.id === forcePreset) || selectedPreset;
+      selectedPreset = µ2_terminalPresets.find(p => p.id === forcePreset) || selectedPreset;
     } else if (udItem.content?.tui_preset) {
-      selectedPreset = μ2_terminalPresets.find(p => p.id === udItem.content.tui_preset) || selectedPreset;
+      selectedPreset = µ2_terminalPresets.find(p => p.id === udItem.content.tui_preset) || selectedPreset;
     } else {
       // Auto-detect from dimensions
       const width = udItem.content?.tui_width || 80;
       const height = udItem.content?.tui_height || 25;
-      const matchingPreset = μ2_terminalPresets.find(p => p.width === width && p.height === height);
+      const matchingPreset = µ2_terminalPresets.find(p => p.width === width && p.height === height);
       if (matchingPreset) selectedPreset = matchingPreset;
     }
 
     // Determine theme (SMART: Don't override if user just changed it)
-    let selectedTheme = μ2_terminalThemes[selectedPreset.defaultTheme] || μ2_terminalThemes.green;
+    let selectedTheme = µ2_terminalThemes[selectedPreset.defaultTheme] || µ2_terminalThemes.green;
     if (forceBaguaTheme) {
-      selectedTheme = μ2_terminalThemes[forceBaguaTheme] || selectedTheme;
+      selectedTheme = µ2_terminalThemes[forceBaguaTheme] || selectedTheme;
     } else if (udItem.content?.tui_theme) {
-      selectedTheme = μ2_terminalThemes[udItem.content.tui_theme] || selectedTheme;
+      selectedTheme = µ2_terminalThemes[udItem.content.tui_theme] || selectedTheme;
     } else {
       // Auto-detect from Bagua descriptor
       const descriptor = udItem.bagua_descriptor;
-      if (descriptor & UDFormat.BAGUA.FEUER) selectedTheme = μ2_terminalThemes.fire;
-      else if (descriptor & UDFormat.BAGUA.WASSER) selectedTheme = μ2_terminalThemes.water;
-      else if (descriptor & UDFormat.BAGUA.WIND) selectedTheme = μ2_terminalThemes.blue;
-      else if (descriptor & UDFormat.BAGUA.ERDE) selectedTheme = μ2_terminalThemes.green;
+      if (descriptor & UDFormat.BAGUA.FEUER) selectedTheme = µ2_terminalThemes.fire;
+      else if (descriptor & UDFormat.BAGUA.WASSER) selectedTheme = µ2_terminalThemes.water;
+      else if (descriptor & UDFormat.BAGUA.WIND) selectedTheme = µ2_terminalThemes.blue;
+      else if (descriptor & UDFormat.BAGUA.ERDE) selectedTheme = µ2_terminalThemes.green;
     }
 
     // Determine codepage
     const codepage = udItem.content?.tui_codepage || selectedPreset.codepage;
 
     // SMART UPDATE: Only update if actually different (prevents reset loops)
-    setμ2_TuiState(prev => {
+    setµ2_TuiState(prev => {
       const shouldUpdateContent = prev.content !== contentText;
       const shouldUpdatePreset = prev.preset.id !== selectedPreset.id;
       const shouldUpdateTheme = prev.theme !== selectedTheme && !prev.hasUnsavedChanges;
@@ -204,12 +204,12 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       return prev;
     });
 
-    setμ2_IsInContext(udItem.is_contextual || false);
+    setµ2_IsInContext(udItem.is_contextual || false);
   }, [udItem, forcePreset, forceBaguaTheme]);
 
-  // μ2_ Format Content for Terminal Display (AUTHENTIC!)
-  const μ2_formatTerminalContent = useCallback((text: string): string => {
-    const { width, height } = μ2_tuiState.preset;
+  // µ2_ Format Content for Terminal Display (AUTHENTIC!)
+  const µ2_formatTerminalContent = useCallback((text: string): string => {
+    const { width, height } = µ2_tuiState.preset;
     const lines = text.split('\n');
     const formattedLines = lines.slice(0, height).map(line => {
       if (line.length > width) {
@@ -224,74 +224,74 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     }
     
     return formattedLines.join('\n');
-  }, [μ2_tuiState.preset]);
+  }, [µ2_tuiState.preset]);
 
-  // μ2_ Update Cursor Position
-  const μ2_updateCursorPosition = useCallback((textarea: HTMLTextAreaElement) => {
+  // µ2_ Update Cursor Position
+  const µ2_updateCursorPosition = useCallback((textarea: HTMLTextAreaElement) => {
     const cursorPos = textarea.selectionStart;
     const textBeforeCursor = textarea.value.substring(0, cursorPos);
     const lines = textBeforeCursor.split('\n');
     const row = lines.length;
     const col = lines[lines.length - 1].length + 1;
     
-    setμ2_TuiState(prev => ({
+    setµ2_TuiState(prev => ({
       ...prev,
       cursorPosition: { row, col }
     }));
   }, []);
 
-  // μ2_ Content Change Handler with UDItem Integration (OPTIMIZED)
-  const μ2_handleContentChange = useCallback((newContent: string) => {
+  // µ2_ Content Change Handler with UDItem Integration (OPTIMIZED)
+  const µ2_handleContentChange = useCallback((newContent: string) => {
     if (readOnly) return;
 
     // Use algebraic transistor for state update
-    const μ2_shouldUpdate = UDFormat.transistor(newContent !== μ2_tuiState.content);
+    const µ2_shouldUpdate = UDFormat.transistor(newContent !== µ2_tuiState.content);
     
-    setμ2_TuiState(prev => ({
+    setµ2_TuiState(prev => ({
       ...prev,
       content: newContent,
-      lastModified: Date.now() * μ2_shouldUpdate,
-      hasUnsavedChanges: μ2_shouldUpdate === 1
+      lastModified: Date.now() * µ2_shouldUpdate,
+      hasUnsavedChanges: µ2_shouldUpdate === 1
     }));
 
     // Auto-save with 2s debounce (only if content changed)
-    if (μ2_shouldUpdate === 1) {
+    if (µ2_shouldUpdate === 1) {
       const saveTimeout = setTimeout(() => {
         const updatedContent = {
           text: newContent,
           tui_content: newContent,
-          tui_preset: μ2_tuiState.preset.id,
-          tui_width: μ2_tuiState.preset.width,
-          tui_height: μ2_tuiState.preset.height,
-          tui_theme: Object.keys(μ2_terminalThemes).find(key => 
-            μ2_terminalThemes[key] === μ2_tuiState.theme
+          tui_preset: µ2_tuiState.preset.id,
+          tui_width: µ2_tuiState.preset.width,
+          tui_height: µ2_tuiState.preset.height,
+          tui_theme: Object.keys(µ2_terminalThemes).find(key => 
+            µ2_terminalThemes[key] === µ2_tuiState.theme
           ) || 'green',
-          tui_codepage: μ2_tuiState.codepage
+          tui_codepage: µ2_tuiState.codepage
         };
 
         onUDItemChange({
           ...udItem,
           content: updatedContent,
           updated_at: Date.now()
-        }, `TUI ${μ2_tuiState.preset.name} bearbeitet: ${newContent.length} Zeichen`);
+        }, `TUI ${µ2_tuiState.preset.name} bearbeitet: ${newContent.length} Zeichen`);
 
-        setμ2_TuiState(prev => ({ ...prev, hasUnsavedChanges: false }));
+        setµ2_TuiState(prev => ({ ...prev, hasUnsavedChanges: false }));
       }, 2000);
 
       return () => clearTimeout(saveTimeout);
     }
-  }, [udItem, onUDItemChange, readOnly, μ2_tuiState.preset, μ2_tuiState.theme, μ2_tuiState.codepage, μ2_tuiState.content]);
+  }, [udItem, onUDItemChange, readOnly, µ2_tuiState.preset, µ2_tuiState.theme, µ2_tuiState.codepage, µ2_tuiState.content]);
 
-  // μ2_ Preset Change Handler
-  const μ2_changePreset = useCallback((presetId: string) => {
+  // µ2_ Preset Change Handler
+  const µ2_changePreset = useCallback((presetId: string) => {
     if (readOnly) return;
     
-    const newPreset = μ2_terminalPresets.find(p => p.id === presetId);
+    const newPreset = µ2_terminalPresets.find(p => p.id === presetId);
     if (!newPreset) return;
 
-    const newTheme = μ2_terminalThemes[newPreset.defaultTheme] || μ2_tuiState.theme;
+    const newTheme = µ2_terminalThemes[newPreset.defaultTheme] || µ2_tuiState.theme;
 
-    setμ2_TuiState(prev => ({
+    setµ2_TuiState(prev => ({
       ...prev,
       preset: newPreset,
       theme: newTheme,
@@ -299,7 +299,7 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       hasUnsavedChanges: true
     }));
 
-    setμ2_ShowPresetSelector(false);
+    setµ2_ShowPresetSelector(false);
 
     // Update UDItem immediately for preset changes
     const updatedContent = {
@@ -307,7 +307,7 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       tui_preset: presetId,
       tui_width: newPreset.width,
       tui_height: newPreset.height,
-      tui_theme: Object.keys(μ2_terminalThemes).find(key => μ2_terminalThemes[key] === newTheme),
+      tui_theme: Object.keys(µ2_terminalThemes).find(key => µ2_terminalThemes[key] === newTheme),
       tui_codepage: newPreset.codepage
     };
 
@@ -315,16 +315,16 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       ...udItem,
       content: updatedContent
     }, `Terminal-Preset gewechselt zu: ${newPreset.name} (${newPreset.width}x${newPreset.height})`);
-  }, [udItem, onUDItemChange, readOnly, μ2_tuiState.theme]);
+  }, [udItem, onUDItemChange, readOnly, µ2_tuiState.theme]);
 
-  // μ2_ Theme Change Handler
-  const μ2_changeTheme = useCallback((themeKey: string) => {
+  // µ2_ Theme Change Handler
+  const µ2_changeTheme = useCallback((themeKey: string) => {
     if (readOnly) return;
     
-    const newTheme = μ2_terminalThemes[themeKey];
+    const newTheme = µ2_terminalThemes[themeKey];
     if (!newTheme) return;
 
-    setμ2_TuiState(prev => ({
+    setµ2_TuiState(prev => ({
       ...prev,
       theme: newTheme,
       hasUnsavedChanges: true
@@ -341,19 +341,19 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     }, `Terminal-Theme gewechselt zu: ${newTheme.name}`);
   }, [udItem, onUDItemChange, readOnly]);
 
-  // μ2_ Context Toggle  
-  const μ2_toggleContext = useCallback(() => {
+  // µ2_ Context Toggle  
+  const µ2_toggleContext = useCallback(() => {
     if (!onAddToContext) return;
 
-    const wasInContext = μ2_isInContext;
-    setμ2_IsInContext(!wasInContext);
+    const wasInContext = µ2_isInContext;
+    setµ2_IsInContext(!wasInContext);
     
     onUDItemChange({
       ...udItem,
       is_contextual: !wasInContext
     }, !wasInContext 
-      ? `${μ2_tuiState.preset.name} TUI zum AI-Context hinzugefügt` 
-      : `${μ2_tuiState.preset.name} TUI aus AI-Context entfernt`
+      ? `${µ2_tuiState.preset.name} TUI zum AI-Context hinzugefügt` 
+      : `${µ2_tuiState.preset.name} TUI aus AI-Context entfernt`
     );
 
     if (!wasInContext) {
@@ -362,10 +362,10 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
         is_contextual: true
       });
     }
-  }, [μ2_isInContext, udItem, onUDItemChange, onAddToContext, μ2_tuiState.preset]);
+  }, [µ2_isInContext, udItem, onUDItemChange, onAddToContext, µ2_tuiState.preset]);
 
-  // μ2_ Special Key Handling (Terminal-specific)
-  const μ2_handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  // µ2_ Special Key Handling (Terminal-specific)
+  const µ2_handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (readOnly) return;
 
     // Handle Tab key (4 spaces for ASCII, special chars for CP437)
@@ -374,20 +374,20 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
       const textarea = event.currentTarget;
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-      const tabChar = μ2_tuiState.codepage === 'cp437' ? '────' : '    ';
-      const newContent = μ2_tuiState.content.substring(0, start) + tabChar + μ2_tuiState.content.substring(end);
+      const tabChar = µ2_tuiState.codepage === 'cp437' ? '────' : '    ';
+      const newContent = µ2_tuiState.content.substring(0, start) + tabChar + µ2_tuiState.content.substring(end);
       
-      μ2_handleContentChange(newContent);
+      µ2_handleContentChange(newContent);
       
       setTimeout(() => {
         textarea.selectionStart = textarea.selectionEnd = start + tabChar.length;
-        μ2_updateCursorPosition(textarea);
+        µ2_updateCursorPosition(textarea);
       }, 0);
     }
-  }, [μ2_tuiState.content, μ2_tuiState.codepage, μ2_handleContentChange, μ2_updateCursorPosition, readOnly]);
+  }, [µ2_tuiState.content, µ2_tuiState.codepage, µ2_handleContentChange, µ2_updateCursorPosition, readOnly]);
 
-  // μ2_ Get Bagua Info
-  const μ2_getBaguaInfo = useCallback((): string => {
+  // µ2_ Get Bagua Info
+  const µ2_getBaguaInfo = useCallback((): string => {
     const descriptor = udItem.bagua_descriptor;
     const symbols: string[] = [];
     
@@ -401,26 +401,26 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
     if (descriptor & UDFormat.BAGUA.ERDE) symbols.push('☷');
     if (descriptor & UDFormat.BAGUA.TAIJI) symbols.push('☯');
     
-    return symbols.join('') || '☴'; // WIND als Default für μ2
+    return symbols.join('') || '☴'; // WIND als Default für µ2
   }, [udItem.bagua_descriptor]);
 
   // Raimunds algebraischer Transistor
-  const μ2_showContextButton = UDFormat.transistor(!!onAddToContext);
-  const μ2_isEditable = UDFormat.transistor(!readOnly);
+  const µ2_showContextButton = UDFormat.transistor(!!onAddToContext);
+  const µ2_isEditable = UDFormat.transistor(!readOnly);
 
-  // μ2_ Terminal Display Content
-  const μ2_displayContent = μ2_formatTerminalContent(μ2_tuiState.content);
+  // µ2_ Terminal Display Content
+  const µ2_displayContent = µ2_formatTerminalContent(µ2_tuiState.content);
 
-  // μ2_ Window Styling
-  const μ2_windowStyle: React.CSSProperties = {
+  // µ2_ Window Styling
+  const µ2_windowStyle: React.CSSProperties = {
     fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
-    backgroundColor: μ2_tuiState.theme.backgroundColor,
-    border: `2px solid ${μ2_isInContext ? '#ef4444' : μ2_tuiState.theme.borderColor}`,
+    backgroundColor: µ2_tuiState.theme.backgroundColor,
+    border: `2px solid ${µ2_isInContext ? '#ef4444' : µ2_tuiState.theme.borderColor}`,
     borderRadius: '8px',
     overflow: 'hidden',
-    boxShadow: μ2_isInContext 
+    boxShadow: µ2_isInContext 
       ? '0 4px 20px rgba(239, 68, 68, 0.15)' 
-      : `0 4px 12px ${μ2_tuiState.theme.backgroundColor}33`,
+      : `0 4px 12px ${µ2_tuiState.theme.backgroundColor}33`,
     position: 'relative',
     width: '100%',
     height: '100%',
@@ -431,39 +431,39 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
   };
 
   return (
-    <div className={`μ2-tui-window μ2-preset-${μ2_tuiState.preset.id}`} style={μ2_windowStyle}>
+    <div className={`µ2-tui-window µ2-preset-${µ2_tuiState.preset.id}`} style={µ2_windowStyle}>
       
-      {/* μ2_ Terminal Header */}
-      <div className="μ2-tui-header" style={{
+      {/* µ2_ Terminal Header */}
+      <div className="µ2-tui-header" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '4px 8px',
-        backgroundColor: μ2_tuiState.theme.statusBarBg,
-        borderBottom: `1px solid ${μ2_tuiState.theme.borderColor}55`,
+        backgroundColor: µ2_tuiState.theme.statusBarBg,
+        borderBottom: `1px solid ${µ2_tuiState.theme.borderColor}55`,
         fontSize: '11px',
-        color: μ2_tuiState.theme.statusBarText
+        color: µ2_tuiState.theme.statusBarText
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>{μ2_tuiState.theme.symbol}</span>
-          <span style={{ fontWeight: '600' }}>{μ2_tuiState.preset.name}</span>
+          <span>{µ2_tuiState.theme.symbol}</span>
+          <span style={{ fontWeight: '600' }}>{µ2_tuiState.preset.name}</span>
           <span style={{ opacity: 0.8 }}>
-            {μ2_tuiState.preset.width}×{μ2_tuiState.preset.height}
+            {µ2_tuiState.preset.width}×{µ2_tuiState.preset.height}
           </span>
-          {μ2_tuiState.preset.historicalContext && (
+          {µ2_tuiState.preset.historicalContext && (
             <span style={{ opacity: 0.6, fontSize: '10px' }}>
-              ({μ2_tuiState.preset.historicalContext})
+              ({µ2_tuiState.preset.historicalContext})
             </span>
           )}
         </div>
         
-        {μ2_isEditable === 1 && (
+        {µ2_isEditable === 1 && (
           <button
-            onClick={() => setμ2_ShowPresetSelector(!μ2_showPresetSelector)}
+            onClick={() => setµ2_ShowPresetSelector(!µ2_showPresetSelector)}
             style={{
               background: 'none',
-              border: `1px solid ${μ2_tuiState.theme.textColor}55`,
-              color: μ2_tuiState.theme.textColor,
+              border: `1px solid ${µ2_tuiState.theme.textColor}55`,
+              color: µ2_tuiState.theme.textColor,
               borderRadius: '2px',
               cursor: 'pointer',
               fontSize: '10px',
@@ -475,17 +475,17 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
         )}
       </div>
 
-      {/* μ2_ Preset Selector (Dropdown) */}
-      {μ2_showPresetSelector && (
-        <div className="μ2-preset-selector" style={{
+      {/* µ2_ Preset Selector (Dropdown) */}
+      {µ2_showPresetSelector && (
+        <div className="µ2-preset-selector" style={{
           position: 'absolute',
           top: '100%',
           left: '0',
           right: '0',
           maxHeight: '300px',
           overflowY: 'auto',
-          backgroundColor: μ2_tuiState.theme.backgroundColor,
-          border: `2px solid ${μ2_tuiState.theme.borderColor}`,
+          backgroundColor: µ2_tuiState.theme.backgroundColor,
+          border: `2px solid ${µ2_tuiState.theme.borderColor}`,
           borderTop: 'none',
           zIndex: 1000,
           fontSize: '12px'
@@ -494,26 +494,26 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
             <div key={category}>
               <div style={{
                 padding: '6px 8px',
-                backgroundColor: μ2_tuiState.theme.statusBarBg,
-                color: μ2_tuiState.theme.statusBarText,
+                backgroundColor: µ2_tuiState.theme.statusBarBg,
+                color: µ2_tuiState.theme.statusBarText,
                 fontWeight: '600',
                 textTransform: 'uppercase',
                 fontSize: '10px'
               }}>
                 {category} Presets
               </div>
-              {μ2_terminalPresets.filter(p => p.category === category).map(preset => (
+              {µ2_terminalPresets.filter(p => p.category === category).map(preset => (
                 <div
                   key={preset.id}
-                  onClick={() => μ2_changePreset(preset.id)}
+                  onClick={() => µ2_changePreset(preset.id)}
                   style={{
                     padding: '6px 12px',
                     cursor: 'pointer',
-                    backgroundColor: preset.id === μ2_tuiState.preset.id 
-                      ? μ2_tuiState.theme.selectionColor 
+                    backgroundColor: preset.id === µ2_tuiState.preset.id 
+                      ? µ2_tuiState.theme.selectionColor 
                       : 'transparent',
-                    color: μ2_tuiState.theme.textColor,
-                    borderBottom: `1px solid ${μ2_tuiState.theme.borderColor}22`
+                    color: µ2_tuiState.theme.textColor,
+                    borderBottom: `1px solid ${µ2_tuiState.theme.borderColor}22`
                   }}
                 >
                   <div style={{ fontWeight: '500' }}>{preset.name}</div>
@@ -528,41 +528,41 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
         </div>
       )}
 
-      {/* μ2_ Terminal Screen */}
-      <div className="μ2-tui-screen" style={{
+      {/* µ2_ Terminal Screen */}
+      <div className="µ2-tui-screen" style={{
         position: 'relative',
-        backgroundColor: μ2_tuiState.theme.backgroundColor
+        backgroundColor: µ2_tuiState.theme.backgroundColor
       }}>
         <textarea
           ref={textareaRef}
-          className="μ2-tui-textarea"
-          value={μ2_displayContent}
-          onChange={(e) => μ2_handleContentChange(e.target.value)}
-          onKeyDown={μ2_handleKeyDown}
-          onClick={(e) => μ2_updateCursorPosition(e.currentTarget)}
+          className="µ2-tui-textarea"
+          value={µ2_displayContent}
+          onChange={(e) => µ2_handleContentChange(e.target.value)}
+          onKeyDown={µ2_handleKeyDown}
+          onClick={(e) => µ2_updateCursorPosition(e.currentTarget)}
           readOnly={readOnly}
           spellCheck={false}
           wrap="off"
-          rows={μ2_tuiState.preset.height}
-          cols={μ2_tuiState.preset.width}
+          rows={µ2_tuiState.preset.height}
+          cols={µ2_tuiState.preset.width}
           style={{
-            width: `${μ2_tuiState.preset.width * 0.6}em`,
-            height: `${μ2_tuiState.preset.height * 1.2}em`,
+            width: `${µ2_tuiState.preset.width * 0.6}em`,
+            height: `${µ2_tuiState.preset.height * 1.2}em`,
             backgroundColor: 'transparent',
             border: 'none',
             outline: 'none',
-            color: μ2_tuiState.theme.textColor,
+            color: µ2_tuiState.theme.textColor,
             fontSize: '14px',
             lineHeight: '1.2',
             padding: '8px',
             resize: 'none',
             fontFamily: 'inherit',
-            caretColor: μ2_tuiState.theme.cursorColor
+            caretColor: µ2_tuiState.theme.cursorColor
           }}
         />
 
         {/* Unsaved Changes Indicator */}
-        {μ2_tuiState.hasUnsavedChanges && (
+        {µ2_tuiState.hasUnsavedChanges && (
           <div style={{
             position: 'absolute',
             top: '4px',
@@ -579,41 +579,41 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
         )}
       </div>
 
-      {/* μ2_ Status Bar */}
-      <div className="μ2-tui-status-bar" style={{
+      {/* µ2_ Status Bar */}
+      <div className="µ2-tui-status-bar" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '4px 8px',
-        backgroundColor: μ2_tuiState.theme.statusBarBg,
-        color: μ2_tuiState.theme.statusBarText,
+        backgroundColor: µ2_tuiState.theme.statusBarBg,
+        color: µ2_tuiState.theme.statusBarText,
         fontSize: '11px',
         fontWeight: '500',
-        borderTop: `1px solid ${μ2_tuiState.theme.borderColor}55`
+        borderTop: `1px solid ${µ2_tuiState.theme.borderColor}55`
       }}>
         
         {/* Left: Mode & CodePage */}
-        <div className="μ2-status-left" style={{
+        <div className="µ2-status-left" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '8px'
         }}>
           <span>{readOnly ? 'VIEW' : 'EDIT'}</span>
-          <span style={{ opacity: 0.8 }}>{μ2_tuiState.codepage.toUpperCase()}</span>
+          <span style={{ opacity: 0.8 }}>{µ2_tuiState.codepage.toUpperCase()}</span>
           
           {/* Theme Selector - All Available Themes */}
-          {μ2_isEditable === 1 && (
+          {µ2_isEditable === 1 && (
             <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap' }}>
-              {Object.entries(μ2_terminalThemes).map(([key, theme]) => {
-                const isActive = μ2_tuiState.theme === theme;
+              {Object.entries(µ2_terminalThemes).map(([key, theme]) => {
+                const isActive = µ2_tuiState.theme === theme;
                 return (
                   <button
                     key={key}
-                    onClick={() => μ2_changeTheme(key)}
+                    onClick={() => µ2_changeTheme(key)}
                     title={`${theme.name}${theme.historicalSystem ? ` (${theme.historicalSystem})` : ''}`}
                     style={{
                       background: isActive ? theme.backgroundColor : 'none',
-                      color: isActive ? theme.textColor : μ2_tuiState.theme.textColor,
+                      color: isActive ? theme.textColor : µ2_tuiState.theme.textColor,
                       border: isActive ? `1px solid ${theme.textColor}` : '1px solid transparent',
                       borderRadius: '3px',
                       cursor: 'pointer',
@@ -632,39 +632,39 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
         </div>
 
         {/* Center: Bagua & System Info */}
-        <div className="μ2-status-center" style={{
+        <div className="µ2-status-center" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
           fontSize: '10px'
         }}>
-          <span title="Bagua Descriptor">{μ2_getBaguaInfo()}</span>
-          {μ2_tuiState.theme.historicalSystem && (
+          <span title="Bagua Descriptor">{µ2_getBaguaInfo()}</span>
+          {µ2_tuiState.theme.historicalSystem && (
             <span title="Historical System" style={{ opacity: 0.7 }}>
-              {μ2_tuiState.theme.historicalSystem}
+              {µ2_tuiState.theme.historicalSystem}
             </span>
           )}
-          {μ2_isInContext && (
+          {µ2_isInContext && (
             <span title="In AI Context" style={{ color: '#ef4444' }}>📌</span>
           )}
         </div>
 
         {/* Right: Cursor & Actions */}
-        <div className="μ2-status-right" style={{
+        <div className="µ2-status-right" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '6px'
         }}>
           
           {/* Context Button */}
-          {μ2_showContextButton === 1 && (
+          {µ2_showContextButton === 1 && (
             <button
-              onClick={μ2_toggleContext}
-              title={μ2_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
+              onClick={µ2_toggleContext}
+              title={µ2_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
               style={{
-                background: μ2_isInContext ? '#ef4444' : 'none',
-                border: `1px solid ${μ2_isInContext ? '#ef4444' : μ2_tuiState.theme.textColor}55`,
-                color: μ2_isInContext ? 'white' : μ2_tuiState.theme.textColor,
+                background: µ2_isInContext ? '#ef4444' : 'none',
+                border: `1px solid ${µ2_isInContext ? '#ef4444' : µ2_tuiState.theme.textColor}55`,
+                color: µ2_isInContext ? 'white' : µ2_tuiState.theme.textColor,
                 borderRadius: '2px',
                 cursor: 'pointer',
                 fontSize: '9px',
@@ -677,12 +677,12 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
 
           {/* Copy Button */}
           <button 
-            onClick={() => navigator.clipboard.writeText(μ2_tuiState.content)}
+            onClick={() => navigator.clipboard.writeText(µ2_tuiState.content)}
             title="Copy Terminal Content"
             style={{
               background: 'none',
-              border: `1px solid ${μ2_tuiState.theme.textColor}55`,
-              color: μ2_tuiState.theme.textColor,
+              border: `1px solid ${µ2_tuiState.theme.textColor}55`,
+              color: µ2_tuiState.theme.textColor,
               borderRadius: '2px',
               cursor: 'pointer',
               fontSize: '9px',
@@ -694,7 +694,7 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
 
           {/* Cursor Position */}
           <span style={{ fontSize: '10px' }}>
-            {μ2_tuiState.cursorPosition.row}:{μ2_tuiState.cursorPosition.col}
+            {µ2_tuiState.cursorPosition.row}:{µ2_tuiState.cursorPosition.col}
           </span>
         </div>
 
@@ -704,4 +704,4 @@ export const μ2_TuiWindow: React.FC<μ2_TuiWindowProps> = ({
   );
 };
 
-export default μ2_TuiWindow;
+export default µ2_TuiWindow;

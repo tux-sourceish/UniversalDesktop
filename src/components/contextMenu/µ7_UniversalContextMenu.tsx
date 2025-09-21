@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ7_UniversalContextMenu - DONNER (☳) Events/Interactions
+ * µ7_UniversalContextMenu - DONNER (☳) Events/Interactions
  * 
  * Universal Context Menu System for UniversalDesktop
  * - Context-aware actions for files, folders, windows, and canvas
@@ -10,7 +10,7 @@ import { UDFormat } from '../../core/UDFormat';
  * - File type specific actions (.ud, images, code files)
  * - Preview functionality for actions
  * - Disabled state explanations
- * - μX-Bagua action categorization
+ * - µX-Bagua action categorization
  */
 
 export interface ContextAction {
@@ -41,7 +41,7 @@ export interface UniversalContextMenuProps {
   selectedFiles?: string[];
 }
 
-export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
+export const µ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
   element,
   visible,
   x,
@@ -381,7 +381,7 @@ export const μ7_UniversalContextMenu: React.FC<UniversalContextMenuProps> = ({
 
       actions.push({ id: 'separator-3', label: '', icon: '', baguaCategory: 0, enabled: true, separator: true });
 
-      // μ8_ERDE - Workspace Export with Binary Optimization
+      // µ8_ERDE - Workspace Export with Binary Optimization
       actions.push({
         id: 'export-workspace',
         label: 'Workspace exportieren...',
@@ -828,4 +828,4 @@ export const useUniversalContextMenu = () => {
   };
 };
 
-export default μ7_UniversalContextMenu;
+export default µ7_UniversalContextMenu;

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { enhancedSupabase } from '../services/μ8_supabaseClient';
+import { enhancedSupabase } from '../services/µ8_supabaseClient';
 import type { DesktopItemData } from '../types';
 
 export interface DataModuleReturn {

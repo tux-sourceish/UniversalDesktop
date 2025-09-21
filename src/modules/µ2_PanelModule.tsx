@@ -1,21 +1,21 @@
 /**
  * 🎛️ PanelModule - V2 Multi-Panel System
- * NEW: Separate floating panels mit μ-Präfix Architektur
+ * NEW: Separate floating panels mit µ-Präfix Architektur
  * INCLUDES: V1 Genius-Feature ContextManager! 🎯
  */
 
 import React from 'react';
-import { μ2_ToolPanel } from '../components/panels/µ2_ToolPanel';
-import { μ2_AIPanel } from '../components/panels/µ2_AIPanel';
-import { μ5_TerritoryPanel } from '../components/panels/µ5_TerritoryPanel';
-import { μ6_ContextPanel } from '../components/panels/µ6_ContextPanel';
+import { µ2_ToolPanel } from '../components/panels/µ2_ToolPanel';
+import { µ2_AIPanel } from '../components/panels/µ2_AIPanel';
+import { µ5_TerritoryPanel } from '../components/panels/µ5_TerritoryPanel';
+import { µ6_ContextPanel } from '../components/panels/µ6_ContextPanel';
 import { µ2_Minimap } from './µ2_Minimap';
-import { μ8_usePanelLayout, μ8_PanelState } from '../hooks/µ8_usePanelLayout';
-import { μ6_useContextManager } from '../hooks/µ6_useContextManager';
+import { µ8_usePanelLayout, µ8_PanelState } from '../hooks/µ8_usePanelLayout';
+import { µ6_useContextManager } from '../hooks/µ6_useContextManager';
 import type { DesktopItemData, CanvasState, PanelState } from '../types';
 
-// μ6_ Type compatibility interface (from context manager)
-interface μ6_DesktopItemData {
+// µ6_ Type compatibility interface (from context manager)
+interface µ6_DesktopItemData {
   id: string;
   type: string;
   title: string;
@@ -34,14 +34,14 @@ interface PanelModuleProps {
   onNavigationChange?: (position: { x: number; y: number; z: number }) => void;  
   onZoomChange?: (scale: number) => void;
   onItemCreate?: (type: string, position: { x: number; y: number; z: number }, content?: any) => void;
-  onCreateUDItem?: (udItem: any) => void;  // NEW: μ1_WindowFactory Unity Bridge API
+  onCreateUDItem?: (udItem: any) => void;  // NEW: µ1_WindowFactory Unity Bridge API
   onItemUpdate?: (id: string, updates: Partial<DesktopItemData>) => void;
   positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
   position?: 'left' | 'right' | 'top' | 'bottom';
   className?: string;
   // NEW V2: Panel State als Props statt separater Hook
-  μ8_panelState?: any;
-  μ8_panelConfigs?: any;
+  µ8_panelState?: any;
+  µ8_panelConfigs?: any;
   // NEW: Context Manager von Parent durchreichen
   contextManager?: any;
 }
@@ -56,18 +56,18 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
   onItemUpdate,
   positionCalculator,
   className = '',
-  μ8_panelState,
-  μ8_panelConfigs,
+  µ8_panelState,
+  µ8_panelConfigs,
   contextManager
 }) => {
   
-  // μ8_ Panel Layout Management (NEW V2 SYSTEM!)
+  // µ8_ Panel Layout Management (NEW V2 SYSTEM!)
   // FIXED: Verwende Props statt separater Hook!
-  const fallbackPanelLayout = μ8_usePanelLayout();
+  const fallbackPanelLayout = µ8_usePanelLayout();
   const panelLayout = {
-    panelState: μ8_panelState || fallbackPanelLayout.panelState,
-    panelConfigs: μ8_panelConfigs || fallbackPanelLayout.panelConfigs,
-    isPanelVisible: (id: keyof μ8_PanelState) => μ8_panelState ? μ8_panelState[id] : fallbackPanelLayout.isPanelVisible(id),
+    panelState: µ8_panelState || fallbackPanelLayout.panelState,
+    panelConfigs: µ8_panelConfigs || fallbackPanelLayout.panelConfigs,
+    isPanelVisible: (id: keyof µ8_PanelState) => µ8_panelState ? µ8_panelState[id] : fallbackPanelLayout.isPanelVisible(id),
     togglePanel: fallbackPanelLayout.togglePanel,
     // MISSING FUNCTIONS: Add all needed functions from original hook
     getRightPanelOffset: fallbackPanelLayout.getRightPanelOffset,
@@ -80,20 +80,20 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
     getSmartPanelDimensions: fallbackPanelLayout.getSmartPanelDimensions
   };
   
-  // μ6_ Context Manager (V1 GENIUS-FEATURE!)
-  // Type adapter for DesktopItemData → μ6_DesktopItemData compatibility  
-  const μ6_onItemUpdate = onItemUpdate ? (id: string, updates: Partial<μ6_DesktopItemData>) => {
-    // Convert μ6_DesktopItemData to DesktopItemData for compatibility
+  // µ6_ Context Manager (V1 GENIUS-FEATURE!)
+  // Type adapter for DesktopItemData → µ6_DesktopItemData compatibility  
+  const µ6_onItemUpdate = onItemUpdate ? (id: string, updates: Partial<µ6_DesktopItemData>) => {
+    // Convert µ6_DesktopItemData to DesktopItemData for compatibility
     const compatibleUpdates = updates as Partial<DesktopItemData>;
     onItemUpdate(id, compatibleUpdates);
   } : undefined;
   
   // Use passed contextManager or create local one as fallback
-  const localContextManager = μ6_useContextManager(100000, μ6_onItemUpdate);
+  const localContextManager = µ6_useContextManager(100000, µ6_onItemUpdate);
   const activeContextManager = contextManager || localContextManager;
   
 
-  // μ8_ Dynamic Panel Offset Calculation
+  // µ8_ Dynamic Panel Offset Calculation
   const calculateRightOffset = (panelId: 'ai' | 'territory' | 'context'): number => {
     const panelWidths = { ai: 320, territory: 300, context: 350 };
     const panelOrder = ['ai', 'territory', 'context'];
@@ -114,8 +114,8 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
 
   return (
     <>
-      {/* μ2_ Tool Panel - Werkzeugkasten (Links) */}
-      <μ2_ToolPanel
+      {/* µ2_ Tool Panel - Werkzeugkasten (Links) */}
+      <µ2_ToolPanel
         visible={panelLayout.isPanelVisible('tools')}
         onToggle={() => panelLayout.togglePanel('tools')}
         onCreateUDItem={onCreateUDItem || (() => {})}
@@ -124,8 +124,8 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         width={280}
       />
 
-      {/* μ2_ AI Panel - KI-Assistent mit flexiblen Agents (Rechts) */}
-      <μ2_AIPanel
+      {/* µ2_ AI Panel - KI-Assistent mit flexiblen Agents (Rechts) */}
+      <µ2_AIPanel
         visible={panelLayout.isPanelVisible('ai')}
         onToggle={() => panelLayout.togglePanel('ai')}
         position="right" 
@@ -136,8 +136,8 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         contextManager={activeContextManager}
       />
 
-      {/* μ5_ Territory Panel - Territory Management (Rechts) */}
-      <μ5_TerritoryPanel
+      {/* µ5_ Territory Panel - Territory Management (Rechts) */}
+      <µ5_TerritoryPanel
         visible={panelLayout.isPanelVisible('territory')}
         onToggle={() => panelLayout.togglePanel('territory')}
         position="right"
@@ -145,8 +145,8 @@ export const PanelModule: React.FC<PanelModuleProps> = ({
         rightOffset={calculateRightOffset('territory')}
       />
 
-      {/* μ6_ Context Panel - AI Context Manager (V1 GENIUS-FEATURE!) */}
-      <μ6_ContextPanel
+      {/* µ6_ Context Panel - AI Context Manager (V1 GENIUS-FEATURE!) */}
+      <µ6_ContextPanel
         visible={panelLayout.isPanelVisible('context')}
         onToggle={() => panelLayout.togglePanel('context')}
         position="right"

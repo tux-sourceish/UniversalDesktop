@@ -22,7 +22,7 @@ const ZoomLevels = {
   MICROSCOPE: { scale: 2.0, name: '🔬 Microscope', description: 'Ultra-Detail' }
 } as const;
 
-export const μ3_useCanvasNavigation = () => {
+export const µ3_useCanvasNavigation = () => {
   const [canvasState, setCanvasState] = useState<CanvasState>({
     position: { x: 0, y: 0, z: 0 },
     scale: 1,

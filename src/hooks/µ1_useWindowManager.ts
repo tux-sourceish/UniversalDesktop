@@ -41,7 +41,7 @@ interface CollisionInfo {
   suggestedPosition?: Position;
 }
 
-export const μ1_useWindowManager = (
+export const µ1_useWindowManager = (
   userId?: string,
   saveCallback?: (items: DesktopItemData[]) => void
 ) => {

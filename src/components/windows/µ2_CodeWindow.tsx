@@ -3,9 +3,9 @@ import { UDItem } from '../../core/universalDocument';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ2_CodeWindow - WIND (☴) Views/UI - Universeller Code Editor
+ * µ2_CodeWindow - WIND (☴) Views/UI - Universeller Code Editor
  * 
- * Vollständige μX-Bagua Integration für Code-Entwicklung mit:
+ * Vollständige µX-Bagua Integration für Code-Entwicklung mit:
  * - Syntax Highlighting für TypeScript/JavaScript/HTML/CSS/Python
  * - Language-specific Formatting
  * - Line Numbers Display
@@ -15,13 +15,13 @@ import { UDFormat } from '../../core/UDFormat';
  * - Context-Aware Functionality
  * 
  * Standards für AI-Modelle:
- * - TypeScript bevorzugt (μX-Bagua Konvention)
+ * - TypeScript bevorzugt (µX-Bagua Konvention)
  * - Python für Data Science & AI Tasks
- * - Funktions-basierter Code mit μX-Prefix
+ * - Funktions-basierter Code mit µX-Prefix
  * - Campus-Model Single-Responsibility Pattern
  */
 
-interface μ2_CodeWindowProps {
+interface µ2_CodeWindowProps {
   /** Vollständiges UDItem mit Code-spezifischen Metadaten */
   udItem: UDItem;
   /** Callback für UDItem Updates mit Transformation Tracking */
@@ -34,7 +34,7 @@ interface μ2_CodeWindowProps {
   autoFormat?: boolean;
 }
 
-interface μ2_CodeState {
+interface µ2_CodeState {
   code: string;
   language: string;
   lineCount: number;
@@ -44,8 +44,8 @@ interface μ2_CodeState {
   isFormatted: boolean;
 }
 
-// μ2_ Supported Languages mit sprachspezifischer Formatierung (WIND-Pattern: UI Language Selection)
-const μ2_SUPPORTED_LANGUAGES = [
+// µ2_ Supported Languages mit sprachspezifischer Formatierung (WIND-Pattern: UI Language Selection)
+const µ2_SUPPORTED_LANGUAGES = [
   { id: 'typescript', name: 'TypeScript', icon: '🔷', ext: '.ts', indentSize: 2, brackets: ['{', '}'] },
   { id: 'javascript', name: 'JavaScript', icon: '🟨', ext: '.js', indentSize: 2, brackets: ['{', '}'] },
   { id: 'python', name: 'Python', icon: '🐍', ext: '.py', indentSize: 4, brackets: [':', ''] },
@@ -56,7 +56,7 @@ const μ2_SUPPORTED_LANGUAGES = [
   { id: 'plain', name: 'Plain Text', icon: '📄', ext: '.txt', indentSize: 2, brackets: ['', ''] }
 ];
 
-export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
+export const µ2_CodeWindow: React.FC<µ2_CodeWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
@@ -64,8 +64,8 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
   autoFormat = true
 }) => {
 
-  // μ2_ Code State Management (WIND-Pattern: UI State)
-  const [μ2_codeState, setμ2_CodeState] = useState<μ2_CodeState>({
+  // µ2_ Code State Management (WIND-Pattern: UI State)
+  const [µ2_codeState, setµ2_CodeState] = useState<µ2_CodeState>({
     code: udItem.content?.code || udItem.content?.text || '',
     language: udItem.content?.language || 'typescript',
     lineCount: 1,
@@ -75,20 +75,20 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
     isFormatted: false
   });
 
-  // μ7_ Event Handlers (DONNER-Pattern: Events)
-  const μ2_textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [μ2_isContextual, setμ2_IsContextual] = useState(udItem.is_contextual || false);
-  const [μ2_scrollTop, setμ2_ScrollTop] = useState(0);
+  // µ7_ Event Handlers (DONNER-Pattern: Events)
+  const µ2_textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [µ2_isContextual, setµ2_IsContextual] = useState(udItem.is_contextual || false);
+  const [µ2_scrollTop, setµ2_ScrollTop] = useState(0);
   
-  // μ5_ Theme State (SEE-Pattern: Properties) - moved up for callback access
-  const [μ5_theme, setμ5_Theme] = useState(udItem.content?.theme || 'light');
+  // µ5_ Theme State (SEE-Pattern: Properties) - moved up for callback access
+  const [µ5_theme, setµ5_Theme] = useState(udItem.content?.theme || 'light');
 
-  // μ6_ Initialize Code Content (FEUER-Pattern: Functions)
+  // µ6_ Initialize Code Content (FEUER-Pattern: Functions)
   useEffect(() => {
-    const initialCode = udItem.content?.code || udItem.content?.text || '// Neuer Code\nfunction μ1_example() {\n  return "UniversalDesktop v2.1";\n}';
+    const initialCode = udItem.content?.code || udItem.content?.text || '// Neuer Code\nfunction µ1_example() {\n  return "UniversalDesktop v2.1";\n}';
     const initialLanguage = udItem.content?.language || 'typescript';
     
-    setμ2_CodeState(prev => ({
+    setµ2_CodeState(prev => ({
       ...prev,
       code: initialCode,
       language: initialLanguage,
@@ -97,18 +97,18 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
     }));
   }, [udItem.content]);
 
-  // μ5_ Sync Theme State with UDItem changes
+  // µ5_ Sync Theme State with UDItem changes
   useEffect(() => {
     const newTheme = udItem.content?.theme || 'light';
-    setμ5_Theme(newTheme);
+    setµ5_Theme(newTheme);
   }, [udItem.content?.theme]);
 
-  // μ6_ Update Code Content (FEUER-Pattern: Code Processing)
-  const μ6_updateCodeContent = useCallback((newCode: string, description: string = "Code edited") => {
+  // µ6_ Update Code Content (FEUER-Pattern: Code Processing)
+  const µ6_updateCodeContent = useCallback((newCode: string, description: string = "Code edited") => {
     const lineCount = (newCode.match(/\n/g) || []).length + 1;
     const charCount = newCode.length;
 
-    setμ2_CodeState(prev => ({
+    setµ2_CodeState(prev => ({
       ...prev,
       code: newCode,
       lineCount,
@@ -117,15 +117,15 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       hasErrors: false // Basic implementation
     }));
 
-    // μ8_ UDItem Update mit Transformation History (ERDE-Pattern: Global State)
+    // µ8_ UDItem Update mit Transformation History (ERDE-Pattern: Global State)
     const updatedItem: UDItem = {
       ...udItem,
       content: {
         ...udItem.content,
         code: newCode,
         text: newCode, // Backward compatibility
-        language: μ2_codeState.language,
-        theme: μ5_theme // Preserve current theme!
+        language: µ2_codeState.language,
+        theme: µ5_theme // Preserve current theme!
       },
       updated_at: new Date().toISOString(),
       transformation_history: [
@@ -142,11 +142,11 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
     };
 
     onUDItemChange(updatedItem, description);
-  }, [udItem, onUDItemChange, μ2_codeState.language, μ5_theme]);
+  }, [udItem, onUDItemChange, µ2_codeState.language, µ5_theme]);
 
-  // μ6_ Language Change Handler (FEUER-Pattern: Language Processing)
-  const μ6_changeLanguage = useCallback((newLanguage: string) => {
-    setμ2_CodeState(prev => ({ ...prev, language: newLanguage }));
+  // µ6_ Language Change Handler (FEUER-Pattern: Language Processing)
+  const µ6_changeLanguage = useCallback((newLanguage: string) => {
+    setµ2_CodeState(prev => ({ ...prev, language: newLanguage }));
     
     // Update UDItem with new language - preserve ALL existing content
     const updatedItem: UDItem = {
@@ -154,16 +154,16 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       content: {
         ...udItem.content,
         language: newLanguage,
-        theme: udItem.content?.theme || μ5_theme // Preserve current theme
+        theme: udItem.content?.theme || µ5_theme // Preserve current theme
       }
     };
     
     onUDItemChange(updatedItem, `Language changed to ${newLanguage}`);
-  }, [udItem, onUDItemChange, μ5_theme]);
+  }, [udItem, onUDItemChange, µ5_theme]);
 
-  // μ6_ Theme Change Handler (FEUER-Pattern: Theme Processing)  
-  const μ6_changeTheme = useCallback((newTheme: string) => {
-    setμ5_Theme(newTheme);
+  // µ6_ Theme Change Handler (FEUER-Pattern: Theme Processing)  
+  const µ6_changeTheme = useCallback((newTheme: string) => {
+    setµ5_Theme(newTheme);
     
     // Update UDItem with new theme - preserve ALL existing content
     const updatedItem: UDItem = {
@@ -171,24 +171,24 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       content: {
         ...udItem.content,
         theme: newTheme,
-        language: udItem.content?.language || μ2_codeState.language // Preserve current language
+        language: udItem.content?.language || µ2_codeState.language // Preserve current language
       }
     };
     
     onUDItemChange(updatedItem, `Theme changed to ${newTheme}`);
-  }, [udItem, onUDItemChange, μ2_codeState.language]);
+  }, [udItem, onUDItemChange, µ2_codeState.language]);
 
-  // μ6_ Language-specific Auto-Format Code (FEUER-Pattern: Code Formatting)
-  const μ6_formatCode = useCallback(() => {
+  // µ6_ Language-specific Auto-Format Code (FEUER-Pattern: Code Formatting)
+  const µ6_formatCode = useCallback(() => {
     if (!autoFormat) return;
 
-    const langConfig = μ2_SUPPORTED_LANGUAGES.find(l => l.id === μ2_codeState.language);
+    const langConfig = µ2_SUPPORTED_LANGUAGES.find(l => l.id === µ2_codeState.language);
     if (!langConfig) return;
 
-    let formatted = μ2_codeState.code;
+    let formatted = µ2_codeState.code;
     const indent = ' '.repeat(langConfig.indentSize);
 
-    if (μ2_codeState.language === 'python') {
+    if (µ2_codeState.language === 'python') {
       // Python-specific formatting
       const lines = formatted.split('\n');
       let indentLevel = 0;
@@ -214,7 +214,7 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       });
       formatted = indentedLines.join('\n');
 
-    } else if (μ2_codeState.language === 'typescript' || μ2_codeState.language === 'javascript') {
+    } else if (µ2_codeState.language === 'typescript' || µ2_codeState.language === 'javascript') {
       // TypeScript/JavaScript formatting
       const lines = formatted.split('\n');
       let indentLevel = 0;
@@ -238,7 +238,7 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       // Add semicolons for JS/TS (basic)
       formatted = formatted.replace(/([^;,{}\s])\s*\n/g, '$1;\n');
 
-    } else if (μ2_codeState.language === 'html') {
+    } else if (µ2_codeState.language === 'html') {
       // Basic HTML indentation
       const lines = formatted.split('\n');
       let indentLevel = 0;
@@ -258,18 +258,18 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       formatted = indentedLines.join('\n');
     }
 
-    if (formatted !== μ2_codeState.code) {
-      μ6_updateCodeContent(formatted, `Auto-formatted ${μ2_codeState.language} code`);
-      setμ2_CodeState(prev => ({ ...prev, isFormatted: true }));
+    if (formatted !== µ2_codeState.code) {
+      µ6_updateCodeContent(formatted, `Auto-formatted ${µ2_codeState.language} code`);
+      setµ2_CodeState(prev => ({ ...prev, isFormatted: true }));
     }
-  }, [μ2_codeState.code, μ2_codeState.language, autoFormat, μ6_updateCodeContent]);
+  }, [µ2_codeState.code, µ2_codeState.language, autoFormat, µ6_updateCodeContent]);
 
-  // μ7_ Context Pin Toggle (DONNER-Pattern: Event Handler)
-  const μ7_toggleContextPin = useCallback(() => {
+  // µ7_ Context Pin Toggle (DONNER-Pattern: Event Handler)
+  const µ7_toggleContextPin = useCallback(() => {
     if (!onAddToContext) return;
     
-    const newContextualState = !μ2_isContextual;
-    setμ2_IsContextual(newContextualState);
+    const newContextualState = !µ2_isContextual;
+    setµ2_IsContextual(newContextualState);
     
     const updatedItem: UDItem = {
       ...udItem,
@@ -281,28 +281,28 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
     if (newContextualState) {
       onAddToContext(updatedItem);
     }
-  }, [udItem, onUDItemChange, onAddToContext, μ2_isContextual]);
+  }, [udItem, onUDItemChange, onAddToContext, µ2_isContextual]);
 
-  // μ7_ Keyboard Shortcuts (DONNER-Pattern: Events)
-  const μ7_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  // µ7_ Keyboard Shortcuts (DONNER-Pattern: Events)
+  const µ7_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.ctrlKey && e.key === 's') {
       e.preventDefault();
-      μ6_formatCode();
+      µ6_formatCode();
     } else if (e.ctrlKey && e.shiftKey && e.key === 'F') {
       e.preventDefault();
-      μ6_formatCode();
+      µ6_formatCode();
     }
-  }, [μ6_formatCode]);
+  }, [µ6_formatCode]);
 
-  // μ7_ Scroll Synchronization (DONNER-Pattern: Events)
-  const μ7_handleScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
-    setμ2_ScrollTop(e.currentTarget.scrollTop);
+  // µ7_ Scroll Synchronization (DONNER-Pattern: Events)
+  const µ7_handleScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
+    setµ2_ScrollTop(e.currentTarget.scrollTop);
   }, []);
 
 
-  // μ5_ Bagua Theme Colors (SEE-Pattern: Properties)
-  const μ5_baguaTheme = useMemo(() => {
-    if (μ5_theme === 'dark') {
+  // µ5_ Bagua Theme Colors (SEE-Pattern: Properties)
+  const µ5_baguaTheme = useMemo(() => {
+    if (µ5_theme === 'dark') {
       return {
         borderColor: '#00aa00', // Classic terminal green
         backgroundColor: '#001100', // Dark green background
@@ -322,18 +322,18 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       textColor: '#1f2937',
       textBg: 'white'
     };
-  }, [μ5_theme]);
+  }, [µ5_theme]);
 
-  // μ2_ Generate Line Numbers (WIND-Pattern: UI Element)
-  const μ2_generateLineNumbers = useCallback(() => {
-    const lines = Array.from({ length: μ2_codeState.lineCount }, (_, i) => i + 1);
+  // µ2_ Generate Line Numbers (WIND-Pattern: UI Element)
+  const µ2_generateLineNumbers = useCallback(() => {
+    const lines = Array.from({ length: µ2_codeState.lineCount }, (_, i) => i + 1);
     return lines.map(lineNum => (
       <div
         key={lineNum}
         style={{
           height: '21px', // Same as line-height * font-size (1.5 * 14px)
           fontSize: '12px',
-          color: μ5_baguaTheme.lineNumberColor,
+          color: µ5_baguaTheme.lineNumberColor,
           textAlign: 'right',
           paddingRight: '8px',
           fontFamily: 'Monaco, Consolas, "Courier New", monospace',
@@ -343,13 +343,13 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
         {lineNum}
       </div>
     ));
-  }, [μ2_codeState.lineCount, μ5_baguaTheme.lineNumberColor]);
+  }, [µ2_codeState.lineCount, µ5_baguaTheme.lineNumberColor]);
 
-  // μ2_ Language Selector (WIND-Pattern: UI Element)
-  const μ2_languageSelector = (
+  // µ2_ Language Selector (WIND-Pattern: UI Element)
+  const µ2_languageSelector = (
     <select
-      value={μ2_codeState.language}
-      onChange={(e) => μ6_changeLanguage(e.target.value)}
+      value={µ2_codeState.language}
+      onChange={(e) => µ6_changeLanguage(e.target.value)}
       disabled={readOnly}
       style={{
         padding: '4px 8px',
@@ -360,7 +360,7 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
         color: '#a78bfa'
       }}
     >
-      {μ2_SUPPORTED_LANGUAGES.map(lang => (
+      {µ2_SUPPORTED_LANGUAGES.map(lang => (
         <option key={lang.id} value={lang.id}>
           {lang.icon} {lang.name}
         </option>
@@ -368,7 +368,7 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
     </select>
   );
 
-  // μ2_ Render (WIND-Pattern: Views/UI)
+  // µ2_ Render (WIND-Pattern: Views/UI)
   return (
     <div style={{
       width: '100%',
@@ -376,39 +376,39 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
       display: 'flex',
       flexDirection: 'column',
       fontFamily: 'monospace',
-      border: `2px solid ${μ5_baguaTheme.borderColor}`,
+      border: `2px solid ${µ5_baguaTheme.borderColor}`,
       borderRadius: '8px',
-      backgroundColor: μ5_baguaTheme.backgroundColor
+      backgroundColor: µ5_baguaTheme.backgroundColor
     }}>
       
-      {/* μ2_ Header mit Language Selector & Stats */}
+      {/* µ2_ Header mit Language Selector & Stats */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '8px 12px',
         backgroundColor: 'rgba(167, 139, 250, 0.05)',
-        borderBottom: `1px solid ${μ5_baguaTheme.borderColor}`,
+        borderBottom: `1px solid ${µ5_baguaTheme.borderColor}`,
         fontSize: '12px'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontWeight: 'bold', color: μ5_baguaTheme.accentColor }}>
+          <span style={{ fontWeight: 'bold', color: µ5_baguaTheme.accentColor }}>
             💻 Code Editor
           </span>
-          {μ2_languageSelector}
+          {µ2_languageSelector}
           
-          {/* μ5_ Theme Selector */}
+          {/* µ5_ Theme Selector */}
           <select
-            value={μ5_theme}
-            onChange={(e) => μ6_changeTheme(e.target.value)}
+            value={µ5_theme}
+            onChange={(e) => µ6_changeTheme(e.target.value)}
             disabled={readOnly}
             style={{
               padding: '4px 8px',
               borderRadius: '4px',
-              border: `1px solid ${μ5_baguaTheme.borderColor}`,
-              backgroundColor: μ5_baguaTheme.textBg,
+              border: `1px solid ${µ5_baguaTheme.borderColor}`,
+              backgroundColor: µ5_baguaTheme.textBg,
               fontSize: '12px',
-              color: μ5_baguaTheme.accentColor
+              color: µ5_baguaTheme.accentColor
             }}
           >
             <option value="light">☀️ Light</option>
@@ -417,38 +417,38 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* μ2_ Code Stats */}
+          {/* µ2_ Code Stats */}
           <span style={{ color: '#6b7280' }}>
-            Lines: {μ2_codeState.lineCount} | Chars: {μ2_codeState.charCount}
+            Lines: {µ2_codeState.lineCount} | Chars: {µ2_codeState.charCount}
           </span>
           
-          {/* μ7_ Context Pin Button */}
+          {/* µ7_ Context Pin Button */}
           {onAddToContext && (
             <button
-              onClick={μ7_toggleContextPin}
-              title={μ2_isContextual ? 'Remove from AI Context' : 'Add to AI Context'}
+              onClick={µ7_toggleContextPin}
+              title={µ2_isContextual ? 'Remove from AI Context' : 'Add to AI Context'}
               style={{
                 background: 'none',
                 border: 'none',
                 fontSize: '16px',
                 cursor: 'pointer',
-                color: μ2_isContextual ? μ5_baguaTheme.accentColor : '#9ca3af'
+                color: µ2_isContextual ? µ5_baguaTheme.accentColor : '#9ca3af'
               }}
             >
               📌
             </button>
           )}
           
-          {/* μ6_ Format Button */}
+          {/* µ6_ Format Button */}
           {!readOnly && (
             <button
-              onClick={μ6_formatCode}
+              onClick={µ6_formatCode}
               style={{
                 padding: '4px 8px',
                 borderRadius: '4px',
-                border: `1px solid ${μ5_baguaTheme.borderColor}`,
+                border: `1px solid ${µ5_baguaTheme.borderColor}`,
                 backgroundColor: 'white',
-                color: μ5_baguaTheme.accentColor,
+                color: µ5_baguaTheme.accentColor,
                 fontSize: '11px',
                 cursor: 'pointer'
               }}
@@ -460,40 +460,40 @@ export const μ2_CodeWindow: React.FC<μ2_CodeWindowProps> = ({
         </div>
       </div>
 
-      {/* μ2_ Code Editor mit Line Numbers */}
+      {/* µ2_ Code Editor mit Line Numbers */}
       <div style={{ 
         flex: 1, 
         display: 'flex', 
-        backgroundColor: μ5_baguaTheme.textBg
+        backgroundColor: µ5_baguaTheme.textBg
       }}>
         
-        {/* μ2_ Line Numbers Column */}
+        {/* µ2_ Line Numbers Column */}
         <div style={{
           width: '50px',
-          backgroundColor: μ5_baguaTheme.lineNumberBg,
-          borderRight: `1px solid ${μ5_baguaTheme.borderColor}`,
+          backgroundColor: µ5_baguaTheme.lineNumberBg,
+          borderRight: `1px solid ${µ5_baguaTheme.borderColor}`,
           paddingTop: '12px',
           overflow: 'hidden',
-          transform: `translateY(-${μ2_scrollTop}px)`,
+          transform: `translateY(-${µ2_scrollTop}px)`,
           position: 'relative'
         }}>
-          {μ2_generateLineNumbers()}
+          {µ2_generateLineNumbers()}
         </div>
 
-        {/* μ2_ Code Editor Textarea */}
+        {/* µ2_ Code Editor Textarea */}
         <textarea
-          ref={μ2_textareaRef}
-          value={μ2_codeState.code}
-          onChange={(e) => μ6_updateCodeContent(e.target.value)}
-          onKeyDown={μ7_handleKeyDown}
-          onScroll={μ7_handleScroll}
+          ref={µ2_textareaRef}
+          value={µ2_codeState.code}
+          onChange={(e) => µ6_updateCodeContent(e.target.value)}
+          onKeyDown={µ7_handleKeyDown}
+          onScroll={µ7_handleScroll}
           readOnly={readOnly}
-          placeholder={`// ${μ2_codeState.language === 'python' ? 'Python' : μ2_codeState.language} code here...
-${μ2_codeState.language === 'python' ? 
-`def μ1_example():
+          placeholder={`// ${µ2_codeState.language === 'python' ? 'Python' : µ2_codeState.language} code here...
+${µ2_codeState.language === 'python' ? 
+`def µ1_example():
     """UniversalDesktop v2.1 Python Function"""
     return "UniversalDesktop v2.1"` :
-`function μ1_example() {
+`function µ1_example() {
   return "UniversalDesktop v2.1";
 }`}`}
           style={{
@@ -506,28 +506,28 @@ ${μ2_codeState.language === 'python' ?
             fontSize: '14px',
             lineHeight: '1.5',
             backgroundColor: 'transparent',
-            color: μ5_baguaTheme.textColor,
-            tabSize: μ2_SUPPORTED_LANGUAGES.find(l => l.id === μ2_codeState.language)?.indentSize || 2
+            color: µ5_baguaTheme.textColor,
+            tabSize: µ2_SUPPORTED_LANGUAGES.find(l => l.id === µ2_codeState.language)?.indentSize || 2
           }}
           spellCheck={false}
         />
       </div>
 
-      {/* μ2_ Footer mit Keyboard Shortcuts & Language Info */}
+      {/* µ2_ Footer mit Keyboard Shortcuts & Language Info */}
       <div style={{
         padding: '6px 12px',
         backgroundColor: 'rgba(167, 139, 250, 0.05)',
-        borderTop: `1px solid ${μ5_baguaTheme.borderColor}`,
+        borderTop: `1px solid ${µ5_baguaTheme.borderColor}`,
         fontSize: '11px',
         color: '#6b7280',
         display: 'flex',
         justifyContent: 'space-between'
       }}>
         <span>
-          μ2 WIND (☴) - Code Editor v2.1 | {μ2_SUPPORTED_LANGUAGES.find(l => l.id === μ2_codeState.language)?.icon} {μ2_codeState.language}
+          µ2 WIND (☴) - Code Editor v2.1 | {µ2_SUPPORTED_LANGUAGES.find(l => l.id === µ2_codeState.language)?.icon} {µ2_codeState.language}
         </span>
         <span>
-          Shortcuts: Ctrl+S = Format | Ctrl+Shift+F = Format | Tab = {μ2_SUPPORTED_LANGUAGES.find(l => l.id === μ2_codeState.language)?.indentSize} spaces
+          Shortcuts: Ctrl+S = Format | Ctrl+Shift+F = Format | Tab = {µ2_SUPPORTED_LANGUAGES.find(l => l.id === µ2_codeState.language)?.indentSize} spaces
         </span>
       </div>
     </div>

@@ -3,9 +3,9 @@ import { UDItem } from '../../core/universalDocument';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ8_NoteWindow - ERDE (☷) Global/Base - Universeller Text/Markdown Editor
+ * µ8_NoteWindow - ERDE (☷) Global/Base - Universeller Text/Markdown Editor
  * 
- * Vollständige μX-Bagua Integration mit UDItem Interface, Transformation History,
+ * Vollständige µX-Bagua Integration mit UDItem Interface, Transformation History,
  * Origin Tracking und algebraischen Transistoren von Raimund.
  * 
  * Features:
@@ -17,7 +17,7 @@ import { UDFormat } from '../../core/UDFormat';
  * - V1 Toolbar Features + V2 Enhancements
  */
 
-interface μ8_NoteWindowProps {
+interface µ8_NoteWindowProps {
   /** Vollständiges UDItem mit allen Bagua-Metadaten */
   udItem: UDItem;
   /** Callback für UDItem Updates mit Transformation Tracking */
@@ -30,7 +30,7 @@ interface μ8_NoteWindowProps {
   autoBaguaTheme?: boolean;
 }
 
-interface μ8_ContentState {
+interface µ8_ContentState {
   text: string;
   wordCount: number;
   charCount: number;
@@ -38,7 +38,7 @@ interface μ8_ContentState {
   lastModified: number;
 }
 
-export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
+export const µ8_NoteWindow: React.FC<µ8_NoteWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
@@ -46,8 +46,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
   autoBaguaTheme = true
 }) => {
 
-  // μ8_ Content State Management (ERDE-Pattern: Global State)
-  const [μ8_contentState, setμ8_ContentState] = useState<μ8_ContentState>({
+  // µ8_ Content State Management (ERDE-Pattern: Global State)
+  const [µ8_contentState, setµ8_ContentState] = useState<µ8_ContentState>({
     text: '',
     wordCount: 0,
     charCount: 0,
@@ -55,31 +55,31 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     lastModified: Date.now()
   });
 
-  const [μ8_hasUnsavedChanges, setμ8_HasUnsavedChanges] = useState(false);
-  const [μ8_isInContext, setμ8_IsInContext] = useState(udItem.is_contextual || false);
-  const [μ8_selectedText, setμ8_SelectedText] = useState<string>('');
-  const [μ8_selectionRange, setμ8_SelectionRange] = useState<{start: number, end: number}>({start: 0, end: 0});
+  const [µ8_hasUnsavedChanges, setµ8_HasUnsavedChanges] = useState(false);
+  const [µ8_isInContext, setµ8_IsInContext] = useState(udItem.is_contextual || false);
+  const [µ8_selectedText, setµ8_SelectedText] = useState<string>('');
+  const [µ8_selectionRange, setµ8_SelectionRange] = useState<{start: number, end: number}>({start: 0, end: 0});
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // μ8_ Initialize Content from UDItem
+  // µ8_ Initialize Content from UDItem
   useEffect(() => {
     const contentText = typeof udItem.content === 'string' 
       ? udItem.content 
       : udItem.content?.text || JSON.stringify(udItem.content);
     
     const lines = contentText.split('\n');
-    setμ8_ContentState({
+    setµ8_ContentState({
       text: contentText,
       wordCount: contentText.trim() ? contentText.trim().split(/\s+/).length : 0,
       charCount: contentText.length,
       lineCount: lines.length,
       lastModified: udItem.updated_at
     });
-    setμ8_IsInContext(udItem.is_contextual || false);
+    setµ8_IsInContext(udItem.is_contextual || false);
   }, [udItem]);
 
-  // μ8_ Bagua Theme Calculator
-  const μ8_getBaguaTheme = useCallback((): string => {
+  // µ8_ Bagua Theme Calculator
+  const µ8_getBaguaTheme = useCallback((): string => {
     if (!autoBaguaTheme) return 'default';
     
     const descriptor = udItem.bagua_descriptor;
@@ -95,15 +95,15 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     if (descriptor & UDFormat.BAGUA.SEE) return 'lake'; // Türkis
     if (descriptor & UDFormat.BAGUA.TAIJI) return 'unity'; // Schwarz/Weiß Balance
     
-    return 'earth'; // ERDE als Default für μ8
+    return 'earth'; // ERDE als Default für µ8
   }, [udItem.bagua_descriptor, autoBaguaTheme]);
 
-  // μ8_ Content Change Handler mit Transformation Tracking
-  const μ8_handleContentChange = useCallback((newText: string) => {
+  // µ8_ Content Change Handler mit Transformation Tracking
+  const µ8_handleContentChange = useCallback((newText: string) => {
     if (readOnly) return;
 
     const lines = newText.split('\n');
-    const newContentState: μ8_ContentState = {
+    const newContentState: µ8_ContentState = {
       text: newText,
       wordCount: newText.trim() ? newText.trim().split(/\s+/).length : 0,
       charCount: newText.length,
@@ -111,8 +111,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
       lastModified: Date.now()
     };
 
-    setμ8_ContentState(newContentState);
-    setμ8_HasUnsavedChanges(true);
+    setµ8_ContentState(newContentState);
+    setµ8_HasUnsavedChanges(true);
 
     // Auto-save mit 1.5s Debounce (V2 Standard)
     const saveTimeout = setTimeout(() => {
@@ -126,57 +126,57 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         updated_at: newContentState.lastModified
       }, `Textinhalt bearbeitet: ${newContentState.wordCount} Wörter, ${newContentState.charCount} Zeichen`);
 
-      setμ8_HasUnsavedChanges(false);
+      setµ8_HasUnsavedChanges(false);
     }, 1500);
 
     return () => clearTimeout(saveTimeout);
   }, [udItem, onUDItemChange, readOnly]);
 
-  // μ8_ Text Formatting Functions (V1 Features preserved)
-  const μ8_insertText = useCallback((text: string) => {
+  // µ8_ Text Formatting Functions (V1 Features preserved)
+  const µ8_insertText = useCallback((text: string) => {
     if (readOnly || !textareaRef.current) return;
     
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const newContent = μ8_contentState.text.substring(0, start) + text + μ8_contentState.text.substring(end);
+    const newContent = µ8_contentState.text.substring(0, start) + text + µ8_contentState.text.substring(end);
     
-    μ8_handleContentChange(newContent);
+    µ8_handleContentChange(newContent);
     
     // Restore cursor position
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + text.length, start + text.length);
     }, 0);
-  }, [μ8_contentState.text, μ8_handleContentChange, readOnly]);
+  }, [µ8_contentState.text, µ8_handleContentChange, readOnly]);
 
-  const μ8_formatText = useCallback((prefix: string, suffix: string = '') => {
+  const µ8_formatText = useCallback((prefix: string, suffix: string = '') => {
     if (readOnly || !textareaRef.current) return;
     
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = μ8_contentState.text.substring(start, end);
+    const selectedText = µ8_contentState.text.substring(start, end);
     
     const newText = prefix + selectedText + suffix;
-    const newContent = μ8_contentState.text.substring(0, start) + newText + μ8_contentState.text.substring(end);
+    const newContent = µ8_contentState.text.substring(0, start) + newText + µ8_contentState.text.substring(end);
     
-    μ8_handleContentChange(newContent);
+    µ8_handleContentChange(newContent);
     
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
     }, 0);
-  }, [μ8_contentState.text, μ8_handleContentChange, readOnly]);
+  }, [µ8_contentState.text, µ8_handleContentChange, readOnly]);
 
-  // μ8_ Context Manager Integration  
-  const μ8_toggleContext = useCallback(() => {
+  // µ8_ Context Manager Integration  
+  const µ8_toggleContext = useCallback(() => {
     if (!onAddToContext) return;
 
-    const wasInContext = μ8_isInContext;
+    const wasInContext = µ8_isInContext;
     
     // Toggle Context State
-    setμ8_IsInContext(!wasInContext);
+    setµ8_IsInContext(!wasInContext);
     
     // Update UDItem is_contextual
     onUDItemChange({
@@ -194,19 +194,19 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         is_contextual: true
       });
     }
-  }, [μ8_isInContext, udItem, onUDItemChange, onAddToContext]);
+  }, [µ8_isInContext, udItem, onUDItemChange, onAddToContext]);
 
-  // μ8_ Clear Content mit Confirmation
-  const μ8_clearContent = useCallback(() => {
+  // µ8_ Clear Content mit Confirmation
+  const µ8_clearContent = useCallback(() => {
     if (readOnly) return;
     
     if (confirm('🗑️ Gesamten Inhalt löschen?')) {
-      μ8_handleContentChange('');
+      µ8_handleContentChange('');
     }
-  }, [μ8_handleContentChange, readOnly]);
+  }, [µ8_handleContentChange, readOnly]);
 
-  // μ8_ Get Bagua Info Display
-  const μ8_getBaguaInfo = useCallback((): string => {
+  // µ8_ Get Bagua Info Display
+  const µ8_getBaguaInfo = useCallback((): string => {
     const descriptor = udItem.bagua_descriptor;
     const symbols: string[] = [];
     
@@ -223,8 +223,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     return symbols.join('') || '○';
   }, [udItem.bagua_descriptor]);
 
-  // μ8_ Text Selection Tracking
-  const μ8_handleSelection = useCallback(() => {
+  // µ8_ Text Selection Tracking
+  const µ8_handleSelection = useCallback(() => {
     if (!textareaRef.current) return;
     
     const textarea = textareaRef.current;
@@ -232,51 +232,51 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     const end = textarea.selectionEnd;
     const selectedText = textarea.value.substring(start, end);
     
-    setμ8_SelectedText(selectedText);
-    setμ8_SelectionRange({ start, end });
+    setµ8_SelectedText(selectedText);
+    setµ8_SelectionRange({ start, end });
   }, []);
 
-  // μ8_ Copy Selected Text (Ctrl+C behavior)
-  const μ8_copySelectedText = useCallback(async () => {
-    if (!μ8_selectedText) return false;
+  // µ8_ Copy Selected Text (Ctrl+C behavior)
+  const µ8_copySelectedText = useCallback(async () => {
+    if (!µ8_selectedText) return false;
     
     try {
-      await navigator.clipboard.writeText(μ8_selectedText);
-      console.log('📋 μ8 Text copied to clipboard:', μ8_selectedText.length, 'characters');
+      await navigator.clipboard.writeText(µ8_selectedText);
+      console.log('📋 µ8 Text copied to clipboard:', µ8_selectedText.length, 'characters');
       return true;
     } catch (error) {
-      console.error('❌ μ8 Copy failed:', error);
+      console.error('❌ µ8 Copy failed:', error);
       return false;
     }
-  }, [μ8_selectedText]);
+  }, [µ8_selectedText]);
 
-  // μ8_ Cut Selected Text (Ctrl+X behavior)
-  const μ8_cutSelectedText = useCallback(async () => {
-    if (!μ8_selectedText || readOnly) return false;
+  // µ8_ Cut Selected Text (Ctrl+X behavior)
+  const µ8_cutSelectedText = useCallback(async () => {
+    if (!µ8_selectedText || readOnly) return false;
     
     try {
-      await navigator.clipboard.writeText(μ8_selectedText);
+      await navigator.clipboard.writeText(µ8_selectedText);
       
       // Remove selected text from content
-      const newText = μ8_contentState.text.substring(0, μ8_selectionRange.start) + 
-                      μ8_contentState.text.substring(μ8_selectionRange.end);
+      const newText = µ8_contentState.text.substring(0, µ8_selectionRange.start) + 
+                      µ8_contentState.text.substring(µ8_selectionRange.end);
       
-      μ8_handleContentChange(newText);
+      µ8_handleContentChange(newText);
       
       // Reset selection
-      setμ8_SelectedText('');
-      setμ8_SelectionRange({ start: μ8_selectionRange.start, end: μ8_selectionRange.start });
+      setµ8_SelectedText('');
+      setµ8_SelectionRange({ start: µ8_selectionRange.start, end: µ8_selectionRange.start });
       
-      console.log('✂️ μ8 Text cut to clipboard:', μ8_selectedText.length, 'characters');
+      console.log('✂️ µ8 Text cut to clipboard:', µ8_selectedText.length, 'characters');
       return true;
     } catch (error) {
-      console.error('❌ μ8 Cut failed:', error);
+      console.error('❌ µ8 Cut failed:', error);
       return false;
     }
-  }, [μ8_selectedText, μ8_selectionRange, μ8_contentState.text, μ8_handleContentChange, readOnly]);
+  }, [µ8_selectedText, µ8_selectionRange, µ8_contentState.text, µ8_handleContentChange, readOnly]);
 
-  // μ8_ Paste Text (Ctrl+V behavior)
-  const μ8_pasteText = useCallback(async () => {
+  // µ8_ Paste Text (Ctrl+V behavior)
+  const µ8_pasteText = useCallback(async () => {
     if (readOnly || !textareaRef.current) return false;
     
     try {
@@ -288,11 +288,11 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
       const end = textarea.selectionEnd;
       
       // Insert clipboard text at cursor position
-      const newText = μ8_contentState.text.substring(0, start) + 
+      const newText = µ8_contentState.text.substring(0, start) + 
                       clipboardText + 
-                      μ8_contentState.text.substring(end);
+                      µ8_contentState.text.substring(end);
       
-      μ8_handleContentChange(newText);
+      µ8_handleContentChange(newText);
       
       // Position cursor after pasted text
       setTimeout(() => {
@@ -301,66 +301,66 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         textarea.focus();
       }, 0);
       
-      console.log('📄 μ8 Text pasted from clipboard:', clipboardText.length, 'characters');
+      console.log('📄 µ8 Text pasted from clipboard:', clipboardText.length, 'characters');
       return true;
     } catch (error) {
-      console.error('❌ μ8 Paste failed:', error);
+      console.error('❌ µ8 Paste failed:', error);
       return false;
     }
-  }, [μ8_contentState.text, μ8_handleContentChange, readOnly]);
+  }, [µ8_contentState.text, µ8_handleContentChange, readOnly]);
 
-  // μ8_ Keyboard Shortcuts Handler
-  const μ8_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  // µ8_ Keyboard Shortcuts Handler
+  const µ8_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.ctrlKey || e.metaKey) {
       switch (e.key) {
         case 'c':
           e.preventDefault();
-          μ8_copySelectedText();
+          µ8_copySelectedText();
           break;
         case 'x':
           e.preventDefault();
-          μ8_cutSelectedText();
+          µ8_cutSelectedText();
           break;
         case 'v':
           e.preventDefault();
-          μ8_pasteText();
+          µ8_pasteText();
           break;
         case 'a':
           e.preventDefault();
           // Select all text
           if (textareaRef.current) {
             textareaRef.current.select();
-            μ8_handleSelection();
+            µ8_handleSelection();
           }
           break;
       }
     }
-  }, [μ8_copySelectedText, μ8_cutSelectedText, μ8_pasteText, μ8_handleSelection]);
+  }, [µ8_copySelectedText, µ8_cutSelectedText, µ8_pasteText, µ8_handleSelection]);
 
-  // μ8_ Universal Event Listeners for Context Menu Actions
+  // µ8_ Universal Event Listeners for Context Menu Actions
   useEffect(() => {
     const handleSelectAll = (e: CustomEvent) => {
       if (e.detail.itemId === udItem.id && textareaRef.current) {
         textareaRef.current.select();
-        μ8_handleSelection();
+        µ8_handleSelection();
       }
     };
 
     const handleCopyText = (e: CustomEvent) => {
       if (e.detail.itemId === udItem.id) {
-        μ8_copySelectedText();
+        µ8_copySelectedText();
       }
     };
 
     const handleCutText = (e: CustomEvent) => {
       if (e.detail.itemId === udItem.id) {
-        μ8_cutSelectedText();
+        µ8_cutSelectedText();
       }
     };
 
     const handlePasteText = (e: CustomEvent) => {
       if (e.detail.itemId === udItem.id) {
-        μ8_pasteText();
+        µ8_pasteText();
       }
     };
 
@@ -377,16 +377,16 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
       document.removeEventListener('universal-cut-text', handleCutText as EventListener);
       document.removeEventListener('universal-paste-text', handlePasteText as EventListener);
     };
-  }, [udItem.id, μ8_handleSelection, μ8_copySelectedText, μ8_cutSelectedText, μ8_pasteText]);
+  }, [udItem.id, µ8_handleSelection, µ8_copySelectedText, µ8_cutSelectedText, µ8_pasteText]);
 
   // Raimunds algebraischer Transistor für Conditional Rendering
-  const μ8_showToolbar = UDFormat.transistor(!readOnly);
-  const μ8_showContextButton = UDFormat.transistor(!!onAddToContext);
-  const μ8_showCopyPaste = UDFormat.transistor(!!μ8_selectedText); // Show copy/paste when text selected
-  const μ8_themeClass = μ8_getBaguaTheme();
+  const µ8_showToolbar = UDFormat.transistor(!readOnly);
+  const µ8_showContextButton = UDFormat.transistor(!!onAddToContext);
+  const µ8_showCopyPaste = UDFormat.transistor(!!µ8_selectedText); // Show copy/paste when text selected
+  const µ8_themeClass = µ8_getBaguaTheme();
 
   // Window Styling basierend auf Bagua Theme
-  const μ8_windowStyle: React.CSSProperties = {
+  const µ8_windowStyle: React.CSSProperties = {
     width: '100%',
     height: '100%',
     minWidth: '250px',
@@ -394,9 +394,9 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white',
-    border: `2px solid ${μ8_isInContext ? '#ef4444' : '#e5e7eb'}`,
+    border: `2px solid ${µ8_isInContext ? '#ef4444' : '#e5e7eb'}`,
     borderRadius: '8px',
-    boxShadow: μ8_isInContext 
+    boxShadow: µ8_isInContext 
       ? '0 4px 20px rgba(239, 68, 68, 0.15)' 
       : '0 4px 12px rgba(0,0,0,0.1)',
     overflow: 'hidden',
@@ -404,11 +404,11 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
   };
 
   return (
-    <div className={`μ8-note-window μ8-theme-${μ8_themeClass}`} style={μ8_windowStyle}>
+    <div className={`µ8-note-window µ8-theme-${µ8_themeClass}`} style={µ8_windowStyle}>
       
-      {/* μ8_ Toolbar - Enhanced V1 + V2 Features */}
-      {μ8_showToolbar === 1 && (
-        <div className="μ8-note-toolbar" style={{
+      {/* µ8_ Toolbar - Enhanced V1 + V2 Features */}
+      {µ8_showToolbar === 1 && (
+        <div className="µ8-note-toolbar" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -419,32 +419,32 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         }}>
           
           {/* Format Buttons (V1 Features) */}
-          <div className="μ8-format-buttons" style={{
+          <div className="µ8-format-buttons" style={{
             display: 'flex',
             gap: '4px'
           }}>
-            <button onClick={() => μ8_formatText('**', '**')} title="Bold" style={toolButtonStyle}>
+            <button onClick={() => µ8_formatText('**', '**')} title="Bold" style={toolButtonStyle}>
               <strong>B</strong>
             </button>
-            <button onClick={() => μ8_formatText('*', '*')} title="Italic" style={toolButtonStyle}>
+            <button onClick={() => µ8_formatText('*', '*')} title="Italic" style={toolButtonStyle}>
               <em>I</em>
             </button>
-            <button onClick={() => μ8_formatText('`', '`')} title="Code" style={toolButtonStyle}>
+            <button onClick={() => µ8_formatText('`', '`')} title="Code" style={toolButtonStyle}>
               &lt;/&gt;
             </button>
-            <button onClick={() => μ8_insertText('# ')} title="Heading" style={toolButtonStyle}>
+            <button onClick={() => µ8_insertText('# ')} title="Heading" style={toolButtonStyle}>
               H1
             </button>
-            <button onClick={() => μ8_insertText('- ')} title="List" style={toolButtonStyle}>
+            <button onClick={() => µ8_insertText('- ')} title="List" style={toolButtonStyle}>
               •
             </button>
-            <button onClick={() => μ8_insertText('> ')} title="Quote" style={toolButtonStyle}>
+            <button onClick={() => µ8_insertText('> ')} title="Quote" style={toolButtonStyle}>
               "
             </button>
           </div>
 
           {/* V2 Enhancements */}
-          <div className="μ8-meta-buttons" style={{
+          <div className="µ8-meta-buttons" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px'
@@ -452,21 +452,21 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
             
             {/* Bagua Display */}
             <span 
-              title={`Bagua: ${udItem.bagua_descriptor} - ${μ8_getBaguaInfo()}`}
+              title={`Bagua: ${udItem.bagua_descriptor} - ${µ8_getBaguaInfo()}`}
               style={{
                 fontSize: '16px',
                 cursor: 'help'
               }}
             >
-              {μ8_getBaguaInfo()}
+              {µ8_getBaguaInfo()}
             </span>
 
             {/* Text Selection Clipboard Buttons */}
-            {μ8_showCopyPaste === 1 && (
+            {µ8_showCopyPaste === 1 && (
               <>
                 <button
-                  onClick={μ8_copySelectedText}
-                  title={`Copy "${μ8_selectedText.substring(0, 20)}${μ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+C)`}
+                  onClick={µ8_copySelectedText}
+                  title={`Copy "${µ8_selectedText.substring(0, 20)}${µ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+C)`}
                   style={{
                     ...toolButtonStyle,
                     backgroundColor: '#10b981',
@@ -478,8 +478,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
                 {!readOnly && (
                   <>
                     <button
-                      onClick={μ8_cutSelectedText}
-                      title={`Cut "${μ8_selectedText.substring(0, 20)}${μ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+X)`}
+                      onClick={µ8_cutSelectedText}
+                      title={`Cut "${µ8_selectedText.substring(0, 20)}${µ8_selectedText.length > 20 ? '...' : ''}" (Ctrl+X)`}
                       style={{
                         ...toolButtonStyle,
                         backgroundColor: '#f59e0b',
@@ -489,7 +489,7 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
                       ✂️
                     </button>
                     <button
-                      onClick={μ8_pasteText}
+                      onClick={µ8_pasteText}
                       title="Paste from clipboard (Ctrl+V)"
                       style={{
                         ...toolButtonStyle,
@@ -505,13 +505,13 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
             )}
 
             {/* Context Button */}
-            {μ8_showContextButton === 1 && (
+            {µ8_showContextButton === 1 && (
               <button
-                onClick={μ8_toggleContext}
-                title={μ8_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
+                onClick={µ8_toggleContext}
+                title={µ8_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
                 style={{
                   ...toolButtonStyle,
-                  backgroundColor: μ8_isInContext ? '#ef4444' : '#6b7280',
+                  backgroundColor: µ8_isInContext ? '#ef4444' : '#6b7280',
                   color: 'white',
                   fontWeight: '600'
                 }}
@@ -522,7 +522,7 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
 
             {/* Clear Button */}
             <button 
-              onClick={μ8_clearContent} 
+              onClick={µ8_clearContent} 
               title="Clear Content"
               style={{
                 ...toolButtonStyle,
@@ -536,19 +536,19 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         </div>
       )}
 
-      {/* μ8_ Content Area */}
-      <div className="μ8-note-content" style={{
+      {/* µ8_ Content Area */}
+      <div className="µ8-note-content" style={{
         flex: 1,
         position: 'relative'
       }}>
         <textarea
           ref={textareaRef}
-          value={μ8_contentState.text}
-          onChange={(e) => μ8_handleContentChange(e.target.value)}
-          onSelect={μ8_handleSelection}
-          onMouseUp={μ8_handleSelection}
-          onKeyUp={μ8_handleSelection}
-          onKeyDown={μ8_handleKeyDown}
+          value={µ8_contentState.text}
+          onChange={(e) => µ8_handleContentChange(e.target.value)}
+          onSelect={µ8_handleSelection}
+          onMouseUp={µ8_handleSelection}
+          onKeyUp={µ8_handleSelection}
+          onKeyDown={µ8_handleKeyDown}
           placeholder={readOnly ? 'No content' : 'Start typing your note...'}
           readOnly={readOnly}
           spellCheck={true}
@@ -567,7 +567,7 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         />
 
         {/* Unsaved Changes Indicator */}
-        {μ8_hasUnsavedChanges && (
+        {µ8_hasUnsavedChanges && (
           <div style={{
             position: 'absolute',
             top: '8px',
@@ -584,8 +584,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         )}
       </div>
 
-      {/* μ8_ Status Bar - Enhanced */}
-      <div className="μ8-note-status" style={{
+      {/* µ8_ Status Bar - Enhanced */}
+      <div className="µ8-note-status" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -597,14 +597,14 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
       }}>
         
         {/* Left: Content Stats */}
-        <div className="μ8-content-stats" style={{
+        <div className="µ8-content-stats" style={{
           display: 'flex',
           gap: '12px'
         }}>
-          <span>{μ8_contentState.wordCount} words</span>
-          <span>{μ8_contentState.charCount} chars</span>
-          <span>{μ8_contentState.lineCount} lines</span>
-          {μ8_selectedText && (
+          <span>{µ8_contentState.wordCount} words</span>
+          <span>{µ8_contentState.charCount} chars</span>
+          <span>{µ8_contentState.lineCount} lines</span>
+          {µ8_selectedText && (
             <span style={{ 
               color: '#10b981', 
               fontWeight: '600',
@@ -613,21 +613,21 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
               borderRadius: '3px',
               border: '1px solid #10b981'
             }}>
-              📋 {μ8_selectedText.length} selected
+              📋 {µ8_selectedText.length} selected
             </span>
           )}
         </div>
 
         {/* Center: UDItem Info */}
-        <div className="μ8-uditem-info" style={{
+        <div className="µ8-uditem-info" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
           fontSize: '11px'
         }}>
           <span title="UDItem ID">{udItem.id.split('_').pop()}</span>
-          <span title="Last Modified">{new Date(μ8_contentState.lastModified).toLocaleTimeString()}</span>
-          {μ8_isInContext && (
+          <span title="Last Modified">{new Date(µ8_contentState.lastModified).toLocaleTimeString()}</span>
+          {µ8_isInContext && (
             <span 
               title="In AI Context" 
               style={{ color: '#ef4444', fontWeight: '600' }}
@@ -638,8 +638,8 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
         </div>
 
         {/* Right: Mode */}
-        <div className="μ8-mode-info">
-          <span className="μ8-mode-badge" style={{
+        <div className="µ8-mode-info">
+          <span className="µ8-mode-badge" style={{
             padding: '2px 6px',
             borderRadius: '4px',
             backgroundColor: readOnly ? '#6b7280' : '#22c55e',
@@ -657,7 +657,7 @@ export const μ8_NoteWindow: React.FC<μ8_NoteWindowProps> = ({
   );
 };
 
-// μ8_ Tool Button Styling
+// µ8_ Tool Button Styling
 const toolButtonStyle: React.CSSProperties = {
   padding: '4px 8px',
   fontSize: '12px',
@@ -668,4 +668,4 @@ const toolButtonStyle: React.CSSProperties = {
   transition: 'all 0.2s ease',
 };
 
-export default μ8_NoteWindow;
+export default µ8_NoteWindow;

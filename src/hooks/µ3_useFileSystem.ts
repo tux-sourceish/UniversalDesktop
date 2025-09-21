@@ -1,5 +1,5 @@
 /**
- * μ3_useFileSystem - WASSER (☵) Procedures/Flow
+ * µ3_useFileSystem - WASSER (☵) Procedures/Flow
  * 
  * Universal File System Abstraction Hook - Tauri-Ready Architecture
  * 
@@ -14,7 +14,7 @@
 
 import { useState, useCallback, useRef, useEffect, useReducer } from 'react';
 import { UDFormat } from '../core/UDFormat';
-import { μ3_FileManagerStateMachine, FileManagerStates, FileManagerEvents } from '../patterns/μX_StateManagement';
+import { µ3_FileManagerStateMachine, FileManagerStates, FileManagerEvents } from '../patterns/µX_StateManagement';
 
 // File System Types
 interface FileSystemItem {
@@ -56,7 +56,7 @@ interface FileSystemState {
   items: FileSystemItem[];
   history: string[];
   historyIndex: number;
-  machine: μ3_FileManagerStateMachine;
+  machine: µ3_FileManagerStateMachine;
   error: string | null;
   capabilities: FileSystemCapabilities;
 }
@@ -78,13 +78,13 @@ const isTauri = () => typeof window !== 'undefined' && '__TAURI__' in window;
 const hasFileSystemAccess = () => 
   typeof window !== 'undefined' && 'showDirectoryPicker' in window;
 
-export const μ3_useFileSystem = (initialPath: string = '/') => {
+export const µ3_useFileSystem = (initialPath: string = '/') => {
   const [state, setState] = useState<FileSystemState>({
     currentPath: initialPath,
     items: [],
     history: [initialPath],
     historyIndex: 0,
-    machine: new μ3_FileManagerStateMachine(),
+    machine: new µ3_FileManagerStateMachine(),
     error: null,
     capabilities: {
       canRead: true,

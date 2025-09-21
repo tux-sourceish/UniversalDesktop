@@ -1,15 +1,15 @@
 /**
- * μ7_ Universal Context Menu System Types
+ * µ7_ Universal Context Menu System Types
  * DONNER (☳) - Events/Interactions
  * 
  * Comprehensive type definitions for the context-aware menu system
- * integrating with μX-Bagua architecture and Tauri-ready abstractions.
+ * integrating with µX-Bagua architecture and Tauri-ready abstractions.
  */
 
 import type { DesktopItemData /* , UDPosition */ } from './index'; // TODO: UDPosition unused here
 
 // Core Context Menu Data Structures
-export interface μ7_ContextMenuData {
+export interface µ7_ContextMenuData {
   visible: boolean;
   position: { x: number; y: number };
   contextType: 'canvas' | 'window' | 'content' | 'file' | 'directory';
@@ -19,7 +19,7 @@ export interface μ7_ContextMenuData {
 }
 
 // Menu Item Definition
-export interface μ7_MenuItem {
+export interface µ7_MenuItem {
   id: string;
   label: string;
   icon: string;
@@ -29,23 +29,23 @@ export interface μ7_MenuItem {
   shortcut?: string;
   tooltip?: string;
   separator?: boolean;
-  submenu?: μ7_MenuItem[];
+  submenu?: µ7_MenuItem[];
   priority?: 'high' | 'medium' | 'low';
   role?: 'create' | 'edit' | 'delete' | 'navigate' | 'ai' | 'transform';
 }
 
 // Menu Section Structure
-export interface μ7_MenuSection {
+export interface µ7_MenuSection {
   id: string;
   title: string;
-  items: μ7_MenuItem[];
+  items: µ7_MenuItem[];
   visible: number; // Algebraic transistor for section visibility
   order: number;
   contextTypes: Array<'canvas' | 'window' | 'content' | 'file' | 'directory'>;
 }
 
 // Context Menu Configuration
-export interface μ7_ContextMenuConfig {
+export interface µ7_ContextMenuConfig {
   enableAnimations: boolean;
   maxWidth: number;
   showIcons: boolean;
@@ -58,20 +58,20 @@ export interface μ7_ContextMenuConfig {
 }
 
 // Context Menu Provider Interface
-export interface μ7_ContextMenuProvider {
+export interface µ7_ContextMenuProvider {
   // Core functionality
-  show: (data: μ7_ContextMenuData) => void;
+  show: (data: µ7_ContextMenuData) => void;
   hide: () => void;
   isVisible: () => boolean;
   
   // Menu management
-  registerSection: (section: μ7_MenuSection) => void;
+  registerSection: (section: µ7_MenuSection) => void;
   unregisterSection: (sectionId: string) => void;
-  updateSection: (sectionId: string, updates: Partial<μ7_MenuSection>) => void;
+  updateSection: (sectionId: string, updates: Partial<µ7_MenuSection>) => void;
   
   // Dynamic menu building
-  buildMenu: (contextType: string, targetItem?: any) => μ7_MenuSection[];
-  addDynamicItem: (contextType: string, item: μ7_MenuItem) => void;
+  buildMenu: (contextType: string, targetItem?: any) => µ7_MenuSection[];
+  addDynamicItem: (contextType: string, item: µ7_MenuItem) => void;
   removeDynamicItem: (contextType: string, itemId: string) => void;
   
   // State management
@@ -108,7 +108,7 @@ export interface FileSystemItem {
 }
 
 // Context-Aware Action System
-export interface μ7_ContextAction {
+export interface µ7_ContextAction {
   id: string;
   type: 'command' | 'workflow' | 'ai-task' | 'transformation';
   handler: (context: any) => Promise<void>;
@@ -122,7 +122,7 @@ export interface μ7_ContextAction {
 }
 
 // Integration with AI System
-export interface μ7_AIContextIntegration {
+export interface µ7_AIContextIntegration {
   addToContext: (item: DesktopItemData | FileSystemItem) => void;
   removeFromContext: (itemId: string) => void;
   isInContext: (itemId: string) => boolean;
@@ -131,19 +131,19 @@ export interface μ7_AIContextIntegration {
 }
 
 // Event System
-export interface μ7_ContextMenuEvents {
+export interface µ7_ContextMenuEvents {
   'menu-show': { position: { x: number; y: number }; contextType: string };
   'menu-hide': { reason: 'click-outside' | 'action' | 'escape' };
-  'item-select': { item: μ7_MenuItem; context: any };
-  'section-register': { section: μ7_MenuSection };
+  'item-select': { item: µ7_MenuItem; context: any };
+  'section-register': { section: µ7_MenuSection };
   'context-change': { oldContext: string; newContext: string };
 }
 
 // Tauri-Ready Abstractions
-export interface μ7_PlatformContextMenu {
+export interface µ7_PlatformContextMenu {
   // Browser implementation uses DOM events and positioning
   // Tauri implementation uses native context menu APIs
-  showNativeMenu?: (items: μ7_MenuItem[], x: number, y: number) => Promise<string | null>;
+  showNativeMenu?: (items: µ7_MenuItem[], x: number, y: number) => Promise<string | null>;
   supportsNativeMenus: boolean;
   platform: 'browser' | 'tauri' | 'electron';
 }

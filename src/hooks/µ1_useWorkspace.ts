@@ -397,13 +397,13 @@ export const µ1_useWorkspace = (userId: string) => {
     return results;
   }, [µ6_importDroppedFile]);
 
-  // μ8_ERDE - Export System with Binary Optimization Strategies
-  const μ1_exportWorkspace = useCallback(async (
+  // µ8_ERDE - Export System with Binary Optimization Strategies
+  const µ1_exportWorkspace = useCallback(async (
     filename: string, 
     strategy: 'standard' | 'traditional' | 'algebraic' = 'standard'
   ): Promise<boolean> => {
     try {
-      // console.log('🏔️ μ1_exportWorkspace starting export:', {
+      // console.log('🏔️ µ1_exportWorkspace starting export:', {
       //   filename,
       //   strategy,
       //   itemCount: udDocument.documentState.items.length
@@ -532,7 +532,7 @@ export const µ1_useWorkspace = (userId: string) => {
         URL.revokeObjectURL(url);
       }, 1000);
 
-      // console.log('✅ μ1_exportWorkspace completed:', {
+      // console.log('✅ µ1_exportWorkspace completed:', {
       //   filename: downloadFilename,
       //   strategy,
       //   ...optimizationInfo,
@@ -542,7 +542,7 @@ export const µ1_useWorkspace = (userId: string) => {
       return true;
 
     } catch (error) {
-      console.error('💥 μ1_exportWorkspace failed:', error);
+      console.error('💥 µ1_exportWorkspace failed:', error);
       return false;
     }
   }, [udDocument]);
@@ -567,7 +567,7 @@ export const µ1_useWorkspace = (userId: string) => {
     µ6_importDroppedFile,
     µ6_importDroppedFiles,
     
-    // μ8_ERDE - Export System with Binary Optimization
-    μ1_exportWorkspace
+    // µ8_ERDE - Export System with Binary Optimization
+    µ1_exportWorkspace
   };
 };

@@ -21,9 +21,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
-          'canvas-module': ['./src/modules/μ8_CanvasModule.tsx'],
-          'panel-module': ['./src/modules/μ2_PanelModule.tsx'],
-          'file-manager-window': ['./src/components/windows/μ2_FileManagerWindow.tsx']
+          'canvas-module': ['./src/modules/µ8_CanvasModule.tsx'],
+          'panel-module': ['./src/modules/µ2_PanelModule.tsx'],
+          'file-manager-window': ['./src/components/windows/µ2_FileManagerWindow.tsx']
         }
       },
       onwarn(warning, warn) {

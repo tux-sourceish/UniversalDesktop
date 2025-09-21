@@ -1,7 +1,7 @@
 /**
- * μX State Management Patterns
+ * µX State Management Patterns
  * 
- * Comprehensive state management architecture for the μX-Bagua system
+ * Comprehensive state management architecture for the µX-Bagua system
  * following Campus-Model principles with specialized hooks for each domain.
  */
 
@@ -9,7 +9,7 @@ import { UDFormat } from '../core/UDFormat';
 import type { /* DesktopItemData, */ UDPosition } from '../types'; // TODO: DesktopItemData unused
 
 // Base State Pattern
-export interface μX_BaseState {
+export interface µX_BaseState {
   id: string;
   baguaType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   version: number;
@@ -22,7 +22,7 @@ export interface μX_BaseState {
 }
 
 // Hook State Isolation Pattern (Campus-Model)
-export interface μX_HookState<T = any> extends μX_BaseState {
+export interface µX_HookState<T = any> extends µX_BaseState {
   data: T;
   status: 'idle' | 'loading' | 'ready' | 'error' | 'updating';
   error?: string;
@@ -38,7 +38,7 @@ export interface μX_HookState<T = any> extends μX_BaseState {
 }
 
 // Cross-Hook Communication Pattern
-export interface μX_HookCommunication {
+export interface µX_HookCommunication {
   // Event emission
   emit: (event: string, data: any, targetHook?: string) => void;
   
@@ -55,7 +55,7 @@ export interface μX_HookCommunication {
 }
 
 // State Synchronization Pattern
-export interface μX_StateSynchronization {
+export interface µX_StateSynchronization {
   // Workspace integration
   persistToWorkspace: (state: any) => Promise<boolean>;
   restoreFromWorkspace: (workspaceId: string) => Promise<any>;
@@ -71,7 +71,7 @@ export interface μX_StateSynchronization {
 }
 
 // Algebraic State Validation
-export class μX_AlgebraicStateValidator {
+export class µX_AlgebraicStateValidator {
   // Using UDFormat.transistor for state validation
   static validateTransition(
     currentState: string, 
@@ -116,7 +116,7 @@ export class μX_AlgebraicStateValidator {
   
   // Validate state consistency across hooks
   static validateHookConsistency(
-    hookStates: Map<string, μX_HookState>
+    hookStates: Map<string, µX_HookState>
   ): { valid: number; inconsistencies: string[] } {
     const inconsistencies: string[] = [];
     
@@ -159,7 +159,7 @@ export class μX_AlgebraicStateValidator {
 }
 
 // Specialized Hook State Patterns
-export interface μ1_TemplateHookState extends μX_HookState {
+export interface µ1_TemplateHookState extends µX_HookState {
   data: {
     templates: Map<string, any>;
     activeTemplate: string | null;
@@ -167,7 +167,7 @@ export interface μ1_TemplateHookState extends μX_HookState {
   };
 }
 
-export interface μ2_ViewHookState extends μX_HookState {
+export interface µ2_ViewHookState extends µX_HookState {
   data: {
     viewMode: 'list' | 'grid' | 'tree' | 'columns';
     sortBy: string;
@@ -178,7 +178,7 @@ export interface μ2_ViewHookState extends μX_HookState {
   };
 }
 
-export interface μ3_FlowHookState extends μX_HookState {
+export interface µ3_FlowHookState extends µX_HookState {
   data: {
     currentFlow: string | null;
     flowHistory: string[];
@@ -187,7 +187,7 @@ export interface μ3_FlowHookState extends μX_HookState {
   };
 }
 
-export interface μ6_FunctionHookState extends μX_HookState {
+export interface µ6_FunctionHookState extends µX_HookState {
   data: {
     activeFunctions: Map<string, any>;
     functionCache: Map<string, any>;
@@ -196,7 +196,7 @@ export interface μ6_FunctionHookState extends μX_HookState {
   };
 }
 
-export interface μ7_EventHookState extends μX_HookState {
+export interface µ7_EventHookState extends µX_HookState {
   data: {
     eventQueue: Array<{ id: string; type: string; data: any; timestamp: Date }>;
     eventHistory: Array<{ id: string; type: string; processed: Date }>;
@@ -206,7 +206,7 @@ export interface μ7_EventHookState extends μX_HookState {
 }
 
 // State Machine Pattern for Complex Hook States
-export interface μX_StateMachine<TState extends string, TEvent extends string> {
+export interface µX_StateMachine<TState extends string, TEvent extends string> {
   currentState: TState;
   states: Record<TState, {
     onEnter?: () => void;
@@ -241,7 +241,7 @@ export type FileManagerEvents =
   | 'error_occurred' 
   | 'error_cleared';
 
-export class μ3_FileManagerStateMachine implements μX_StateMachine<FileManagerStates, FileManagerEvents> {
+export class µ3_FileManagerStateMachine implements µX_StateMachine<FileManagerStates, FileManagerEvents> {
   currentState: FileManagerStates = 'idle';
   
   states: Record<FileManagerStates, any> = {
@@ -337,17 +337,17 @@ export class μ3_FileManagerStateMachine implements μX_StateMachine<FileManager
 }
 
 // Event Architecture Pattern
-export interface μX_EventArchitecture {
+export interface µX_EventArchitecture {
   // Event types following Bagua system
   eventTypes: {
-    μ1_template: 'template.created' | 'template.modified' | 'template.deleted';
-    μ2_view: 'view.changed' | 'view.filtered' | 'view.sorted';
-    μ3_flow: 'flow.started' | 'flow.completed' | 'flow.error';
-    μ4_init: 'init.started' | 'init.completed' | 'init.failed';
-    μ5_property: 'property.changed' | 'property.validated' | 'property.synced';
-    μ6_function: 'function.called' | 'function.completed' | 'function.cached';
-    μ7_event: 'event.fired' | 'event.handled' | 'event.propagated';
-    μ8_global: 'global.state_changed' | 'global.error' | 'global.sync';
+    µ1_template: 'template.created' | 'template.modified' | 'template.deleted';
+    µ2_view: 'view.changed' | 'view.filtered' | 'view.sorted';
+    µ3_flow: 'flow.started' | 'flow.completed' | 'flow.error';
+    µ4_init: 'init.started' | 'init.completed' | 'init.failed';
+    µ5_property: 'property.changed' | 'property.validated' | 'property.synced';
+    µ6_function: 'function.called' | 'function.completed' | 'function.cached';
+    µ7_event: 'event.fired' | 'event.handled' | 'event.propagated';
+    µ8_global: 'global.state_changed' | 'global.error' | 'global.sync';
   };
   
   // Event bus implementation
@@ -386,7 +386,7 @@ export interface μX_EventArchitecture {
 }
 
 // Context Menu State Integration
-export interface μ7_ContextMenuState extends μX_HookState {
+export interface µ7_ContextMenuState extends µX_HookState {
   data: {
     visible: boolean;
     position: { x: number; y: number };
@@ -401,7 +401,7 @@ export interface μ7_ContextMenuState extends μX_HookState {
 }
 
 // File Manager State Integration  
-export interface μ3_FileManagerState extends μX_HookState {
+export interface µ3_FileManagerState extends µX_HookState {
   data: {
     currentPath: string;
     items: any[];
@@ -419,7 +419,7 @@ export interface μ3_FileManagerState extends μX_HookState {
 }
 
 // State Persistence Pattern
-export interface μX_StatePersistence {
+export interface µX_StatePersistence {
   // Workspace integration
   saveToWorkspace: (hookId: string, state: any) => Promise<boolean>;
   loadFromWorkspace: (hookId: string) => Promise<any>;
@@ -438,6 +438,6 @@ export interface μX_StatePersistence {
 }
 
 export default {
-  AlgebraicStateValidator: μX_AlgebraicStateValidator,
-  FileManagerStateMachine: μ3_FileManagerStateMachine
+  AlgebraicStateValidator: µX_AlgebraicStateValidator,
+  FileManagerStateMachine: µ3_FileManagerStateMachine
 };

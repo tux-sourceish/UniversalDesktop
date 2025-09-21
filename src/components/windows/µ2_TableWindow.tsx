@@ -3,9 +3,9 @@ import { UDItem } from '../../core/universalDocument';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ2_TableWindow - WIND (☴) Views/UI - Interactive Data Table
+ * µ2_TableWindow - WIND (☴) Views/UI - Interactive Data Table
  * 
- * Vollständige μX-Bagua Integration mit strukturierten Tabellen-Daten.
+ * Vollständige µX-Bagua Integration mit strukturierten Tabellen-Daten.
  * Enhanced Table Management mit UDItem Content Structure und Transformation History.
  * 
  * Features:
@@ -19,7 +19,7 @@ import { UDFormat } from '../../core/UDFormat';
  * - Bagua-Theme Integration
  */
 
-interface μ2_TableWindowProps {
+interface µ2_TableWindowProps {
   /** Vollständiges UDItem mit allen Bagua-Metadaten */
   udItem: UDItem;
   /** Callback für UDItem Updates mit Transformation Tracking */
@@ -30,7 +30,7 @@ interface μ2_TableWindowProps {
   readOnly?: boolean;
 }
 
-interface μ2_TableData {
+interface µ2_TableData {
   headers: string[];
   rows: (string | number | Date)[][];
   metadata: {
@@ -41,20 +41,20 @@ interface μ2_TableData {
   };
 }
 
-interface μ2_EditingCell {
+interface µ2_EditingCell {
   row: number;
   col: number;
 }
 
-export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
+export const µ2_TableWindow: React.FC<µ2_TableWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
   readOnly = false
 }) => {
 
-  // μ2_ Table State Management (WIND-Pattern: Views/UI Data)
-  const [μ2_tableData, setμ2_TableData] = useState<μ2_TableData>({
+  // µ2_ Table State Management (WIND-Pattern: Views/UI Data)
+  const [µ2_tableData, setµ2_TableData] = useState<µ2_TableData>({
     headers: ['Header 1', 'Header 2', 'Header 3'],
     rows: [['Row 1', 'Data 1', 'Data 2']],
     metadata: {
@@ -65,16 +65,16 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     }
   });
 
-  const [μ2_editingCell, setμ2_EditingCell] = useState<μ2_EditingCell | null>(null);
-  const [μ2_editValue, setμ2_EditValue] = useState('');
-  const [μ2_selectedRow, setμ2_SelectedRow] = useState<number | null>(null);
-  const [μ2_selectedColumn, setμ2_SelectedColumn] = useState<number | null>(null);
-  const [μ2_isInContext, setμ2_IsInContext] = useState(udItem.is_contextual || false);
-  const [μ2_hasUnsavedChanges, setμ2_HasUnsavedChanges] = useState(false);
+  const [µ2_editingCell, setµ2_EditingCell] = useState<µ2_EditingCell | null>(null);
+  const [µ2_editValue, setµ2_EditValue] = useState('');
+  const [µ2_selectedRow, setµ2_SelectedRow] = useState<number | null>(null);
+  const [µ2_selectedColumn, setµ2_SelectedColumn] = useState<number | null>(null);
+  const [µ2_isInContext, setµ2_IsInContext] = useState(udItem.is_contextual || false);
+  const [µ2_hasUnsavedChanges, setµ2_HasUnsavedChanges] = useState(false);
 
-  // μ2_ Initialize Table Data from UDItem
+  // µ2_ Initialize Table Data from UDItem
   useEffect(() => {
-    let tableData: μ2_TableData;
+    let tableData: µ2_TableData;
 
     if (typeof udItem.content === 'object' && udItem.content.headers && udItem.content.rows) {
       // UDItem has structured table data
@@ -103,16 +103,16 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
       };
     } else {
       // Default table structure
-      tableData = μ2_tableData;
+      tableData = µ2_tableData;
     }
 
-    setμ2_TableData(tableData);
-    setμ2_IsInContext(udItem.is_contextual || false);
+    setµ2_TableData(tableData);
+    setµ2_IsInContext(udItem.is_contextual || false);
   }, [udItem]);
 
-  // μ2_ Detect Column Types automatically
-  const _μ2_detectColumnType = useCallback((columnIndex: number): 'text' | 'number' | 'date' => {
-    const columnValues = μ2_tableData.rows.map(row => row[columnIndex]).filter(val => val != null && val !== '');
+  // µ2_ Detect Column Types automatically
+  const _µ2_detectColumnType = useCallback((columnIndex: number): 'text' | 'number' | 'date' => {
+    const columnValues = µ2_tableData.rows.map(row => row[columnIndex]).filter(val => val != null && val !== '');
     
     if (columnValues.length === 0) return 'text';
 
@@ -138,10 +138,10 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     if (numberCount / total > 0.7) return 'number';
     if (dateCount / total > 0.7) return 'date';
     return 'text';
-  }, [μ2_tableData.rows]);
+  }, [µ2_tableData.rows]);
 
-  // μ2_ Save Table Data to UDItem
-  const μ2_saveTableData = useCallback((newTableData: μ2_TableData, description: string) => {
+  // µ2_ Save Table Data to UDItem
+  const µ2_saveTableData = useCallback((newTableData: µ2_TableData, description: string) => {
     const updatedContent = {
       headers: newTableData.headers,
       rows: newTableData.rows,
@@ -160,38 +160,38 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
       updated_at: Date.now()
     }, description);
 
-    setμ2_HasUnsavedChanges(false);
+    setµ2_HasUnsavedChanges(false);
   }, [udItem, onUDItemChange]);
 
-  // μ2_ Cell Click Handler
-  const μ2_handleCellClick = useCallback((row: number, col: number) => {
+  // µ2_ Cell Click Handler
+  const µ2_handleCellClick = useCallback((row: number, col: number) => {
     if (readOnly) return;
     
-    setμ2_EditingCell({ row, col });
-    const cellValue = row === -1 ? μ2_tableData.headers[col] : μ2_tableData.rows[row][col];
-    setμ2_EditValue(String(cellValue || ''));
-  }, [μ2_tableData, readOnly]);
+    setµ2_EditingCell({ row, col });
+    const cellValue = row === -1 ? µ2_tableData.headers[col] : µ2_tableData.rows[row][col];
+    setµ2_EditValue(String(cellValue || ''));
+  }, [µ2_tableData, readOnly]);
 
-  // μ2_ Cell Save Handler
-  const μ2_handleCellSave = useCallback(() => {
-    if (!μ2_editingCell) return;
+  // µ2_ Cell Save Handler
+  const µ2_handleCellSave = useCallback(() => {
+    if (!µ2_editingCell) return;
 
-    const { row, col } = μ2_editingCell;
-    let newTableData = { ...μ2_tableData };
+    const { row, col } = µ2_editingCell;
+    let newTableData = { ...µ2_tableData };
 
     if (row === -1) {
       // Editing header
-      newTableData.headers[col] = μ2_editValue;
+      newTableData.headers[col] = µ2_editValue;
     } else {
       // Editing data cell
-      let processedValue: string | number | Date = μ2_editValue;
+      let processedValue: string | number | Date = µ2_editValue;
       
       // Process value based on detected column type
-      const columnType = μ2_tableData.metadata.columnTypes[col];
-      if (columnType === 'number' && !isNaN(Number(μ2_editValue))) {
-        processedValue = Number(μ2_editValue);
+      const columnType = µ2_tableData.metadata.columnTypes[col];
+      if (columnType === 'number' && !isNaN(Number(µ2_editValue))) {
+        processedValue = Number(µ2_editValue);
       } else if (columnType === 'date') {
-        const dateValue = new Date(μ2_editValue);
+        const dateValue = new Date(µ2_editValue);
         if (!isNaN(dateValue.getTime())) {
           processedValue = dateValue;
         }
@@ -201,109 +201,109 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     }
 
     newTableData.metadata.lastModified = Date.now();
-    setμ2_TableData(newTableData);
-    setμ2_HasUnsavedChanges(true);
+    setµ2_TableData(newTableData);
+    setµ2_HasUnsavedChanges(true);
     
     // Auto-save with 2s debounce
     setTimeout(() => {
-      μ2_saveTableData(newTableData, `Zelle ${row === -1 ? 'Header' : 'Row ' + (row + 1)}:${col + 1} bearbeitet`);
+      µ2_saveTableData(newTableData, `Zelle ${row === -1 ? 'Header' : 'Row ' + (row + 1)}:${col + 1} bearbeitet`);
     }, 2000);
 
-    setμ2_EditingCell(null);
-    setμ2_EditValue('');
-  }, [μ2_editingCell, μ2_editValue, μ2_tableData, μ2_saveTableData]);
+    setµ2_EditingCell(null);
+    setµ2_EditValue('');
+  }, [µ2_editingCell, µ2_editValue, µ2_tableData, µ2_saveTableData]);
 
-  // μ2_ Add Row
-  const μ2_addRow = useCallback(() => {
+  // µ2_ Add Row
+  const µ2_addRow = useCallback(() => {
     if (readOnly) return;
     
-    const newRow = new Array(μ2_tableData.headers.length).fill('');
+    const newRow = new Array(µ2_tableData.headers.length).fill('');
     const newTableData = {
-      ...μ2_tableData,
-      rows: [...μ2_tableData.rows, newRow],
+      ...µ2_tableData,
+      rows: [...µ2_tableData.rows, newRow],
       metadata: {
-        ...μ2_tableData.metadata,
-        totalRows: μ2_tableData.rows.length + 1,
+        ...µ2_tableData.metadata,
+        totalRows: µ2_tableData.rows.length + 1,
         lastModified: Date.now()
       }
     };
     
-    setμ2_TableData(newTableData);
-    μ2_saveTableData(newTableData, `Neue Zeile hinzugefügt (${newTableData.metadata.totalRows} Zeilen gesamt)`);
-  }, [μ2_tableData, μ2_saveTableData, readOnly]);
+    setµ2_TableData(newTableData);
+    µ2_saveTableData(newTableData, `Neue Zeile hinzugefügt (${newTableData.metadata.totalRows} Zeilen gesamt)`);
+  }, [µ2_tableData, µ2_saveTableData, readOnly]);
 
-  // μ2_ Delete Row
-  const μ2_deleteRow = useCallback((rowIndex: number) => {
-    if (readOnly || μ2_tableData.rows.length <= 1) return;
+  // µ2_ Delete Row
+  const µ2_deleteRow = useCallback((rowIndex: number) => {
+    if (readOnly || µ2_tableData.rows.length <= 1) return;
     
     const newTableData = {
-      ...μ2_tableData,
-      rows: μ2_tableData.rows.filter((_, index) => index !== rowIndex),
+      ...µ2_tableData,
+      rows: µ2_tableData.rows.filter((_, index) => index !== rowIndex),
       metadata: {
-        ...μ2_tableData.metadata,
-        totalRows: μ2_tableData.rows.length - 1,
+        ...µ2_tableData.metadata,
+        totalRows: µ2_tableData.rows.length - 1,
         lastModified: Date.now()
       }
     };
     
-    setμ2_TableData(newTableData);
-    setμ2_SelectedRow(null);
-    μ2_saveTableData(newTableData, `Zeile ${rowIndex + 1} gelöscht`);
-  }, [μ2_tableData, μ2_saveTableData, readOnly]);
+    setµ2_TableData(newTableData);
+    setµ2_SelectedRow(null);
+    µ2_saveTableData(newTableData, `Zeile ${rowIndex + 1} gelöscht`);
+  }, [µ2_tableData, µ2_saveTableData, readOnly]);
 
-  // μ2_ Add Column
-  const μ2_addColumn = useCallback(() => {
+  // µ2_ Add Column
+  const µ2_addColumn = useCallback(() => {
     if (readOnly) return;
     
-    const newHeaders = [...μ2_tableData.headers, `Header ${μ2_tableData.headers.length + 1}`];
-    const newRows = μ2_tableData.rows.map(row => [...row, '']);
-    const newColumnTypes = [...μ2_tableData.metadata.columnTypes, 'text' as const] as ('text' | 'number' | 'date')[];
+    const newHeaders = [...µ2_tableData.headers, `Header ${µ2_tableData.headers.length + 1}`];
+    const newRows = µ2_tableData.rows.map(row => [...row, '']);
+    const newColumnTypes = [...µ2_tableData.metadata.columnTypes, 'text' as const] as ('text' | 'number' | 'date')[];
     
     const newTableData = {
       headers: newHeaders,
       rows: newRows,
       metadata: {
-        ...μ2_tableData.metadata,
+        ...µ2_tableData.metadata,
         columnTypes: newColumnTypes,
         totalColumns: newHeaders.length,
         lastModified: Date.now()
       }
     };
     
-    setμ2_TableData(newTableData);
-    μ2_saveTableData(newTableData, `Neue Spalte hinzugefügt (${newTableData.metadata.totalColumns} Spalten gesamt)`);
-  }, [μ2_tableData, μ2_saveTableData, readOnly]);
+    setµ2_TableData(newTableData);
+    µ2_saveTableData(newTableData, `Neue Spalte hinzugefügt (${newTableData.metadata.totalColumns} Spalten gesamt)`);
+  }, [µ2_tableData, µ2_saveTableData, readOnly]);
 
-  // μ2_ Delete Column  
-  const μ2_deleteColumn = useCallback((colIndex: number) => {
-    if (readOnly || μ2_tableData.headers.length <= 1) return;
+  // µ2_ Delete Column  
+  const µ2_deleteColumn = useCallback((colIndex: number) => {
+    if (readOnly || µ2_tableData.headers.length <= 1) return;
     
-    const newHeaders = μ2_tableData.headers.filter((_, index) => index !== colIndex);
-    const newRows = μ2_tableData.rows.map(row => row.filter((_, index) => index !== colIndex));
-    const newColumnTypes = μ2_tableData.metadata.columnTypes.filter((_, index) => index !== colIndex) as ('text' | 'number' | 'date')[];
+    const newHeaders = µ2_tableData.headers.filter((_, index) => index !== colIndex);
+    const newRows = µ2_tableData.rows.map(row => row.filter((_, index) => index !== colIndex));
+    const newColumnTypes = µ2_tableData.metadata.columnTypes.filter((_, index) => index !== colIndex) as ('text' | 'number' | 'date')[];
     
     const newTableData = {
       headers: newHeaders,
       rows: newRows,
       metadata: {
-        ...μ2_tableData.metadata,
+        ...µ2_tableData.metadata,
         columnTypes: newColumnTypes,
         totalColumns: newHeaders.length,
         lastModified: Date.now()
       }
     };
     
-    setμ2_TableData(newTableData);
-    setμ2_SelectedColumn(null);
-    μ2_saveTableData(newTableData, `Spalte ${colIndex + 1} gelöscht`);
-  }, [μ2_tableData, μ2_saveTableData, readOnly]);
+    setµ2_TableData(newTableData);
+    setµ2_SelectedColumn(null);
+    µ2_saveTableData(newTableData, `Spalte ${colIndex + 1} gelöscht`);
+  }, [µ2_tableData, µ2_saveTableData, readOnly]);
 
-  // μ2_ Context Toggle
-  const μ2_toggleContext = useCallback(() => {
+  // µ2_ Context Toggle
+  const µ2_toggleContext = useCallback(() => {
     if (!onAddToContext) return;
 
-    const wasInContext = μ2_isInContext;
-    setμ2_IsInContext(!wasInContext);
+    const wasInContext = µ2_isInContext;
+    setµ2_IsInContext(!wasInContext);
     
     onUDItemChange({
       ...udItem,
@@ -319,13 +319,13 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         is_contextual: true
       });
     }
-  }, [μ2_isInContext, udItem, onUDItemChange, onAddToContext]);
+  }, [µ2_isInContext, udItem, onUDItemChange, onAddToContext]);
 
-  // μ2_ CSV Export
-  const μ2_exportCSV = useCallback(() => {
+  // µ2_ CSV Export
+  const µ2_exportCSV = useCallback(() => {
     const csvContent = [
-      μ2_tableData.headers.join(','),
-      ...μ2_tableData.rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      µ2_tableData.headers.join(','),
+      ...µ2_tableData.rows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
     
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -335,10 +335,10 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     a.download = `table_${udItem.id}_${Date.now()}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [μ2_tableData, udItem.id]);
+  }, [µ2_tableData, udItem.id]);
 
-  // μ2_ Get Bagua Info
-  const μ2_getBaguaInfo = useCallback((): string => {
+  // µ2_ Get Bagua Info
+  const µ2_getBaguaInfo = useCallback((): string => {
     const descriptor = udItem.bagua_descriptor;
     const symbols: string[] = [];
     
@@ -352,25 +352,25 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     if (descriptor & UDFormat.BAGUA.ERDE) symbols.push('☷');
     if (descriptor & UDFormat.BAGUA.TAIJI) symbols.push('☯');
     
-    return symbols.join('') || '☴'; // WIND als Default für μ2
+    return symbols.join('') || '☴'; // WIND als Default für µ2
   }, [udItem.bagua_descriptor]);
 
-  // μ2_ Key Handling
-  const μ2_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  // µ2_ Key Handling
+  const µ2_handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      μ2_handleCellSave();
+      µ2_handleCellSave();
     } else if (e.key === 'Escape') {
-      setμ2_EditingCell(null);
-      setμ2_EditValue('');
+      setµ2_EditingCell(null);
+      setµ2_EditValue('');
     }
-  }, [μ2_handleCellSave]);
+  }, [µ2_handleCellSave]);
 
   // Raimunds algebraischer Transistor
-  const μ2_showToolbar = UDFormat.transistor(!readOnly);
-  const μ2_showContextButton = UDFormat.transistor(!!onAddToContext);
+  const µ2_showToolbar = UDFormat.transistor(!readOnly);
+  const µ2_showContextButton = UDFormat.transistor(!!onAddToContext);
 
-  // μ2_ Window Styling
-  const μ2_windowStyle: React.CSSProperties = {
+  // µ2_ Window Styling
+  const µ2_windowStyle: React.CSSProperties = {
     width: '100%',
     height: '100%',
     minWidth: '300px',
@@ -378,9 +378,9 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white',
-    border: `2px solid ${μ2_isInContext ? '#ef4444' : '#e5e7eb'}`,
+    border: `2px solid ${µ2_isInContext ? '#ef4444' : '#e5e7eb'}`,
     borderRadius: '8px',
-    boxShadow: μ2_isInContext 
+    boxShadow: µ2_isInContext 
       ? '0 4px 20px rgba(239, 68, 68, 0.15)' 
       : '0 4px 12px rgba(0,0,0,0.1)',
     overflow: 'hidden',
@@ -388,11 +388,11 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
   };
 
   return (
-    <div className={`μ2-table-window`} style={μ2_windowStyle}>
+    <div className={`µ2-table-window`} style={µ2_windowStyle}>
       
-      {/* μ2_ Toolbar */}
-      {μ2_showToolbar === 1 && (
-        <div className="μ2-table-toolbar" style={{
+      {/* µ2_ Toolbar */}
+      {µ2_showToolbar === 1 && (
+        <div className="µ2-table-toolbar" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -403,23 +403,23 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         }}>
           
           {/* Left: Table Operations */}
-          <div className="μ2-table-operations" style={{
+          <div className="µ2-table-operations" style={{
             display: 'flex',
             gap: '6px'
           }}>
-            <button onClick={μ2_addRow} title="Add Row" style={toolButtonStyle}>
+            <button onClick={µ2_addRow} title="Add Row" style={toolButtonStyle}>
               ➕ Row
             </button>
-            <button onClick={μ2_addColumn} title="Add Column" style={toolButtonStyle}>
+            <button onClick={µ2_addColumn} title="Add Column" style={toolButtonStyle}>
               ➕ Col
             </button>
-            <button onClick={μ2_exportCSV} title="Export CSV" style={toolButtonStyle}>
+            <button onClick={µ2_exportCSV} title="Export CSV" style={toolButtonStyle}>
               📊 CSV
             </button>
           </div>
 
           {/* Right: Meta Actions */}
-          <div className="μ2-meta-actions" style={{
+          <div className="µ2-meta-actions" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px'
@@ -427,23 +427,23 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
             
             {/* Bagua Display */}
             <span 
-              title={`Bagua: ${udItem.bagua_descriptor} - ${μ2_getBaguaInfo()}`}
+              title={`Bagua: ${udItem.bagua_descriptor} - ${µ2_getBaguaInfo()}`}
               style={{
                 fontSize: '16px',
                 cursor: 'help'
               }}
             >
-              {μ2_getBaguaInfo()}
+              {µ2_getBaguaInfo()}
             </span>
 
             {/* Context Button */}
-            {μ2_showContextButton === 1 && (
+            {µ2_showContextButton === 1 && (
               <button
-                onClick={μ2_toggleContext}
-                title={μ2_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
+                onClick={µ2_toggleContext}
+                title={µ2_isInContext ? 'Aus AI-Context entfernen' : 'Zum AI-Context hinzufügen'}
                 style={{
                   ...toolButtonStyle,
-                  backgroundColor: μ2_isInContext ? '#ef4444' : '#6b7280',
+                  backgroundColor: µ2_isInContext ? '#ef4444' : '#6b7280',
                   color: 'white',
                   fontWeight: '600'
                 }}
@@ -456,13 +456,13 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         </div>
       )}
 
-      {/* μ2_ Table Container */}
-      <div className="μ2-table-container" style={{
+      {/* µ2_ Table Container */}
+      <div className="µ2-table-container" style={{
         flex: 1,
         overflow: 'auto',
         position: 'relative'
       }}>
-        <table className="μ2-interactive-table" style={{
+        <table className="µ2-interactive-table" style={{
           width: '100%',
           borderCollapse: 'collapse',
           fontSize: '14px'
@@ -483,26 +483,26 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
                   #
                 </th>
               )}
-              {μ2_tableData.headers.map((header, colIndex) => (
+              {µ2_tableData.headers.map((header, colIndex) => (
                 <th 
                   key={colIndex}
-                  onClick={() => setμ2_SelectedColumn(colIndex)}
+                  onClick={() => setµ2_SelectedColumn(colIndex)}
                   style={{
                     padding: '8px',
                     border: '1px solid #e5e7eb',
-                    backgroundColor: μ2_selectedColumn === colIndex ? '#ddd6fe' : '#f9fafb',
+                    backgroundColor: µ2_selectedColumn === colIndex ? '#ddd6fe' : '#f9fafb',
                     cursor: readOnly ? 'default' : 'pointer',
                     position: 'relative',
                     fontWeight: '600'
                   }}
                 >
-                  {μ2_editingCell?.row === -1 && μ2_editingCell?.col === colIndex ? (
+                  {µ2_editingCell?.row === -1 && µ2_editingCell?.col === colIndex ? (
                     <input
                       type="text"
-                      value={μ2_editValue}
-                      onChange={(e) => setμ2_EditValue(e.target.value)}
-                      onBlur={μ2_handleCellSave}
-                      onKeyDown={μ2_handleKeyDown}
+                      value={µ2_editValue}
+                      onChange={(e) => setµ2_EditValue(e.target.value)}
+                      onBlur={µ2_handleCellSave}
+                      onKeyDown={µ2_handleKeyDown}
                       autoFocus
                       style={{
                         width: '100%',
@@ -514,7 +514,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
                     />
                   ) : (
                     <div 
-                      onClick={() => μ2_handleCellClick(-1, colIndex)}
+                      onClick={() => µ2_handleCellClick(-1, colIndex)}
                       style={{ cursor: readOnly ? 'default' : 'text' }}
                     >
                       {header}
@@ -529,16 +529,16 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
                     fontSize: '10px',
                     color: '#9ca3af'
                   }}>
-                    {μ2_tableData.metadata.columnTypes[colIndex] === 'number' ? '123' :
-                     μ2_tableData.metadata.columnTypes[colIndex] === 'date' ? '📅' : 'Aa'}
+                    {µ2_tableData.metadata.columnTypes[colIndex] === 'number' ? '123' :
+                     µ2_tableData.metadata.columnTypes[colIndex] === 'date' ? '📅' : 'Aa'}
                   </div>
 
                   {/* Delete Column Button */}
-                  {!readOnly && μ2_selectedColumn === colIndex && μ2_tableData.headers.length > 1 && (
+                  {!readOnly && µ2_selectedColumn === colIndex && µ2_tableData.headers.length > 1 && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        μ2_deleteColumn(colIndex);
+                        µ2_deleteColumn(colIndex);
                       }}
                       style={{
                         position: 'absolute',
@@ -568,12 +568,12 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
 
           {/* Table Body */}
           <tbody>
-            {μ2_tableData.rows.map((row, rowIndex) => (
+            {µ2_tableData.rows.map((row, rowIndex) => (
               <tr 
                 key={rowIndex}
-                onClick={() => setμ2_SelectedRow(rowIndex)}
+                onClick={() => setµ2_SelectedRow(rowIndex)}
                 style={{
-                  backgroundColor: μ2_selectedRow === rowIndex ? '#fef3c7' : 'white',
+                  backgroundColor: µ2_selectedRow === rowIndex ? '#fef3c7' : 'white',
                   cursor: readOnly ? 'default' : 'pointer'
                 }}
               >
@@ -591,11 +591,11 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
                     <div>{rowIndex + 1}</div>
                     
                     {/* Delete Row Button */}
-                    {μ2_selectedRow === rowIndex && μ2_tableData.rows.length > 1 && (
+                    {µ2_selectedRow === rowIndex && µ2_tableData.rows.length > 1 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          μ2_deleteRow(rowIndex);
+                          µ2_deleteRow(rowIndex);
                         }}
                         style={{
                           position: 'absolute',
@@ -622,23 +622,23 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
                 {row.map((cell, colIndex) => (
                   <td 
                     key={colIndex}
-                    onClick={() => μ2_handleCellClick(rowIndex, colIndex)}
+                    onClick={() => µ2_handleCellClick(rowIndex, colIndex)}
                     style={{
                       padding: '8px',
                       border: '1px solid #e5e7eb',
                       cursor: readOnly ? 'default' : 'text',
                       backgroundColor: 
-                        μ2_editingCell?.row === rowIndex && μ2_editingCell?.col === colIndex 
+                        µ2_editingCell?.row === rowIndex && µ2_editingCell?.col === colIndex 
                           ? '#fef3c7' : 'transparent'
                     }}
                   >
-                    {μ2_editingCell?.row === rowIndex && μ2_editingCell?.col === colIndex ? (
+                    {µ2_editingCell?.row === rowIndex && µ2_editingCell?.col === colIndex ? (
                       <input
                         type="text"
-                        value={μ2_editValue}
-                        onChange={(e) => setμ2_EditValue(e.target.value)}
-                        onBlur={μ2_handleCellSave}
-                        onKeyDown={μ2_handleKeyDown}
+                        value={µ2_editValue}
+                        onChange={(e) => setµ2_EditValue(e.target.value)}
+                        onBlur={µ2_handleCellSave}
+                        onKeyDown={µ2_handleKeyDown}
                         autoFocus
                         style={{
                           width: '100%',
@@ -660,7 +660,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         </table>
 
         {/* Unsaved Changes Indicator */}
-        {μ2_hasUnsavedChanges && (
+        {µ2_hasUnsavedChanges && (
           <div style={{
             position: 'absolute',
             top: '8px',
@@ -677,8 +677,8 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         )}
       </div>
 
-      {/* μ2_ Status Bar */}
-      <div className="μ2-table-status" style={{
+      {/* µ2_ Status Bar */}
+      <div className="µ2-table-status" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -690,25 +690,25 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
       }}>
         
         {/* Left: Table Stats */}
-        <div className="μ2-table-stats" style={{
+        <div className="µ2-table-stats" style={{
           display: 'flex',
           gap: '12px'
         }}>
-          <span>{μ2_tableData.metadata.totalRows} rows</span>
-          <span>{μ2_tableData.metadata.totalColumns} columns</span>
-          <span>{μ2_tableData.rows.reduce((acc, row) => acc + row.filter(cell => cell !== '').length, 0)} cells</span>
+          <span>{µ2_tableData.metadata.totalRows} rows</span>
+          <span>{µ2_tableData.metadata.totalColumns} columns</span>
+          <span>{µ2_tableData.rows.reduce((acc, row) => acc + row.filter(cell => cell !== '').length, 0)} cells</span>
         </div>
 
         {/* Center: UDItem Info */}
-        <div className="μ2-uditem-info" style={{
+        <div className="µ2-uditem-info" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
           fontSize: '11px'
         }}>
           <span title="UDItem ID">{udItem.id.split('_').pop()}</span>
-          <span title="Last Modified">{new Date(μ2_tableData.metadata.lastModified).toLocaleTimeString()}</span>
-          {μ2_isInContext && (
+          <span title="Last Modified">{new Date(µ2_tableData.metadata.lastModified).toLocaleTimeString()}</span>
+          {µ2_isInContext && (
             <span 
               title="In AI Context" 
               style={{ color: '#ef4444', fontWeight: '600' }}
@@ -719,7 +719,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
         </div>
 
         {/* Right: Mode */}
-        <div className="μ2-mode-info">
+        <div className="µ2-mode-info">
           <span style={{
             padding: '2px 6px',
             borderRadius: '4px',
@@ -738,7 +738,7 @@ export const μ2_TableWindow: React.FC<μ2_TableWindowProps> = ({
   );
 };
 
-// μ2_ Tool Button Styling
+// µ2_ Tool Button Styling
 const toolButtonStyle: React.CSSProperties = {
   padding: '4px 8px',
   fontSize: '12px',
@@ -749,4 +749,4 @@ const toolButtonStyle: React.CSSProperties = {
   transition: 'all 0.2s ease'
 };
 
-export default μ2_TableWindow;
+export default µ2_TableWindow;

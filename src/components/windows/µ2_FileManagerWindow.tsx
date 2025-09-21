@@ -1,23 +1,23 @@
 import React from 'react';
 import { UDItem } from '../../core/universalDocument';
-import { μ2_FileManager } from '../μ2_FileManager';
+import { µ2_FileManager } from '../µ2_FileManager';
 
 /**
- * μ2_FileManagerWindow - WIND (☴) Views/UI
+ * µ2_FileManagerWindow - WIND (☴) Views/UI
  * 
  * Proper UniversalDesktop window component for File Manager.
- * Integrates μ2_FileManager with the UniversalDesktop window system,
+ * Integrates µ2_FileManager with the UniversalDesktop window system,
  * providing proper UDItem integration, window controls, and persistence.
  * 
  * Features:
  * - Full UDItem integration for persistence
- * - Window title bar with controls (handled by μ8_DesktopItem)
+ * - Window title bar with controls (handled by µ8_DesktopItem)
  * - Proper content rendering within window boundaries
- * - Drag/drop positioning support via μ8_DesktopItem
+ * - Drag/drop positioning support via µ8_DesktopItem
  * - State synchronization with UDItem content
  */
 
-interface μ2_FileManagerWindowProps {
+interface µ2_FileManagerWindowProps {
   /** Complete UDItem with all Bagua metadata */
   udItem: UDItem;
   /** Callback for UDItem updates with transformation tracking */
@@ -28,7 +28,7 @@ interface μ2_FileManagerWindowProps {
   readOnly?: boolean;
 }
 
-export const μ2_FileManagerWindow: React.FC<μ2_FileManagerWindowProps> = ({
+export const µ2_FileManagerWindow: React.FC<µ2_FileManagerWindowProps> = ({
   udItem,
   onUDItemChange,
   onAddToContext,
@@ -86,7 +86,7 @@ export const μ2_FileManagerWindow: React.FC<μ2_FileManagerWindowProps> = ({
         overflow: 'hidden'
       }}
     >
-      <μ2_FileManager
+      <µ2_FileManager
         initialPath={fileManagerConfig.initialPath || '/home/user'}
         mode={fileManagerConfig.mode || 'gui'}
         onFileOpen={handleFileOpen}
@@ -98,7 +98,7 @@ export const μ2_FileManagerWindow: React.FC<μ2_FileManagerWindowProps> = ({
         style={{
           width: '100%',
           height: '100%',
-          border: 'none', // Remove border since μ8_DesktopItem handles window styling
+          border: 'none', // Remove border since µ8_DesktopItem handles window styling
           borderRadius: '0'
         }}
       />
@@ -106,4 +106,4 @@ export const μ2_FileManagerWindow: React.FC<μ2_FileManagerWindowProps> = ({
   );
 };
 
-export default μ2_FileManagerWindow;
+export default µ2_FileManagerWindow;

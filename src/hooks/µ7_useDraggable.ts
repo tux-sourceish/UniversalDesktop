@@ -21,7 +21,7 @@ interface DraggableItem {
   height?: number;
 }
 
-export const μ7_useDraggable = (
+export const µ7_useDraggable = (
   id: string, 
   onUpdate: (id: string, updates: Partial<DraggableItem>) => void,
   canvasState: CanvasState

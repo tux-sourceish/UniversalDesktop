@@ -1,5 +1,5 @@
 /**
- * μ1_AgentPersonas - HIMMEL (☰) - Schablonen/Vorlagen
+ * µ1_AgentPersonas - HIMMEL (☰) - Schablonen/Vorlagen
  * 
  * Definiert die finalen, unmissverständlichen Identitäten für die KI-Agenten des UniversalDesktop.
  * Diese Personas sind die "Seele" des Systems, jede eine Manifestation von Raimund Welschs Vision.
@@ -16,10 +16,10 @@ export interface AgentPersona {
 export const AGENT_PERSONAS: Record<'reasoner' | 'coder' | 'refiner' | 'guardian', AgentPersona> = {
   reasoner: {
     role: "Meister-Planer (Master Planner) des UniversalDesktop",
-    context: "Du bist der Architekt der Vision, ein Experte für das algebraische Betriebssystem. Du siehst das große Ganze und denkst in reinen, philosophischen Strukturen des μX-Bagua-Systems und des Campus-Modells.",
+    context: "Du bist der Architekt der Vision, ein Experte für das algebraische Betriebssystem. Du siehst das große Ganze und denkst in reinen, philosophischen Strukturen des µX-Bagua-Systems und des Campus-Modells.",
     task: "Erstelle die übergeordneten Baupläne. Analysiere Anfragen auf ihre philosophische Kompatibilität. Zerlege komplexe Vorhaben in elegante, logische und ausführbare Phasen. Deine Pläne sind die heiligen Schriften für den Coder.",
     constraints: [
-      "Respektiere das μX-Bagua-System als unveränderliches Gesetz.",
+      "Respektiere das µX-Bagua-System als unveränderliches Gesetz.",
       "Denke in harmonischen Polaritäten (1↔8, 2↔7, 3↔6, 4↔5).",
       "Bevorzuge algebraische Eleganz über alles. Jede Lösung muss die Schönheit der Mathematik widerspiegeln.",
       "Antworte NIEMALS mit Code. Deine Artefakte sind Pläne, Diagramme und philosophische Begründungen."
@@ -31,7 +31,7 @@ export const AGENT_PERSONAS: Record<'reasoner' | 'coder' | 'refiner' | 'guardian
     context: "Du bist ein TypeScript-Artisan. Du sprichst fließend die Sprache des UniversalDesktop und setzt die Pläne des Reasoners mit höchster Präzision und Ästhetik um.",
     task: "Schreibe makellosen, performanten und philosophisch reinen TypeScript-Code. Jede Zeile, die du schreibst, ist eine Manifestation der Systemvision. Du bist der Schöpfer der funktionalen Realität.",
     constraints: [
-      "JEDE Funktion, Komponente und Variable MUSS einen μX-Bagua-Präfix tragen.",
+      "JEDE Funktion, Komponente und Variable MUSS einen µX-Bagua-Präfix tragen.",
       "Verwende AUSSCHLIESSLICH algebraische Transistoren. `if-else` ist Ketzerei.",
       "Folge dem Campus-Modell mit religiöser Hingabe: Ein Hook = Eine Aufgabe.",
       "Dein Code muss nicht nur funktionieren, er muss schön sein.",
@@ -67,7 +67,7 @@ export const AGENT_PERSONAS: Record<'reasoner' | 'coder' | 'refiner' | 'guardian
   }
 };
 
-export function μ1_generateAgentPrompt(
+export function µ1_generateAgentPrompt(
   agentKey: keyof typeof AGENT_PERSONAS,
   prompt: string,
   context: string,
@@ -89,12 +89,12 @@ export function μ1_generateAgentPrompt(
   return `${personaHeader}\n\n${personaContext}\n\n${personaTask}\n\n${personaConstraints}\n\n${outputInstruction}\n\n**USER PROMPT:**\n${prompt}\n\n**ZUSÄTZLICHER KONTEXT:**\n${context}\n${mcpContext}${signature}`;
 }
 
-export function μ1_validateAgentResponse(response: string, agentKey: keyof typeof AGENT_PERSONAS): { valid: boolean; issues: string[] } {
+export function µ1_validateAgentResponse(response: string, agentKey: keyof typeof AGENT_PERSONAS): { valid: boolean; issues: string[] } {
   const issues: string[] = [];
   const persona = AGENT_PERSONAS[agentKey];
 
-  if (agentKey === 'coder' && !response.includes('μ')) {
-    issues.push('Der Code enthält keine μX-Bagua-Präfixe. Dies ist ein Verstoß gegen die Handwerksregeln.');
+  if (agentKey === 'coder' && !response.includes('µ')) {
+    issues.push('Der Code enthält keine µX-Bagua-Präfixe. Dies ist ein Verstoß gegen die Handwerksregeln.');
   }
   if (response.toLowerCase().includes('if')) {
     issues.push('Eine if-else-Struktur wurde erkannt. Dies ist Ketzerei. Nur algebraische Transistoren sind erlaubt.');

@@ -1,5 +1,5 @@
 /**
- * μ3_ File Manager System Types
+ * µ3_ File Manager System Types
  * WASSER (☵) - Procedures/Workflows  
  * 
  * Comprehensive type definitions for the dual-mode File Manager
@@ -50,7 +50,7 @@ export interface FileSystemItem {
 }
 
 // File Manager State
-export interface μ3_FileManagerState {
+export interface µ3_FileManagerState {
   // Navigation
   currentPath: string;
   history: NavigationHistoryEntry[];
@@ -167,7 +167,7 @@ export interface TUIPanel {
 }
 
 // File System API Abstraction (Tauri-Ready)
-export interface μ3_FileSystemAPI {
+export interface µ3_FileSystemAPI {
   // Core Operations
   listDirectory: (path: string, showHidden?: boolean) => Promise<FileSystemItem[]>;
   createDirectory: (path: string) => Promise<boolean>;
@@ -242,7 +242,7 @@ export interface SaveDialogOptions {
 }
 
 // File Manager Component Props
-export interface μ3_FileManagerProps {
+export interface µ3_FileManagerProps {
   initialPath?: string;
   mode?: 'gui' | 'tui' | 'dual';
   readOnly?: boolean;
@@ -261,8 +261,8 @@ export interface μ3_FileManagerProps {
   onError?: (error: string) => void;
   
   // Integration
-  contextMenuProvider?: any; // μ7_ContextMenuProvider
-  aiContextManager?: any; // μ6_useContextManager
+  contextMenuProvider?: any; // µ7_ContextMenuProvider
+  aiContextManager?: any; // µ6_useContextManager
   
   // Styling
   theme?: 'light' | 'dark' | 'auto';

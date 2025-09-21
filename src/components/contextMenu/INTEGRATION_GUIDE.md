@@ -25,7 +25,7 @@ Actions can provide previews of what will happen when executed.
 ### Basic Integration
 
 ```tsx
-import { μ7_UniversalContextMenu, useUniversalContextMenu } from './contextMenu/μ7_UniversalContextMenu';
+import { µ7_UniversalContextMenu, useUniversalContextMenu } from './contextMenu/µ7_UniversalContextMenu';
 
 const MyComponent = () => {
   const { contextMenu, showContextMenu, hideContextMenu } = useUniversalContextMenu();
@@ -39,7 +39,7 @@ const MyComponent = () => {
     <div onContextMenu={(e) => handleContextMenu(e, myElement)}>
       {/* Your component content */}
       
-      <μ7_UniversalContextMenu
+      <µ7_UniversalContextMenu
         element={contextMenu.element}
         visible={contextMenu.visible}
         x={contextMenu.x}

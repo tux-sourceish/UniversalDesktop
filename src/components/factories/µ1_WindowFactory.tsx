@@ -2,36 +2,36 @@ import React from 'react';
 import { UDItem, UniversalDocument } from '../../core/universalDocument';
 import { UDFormat } from '../../core/UDFormat';
 
-// Import our μX-Bagua Window Components
-import { μ8_NoteWindow } from '../windows/μ8_NoteWindow';
-import { μ2_TuiWindow } from '../windows/μ2_TuiWindow';
-import { μ2_TableWindow } from '../windows/μ2_TableWindow';
-import { μ2_FileManagerWindow } from '../windows/μ2_FileManagerWindow';
-import { μ2_CodeWindow } from '../windows/μ2_CodeWindow';
+// Import our µX-Bagua Window Components
+import { µ8_NoteWindow } from '../windows/µ8_NoteWindow';
+import { µ2_TuiWindow } from '../windows/µ2_TuiWindow';
+import { µ2_TableWindow } from '../windows/µ2_TableWindow';
+import { µ2_FileManagerWindow } from '../windows/µ2_FileManagerWindow';
+import { µ2_CodeWindow } from '../windows/µ2_CodeWindow';
 
 /**
- * μ1_WindowFactory - HIMMEL (☰) Classes/Templates
+ * µ1_WindowFactory - HIMMEL (☰) Classes/Templates
  * 
  * THE UNITY BRIDGE - Raimunds algebraischer Universalisierer
  * 
  * Diese Factory UNIFIZIERT:
- * - Menschliche Tool-Creation (μ2_ToolPanel)
- * - KI-basierte Item-Creation (μ2_AIPanel)  
+ * - Menschliche Tool-Creation (µ2_ToolPanel)
+ * - KI-basierte Item-Creation (µ2_AIPanel)  
  * - Legacy V1 Window Types
- * - Neue μX-Bagua Window Components
+ * - Neue µX-Bagua Window Components
  * 
  * "Ein System, alle Wege, eine Wahrheit" - Raimund Welsch
  * 
  * Features:
- * - Type Mapping: 'notizzettel' → μ8_NoteWindow
+ * - Type Mapping: 'notizzettel' → µ8_NoteWindow
  * - UDItem Integration: Erstellt vollständige UDItems mit Bagua Descriptors
  * - Origin Tracking: Mensch vs KI Erstellung wird dokumentiert
  * - Algebraische Transistor Logik für Component Selection
  * - Backward Compatibility mit V1 Types
  */
 
-// μ1_ Window Type Registry (HIMMEL-Pattern: Template Definitions)
-export interface μ1_WindowTypeConfig {
+// µ1_ Window Type Registry (HIMMEL-Pattern: Template Definitions)
+export interface µ1_WindowTypeConfig {
   id: string;
   displayName: string;
   component: React.ComponentType<any>;
@@ -44,12 +44,12 @@ export interface μ1_WindowTypeConfig {
   category: 'text' | 'data' | 'code' | 'media' | 'system';
 }
 
-export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
-  // Text-based Windows (μ8 ERDE - Base Content)
+export const µ1_WINDOW_REGISTRY: Record<string, µ1_WindowTypeConfig> = {
+  // Text-based Windows (µ8 ERDE - Base Content)
   'notizzettel': {
     id: 'notizzettel',
     displayName: 'Notizzettel',
-    component: μ8_NoteWindow,
+    component: µ8_NoteWindow,
     defaultBagua: UDFormat.BAGUA.ERDE | UDFormat.BAGUA.WIND, // Base + UI
     itemType: UniversalDocument.ItemType.VARIABLE,
     defaultDimensions: { width: 400, height: 300 },
@@ -62,11 +62,11 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     category: 'text'
   },
   
-  // Terminal/TUI Windows (μ2 WIND - Views/UI)
+  // Terminal/TUI Windows (µ2 WIND - Views/UI)
   'terminal': {
     id: 'terminal',
     displayName: 'Terminal',
-    component: μ2_TuiWindow,
+    component: µ2_TuiWindow,
     defaultBagua: UDFormat.BAGUA.WIND | UDFormat.BAGUA.DONNER, // UI + Events
     itemType: UniversalDocument.ItemType.EREIGNIS,
     defaultDimensions: { width: 600, height: 400 },
@@ -88,7 +88,7 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
   'tui': {
     id: 'tui',
     displayName: 'TUI Interface',
-    component: μ2_TuiWindow,
+    component: µ2_TuiWindow,
     defaultBagua: UDFormat.BAGUA.WIND | UDFormat.BAGUA.FEUER, // UI + Functions  
     itemType: UniversalDocument.ItemType.FUNKTION,
     defaultDimensions: { width: 800, height: 500 },
@@ -107,11 +107,11 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     category: 'system'
   },
   
-  // Table/Data Windows (μ2 WIND - Views/UI) 
+  // Table/Data Windows (µ2 WIND - Views/UI) 
   'tabelle': {
     id: 'tabelle',
     displayName: 'Tabelle',
-    component: μ2_TableWindow,
+    component: µ2_TableWindow,
     defaultBagua: UDFormat.BAGUA.WIND | UDFormat.BAGUA.SEE, // UI + Properties
     itemType: UniversalDocument.ItemType.TABELLE,
     defaultDimensions: { width: 600, height: 400 },
@@ -127,17 +127,17 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     category: 'data'
   },
   
-  // Code Windows (μ2 WIND - Views/UI with μ1 HIMMEL + μ6 FEUER)
+  // Code Windows (µ2 WIND - Views/UI with µ1 HIMMEL + µ6 FEUER)
   'code': {
     id: 'code',
     displayName: 'Code Editor',  
-    component: μ2_CodeWindow, // NEW: Dedicated Code Editor with syntax highlighting
+    component: µ2_CodeWindow, // NEW: Dedicated Code Editor with syntax highlighting
     defaultBagua: UDFormat.BAGUA.HIMMEL | UDFormat.BAGUA.FEUER, // Templates + Functions
     itemType: UniversalDocument.ItemType.KONSTRUKTOR,
     defaultDimensions: { width: 750, height: 550 }, // Slightly larger for line numbers
     createDefaultContent: (options = {}) => ({
-      text: options.code || options.text || '// Neuer Code\nfunction μ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
-      code: options.code || options.text || '// Neuer Code\nfunction μ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
+      text: options.code || options.text || '// Neuer Code\nfunction µ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
+      code: options.code || options.text || '// Neuer Code\nfunction µ1_create() {\n  // Raimunds Campus-Model Magic!\n  return "UniversalDesktop v2.1";\n}',
       language: options.language || 'typescript',
       autoFormat: options.autoFormat !== false,
       ...options
@@ -147,11 +147,11 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
     category: 'code'
   },
   
-  // File Manager Windows (μ3 WASSER - Flow/Procedures)
+  // File Manager Windows (µ3 WASSER - Flow/Procedures)
   'filemanager': {
     id: 'filemanager',
     displayName: 'File Manager',
-    component: μ2_FileManagerWindow,
+    component: µ2_FileManagerWindow,
     defaultBagua: UDFormat.BAGUA.WASSER | UDFormat.BAGUA.WIND, // Flow + UI
     itemType: UniversalDocument.ItemType.FLUSS,
     defaultDimensions: { width: 800, height: 600 },
@@ -169,10 +169,10 @@ export const μ1_WINDOW_REGISTRY: Record<string, μ1_WindowTypeConfig> = {
   }
 };
 
-// μ1_ Creation Origin Types
-export type μ1_CreationOrigin = 'human-tool' | 'ai-reasoner' | 'ai-coder' | 'ai-refiner' | 'ai-multi' | 'system';
+// µ1_ Creation Origin Types
+export type µ1_CreationOrigin = 'human-tool' | 'ai-reasoner' | 'ai-coder' | 'ai-refiner' | 'ai-multi' | 'system';
 
-export interface μ1_WindowCreationRequest {
+export interface µ1_WindowCreationRequest {
   /** Window type key from registry */
   type: string;
   /** 3D position for placement */
@@ -180,7 +180,7 @@ export interface μ1_WindowCreationRequest {
   /** Optional content overrides */
   content?: any;
   /** Creation origin for tracking */
-  origin: μ1_CreationOrigin;
+  origin: µ1_CreationOrigin;
   /** Optional title override */
   title?: string;
   /** Optional bagua descriptor override */
@@ -193,27 +193,27 @@ export interface μ1_WindowCreationRequest {
   metadata?: any;
 }
 
-export interface μ1_RenderedWindow {
+export interface µ1_RenderedWindow {
   udItem: UDItem;
   component: React.ReactElement;
-  typeConfig: μ1_WindowTypeConfig;
+  typeConfig: µ1_WindowTypeConfig;
 }
 
 /**
- * μ1_WindowFactory - The Universal Window Creator
+ * µ1_WindowFactory - The Universal Window Creator
  */
-export class μ1_WindowFactory {
+export class µ1_WindowFactory {
   
-  // μ1_ Static Registry Access
-  static getWindowTypes(): μ1_WindowTypeConfig[] {
-    return Object.values(μ1_WINDOW_REGISTRY);
+  // µ1_ Static Registry Access
+  static getWindowTypes(): µ1_WindowTypeConfig[] {
+    return Object.values(µ1_WINDOW_REGISTRY);
   }
   
-  static getWindowType(type: string): μ1_WindowTypeConfig | null {
-    return μ1_WINDOW_REGISTRY[type] || null;
+  static getWindowType(type: string): µ1_WindowTypeConfig | null {
+    return µ1_WINDOW_REGISTRY[type] || null;
   }
   
-  // μ1_ Algebraic Type Detection (Raimunds Transistor Magic)
+  // µ1_ Algebraic Type Detection (Raimunds Transistor Magic)
   static detectOptimalType(content: any, agents: string[] = []): string {
     // Raimund's algebraic transistor for type detection
     const hasCode = typeof content === 'object' && (content.code || (typeof content.text === 'string' && content.text.includes('function')));
@@ -239,18 +239,18 @@ export class μ1_WindowFactory {
     return 'notizzettel';
   }
   
-  // μ1_ Create UDItem from Request (with optional smart positioning)
+  // µ1_ Create UDItem from Request (with optional smart positioning)
   static createUDItem(
-    request: μ1_WindowCreationRequest, 
+    request: µ1_WindowCreationRequest, 
     positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number }
   ): UDItem {
-    console.log('🏭 μ1_WindowFactory.createUDItem called with request:', request);
+    console.log('🏭 µ1_WindowFactory.createUDItem called with request:', request);
     
-    const typeConfig = μ1_WindowFactory.getWindowType(request.type);
+    const typeConfig = µ1_WindowFactory.getWindowType(request.type);
     console.log('🔍 Retrieved typeConfig for', request.type, ':', typeConfig);
     
     if (!typeConfig) {
-      throw new Error(`μ1_WindowFactory: Unknown window type '${request.type}'`);
+      throw new Error(`µ1_WindowFactory: Unknown window type '${request.type}'`);
     }
     
     // Generate unique ID with Raimunds timestamp precision
@@ -262,7 +262,7 @@ export class μ1_WindowFactory {
     const origin = {
       host: "UniversalDesktop.localhost",
       path: "/workspace",
-      tool: request.origin === 'human-tool' ? 'μ2_ToolPanel' : 'μ2_AIPanel',
+      tool: request.origin === 'human-tool' ? 'µ2_ToolPanel' : 'µ2_AIPanel',
       device: `${request.origin}-creator`
     };
     
@@ -303,21 +303,21 @@ export class μ1_WindowFactory {
     return udItem;
   }
   
-  // μ1_ Render Window Component
+  // µ1_ Render Window Component
   static renderWindow(
     udItem: UDItem, 
     onUDItemChange: (updatedItem: UDItem, description: string) => void,
     onAddToContext?: (item: UDItem) => void
-  ): μ1_RenderedWindow | null {
+  ): µ1_RenderedWindow | null {
     
     // Detect window type from UDItem (reverse lookup)
-    let typeConfig: μ1_WindowTypeConfig | null = null;
+    let typeConfig: µ1_WindowTypeConfig | null = null;
     
     // Try direct type mapping first
-    for (const config of Object.values(μ1_WINDOW_REGISTRY)) {
+    for (const config of Object.values(µ1_WINDOW_REGISTRY)) {
       if (config.itemType === udItem.type) {
         // Additional content-based verification
-        const contentMatches = μ1_WindowFactory.verifyContentMatch(udItem.content, config);
+        const contentMatches = µ1_WindowFactory.verifyContentMatch(udItem.content, config);
         if (contentMatches) {
           typeConfig = config;
           break;
@@ -327,12 +327,12 @@ export class μ1_WindowFactory {
     
     // Fallback: Content-based detection
     if (!typeConfig) {
-      const detectedType = μ1_WindowFactory.detectOptimalType(udItem.content);
-      typeConfig = μ1_WINDOW_REGISTRY[detectedType];
+      const detectedType = µ1_WindowFactory.detectOptimalType(udItem.content);
+      typeConfig = µ1_WINDOW_REGISTRY[detectedType];
     }
     
     if (!typeConfig) {
-      console.warn(`μ1_WindowFactory: Could not determine window type for UDItem ${udItem.id}`);
+      console.warn(`µ1_WindowFactory: Could not determine window type for UDItem ${udItem.id}`);
       return null;
     }
     
@@ -353,8 +353,8 @@ export class μ1_WindowFactory {
     };
   }
   
-  // μ1_ Verify Content Match (helper for reverse type detection)
-  private static verifyContentMatch(content: any, config: μ1_WindowTypeConfig): boolean {
+  // µ1_ Verify Content Match (helper for reverse type detection)
+  private static verifyContentMatch(content: any, config: µ1_WindowTypeConfig): boolean {
     switch (config.id) {
       case 'tabelle':
         return content && (content.headers || content.rows || content.tableType);
@@ -370,17 +370,17 @@ export class μ1_WindowFactory {
     }
   }
   
-  // μ1_ Get Supported Types for AI Agents
-  static getSupportedTypesForAgents(agents: string[]): μ1_WindowTypeConfig[] {
-    return Object.values(μ1_WINDOW_REGISTRY).filter(config => {
+  // µ1_ Get Supported Types for AI Agents
+  static getSupportedTypesForAgents(agents: string[]): µ1_WindowTypeConfig[] {
+    return Object.values(µ1_WINDOW_REGISTRY).filter(config => {
       if (!config.supportedAgents) return true;
       return agents.some(agent => config.supportedAgents!.includes(agent as any));
     });
   }
   
-  // μ1_ Quick Creation Methods (convenience)
-  static createNote(position: { x: number; y: number; z: number }, text: string = '', origin: μ1_CreationOrigin = 'human-tool'): UDItem {
-    return μ1_WindowFactory.createUDItem({
+  // µ1_ Quick Creation Methods (convenience)
+  static createNote(position: { x: number; y: number; z: number }, text: string = '', origin: µ1_CreationOrigin = 'human-tool'): UDItem {
+    return µ1_WindowFactory.createUDItem({
       type: 'notizzettel',
       position,
       content: { text },
@@ -388,8 +388,8 @@ export class μ1_WindowFactory {
     });
   }
   
-  static createTable(position: { x: number; y: number; z: number }, headers: string[] = [], rows: any[][] = [], origin: μ1_CreationOrigin = 'human-tool'): UDItem {
-    return μ1_WindowFactory.createUDItem({
+  static createTable(position: { x: number; y: number; z: number }, headers: string[] = [], rows: any[][] = [], origin: µ1_CreationOrigin = 'human-tool'): UDItem {
+    return µ1_WindowFactory.createUDItem({
       type: 'tabelle',
       position,
       content: { headers, rows },
@@ -397,8 +397,8 @@ export class μ1_WindowFactory {
     });
   }
   
-  static createTUI(position: { x: number; y: number; z: number }, content: string = '', preset: string = 'standard', origin: μ1_CreationOrigin = 'human-tool'): UDItem {
-    return μ1_WindowFactory.createUDItem({
+  static createTUI(position: { x: number; y: number; z: number }, content: string = '', preset: string = 'standard', origin: µ1_CreationOrigin = 'human-tool'): UDItem {
+    return µ1_WindowFactory.createUDItem({
       type: 'tui',
       position,
       content: { text: content, tui_preset: preset },
@@ -407,4 +407,4 @@ export class μ1_WindowFactory {
   }
 }
 
-export default μ1_WindowFactory;
+export default µ1_WindowFactory;

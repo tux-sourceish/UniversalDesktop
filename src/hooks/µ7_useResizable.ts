@@ -14,7 +14,7 @@ interface CanvasState {
   momentum: { x: number; y: number };
 }
 
-export const μ7_useResizable = (
+export const µ7_useResizable = (
   id: string,
   onUpdate: (id: string, updates: Partial<ResizableItem>) => void,
   canvasState: CanvasState,

@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { μ3_useFileSystem } from '../hooks/μ3_useFileSystem';
-// Removed: import { μ7_UniversalContextMenu, useUniversalContextMenu } - using unified context menu
+import { µ3_useFileSystem } from '../hooks/µ3_useFileSystem';
+// Removed: import { µ7_UniversalContextMenu, useUniversalContextMenu } - using unified context menu
 import { UDFormat } from '../core/UDFormat';
 
 /**
- * μ2_FileManager - WIND (☴) Views/UI
+ * µ2_FileManager - WIND (☴) Views/UI
  *
  * Universal File Manager with Context-First Design
  * - Dual-mode architecture: GUI Mode (modern) + TUI Mode (Norton Commander style)
@@ -29,7 +29,7 @@ interface FileManagerProps {
   onCreateUDItem?: (item: any) => void;
 }
 
-export const μ2_FileManager: React.FC<FileManagerProps> = ({
+export const µ2_FileManager: React.FC<FileManagerProps> = ({
   initialPath = '/',
   mode: initialMode = 'gui',
   onFileOpen,
@@ -53,7 +53,7 @@ export const μ2_FileManager: React.FC<FileManagerProps> = ({
   // const [renamingItem, setRenamingItem] = useState<string | null>(null); // TODO: Implement inline renaming
 
   // Hooks
-  const fileSystem = μ3_useFileSystem(initialPath);
+  const fileSystem = µ3_useFileSystem(initialPath);
   // Removed: const { contextMenu, showContextMenu, hideContextMenu } = useUniversalContextMenu() - using unified context menu
 
   // Refs

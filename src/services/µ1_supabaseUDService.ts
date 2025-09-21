@@ -8,7 +8,7 @@
  * @version 2.1.0-raimund-algebra
  */
 
-import { enhancedSupabase } from './μ8_supabaseClient';
+import { enhancedSupabase } from './µ8_supabaseClient';
 import { UDFormat } from '../core/UDFormat';
 
 export interface µ1_Workspace {

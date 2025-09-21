@@ -1,19 +1,19 @@
 /**
- * μX Component Reusability Patterns
+ * µX Component Reusability Patterns
  * 
- * Architectural patterns for component reusability within the μX-Bagua system.
+ * Architectural patterns for component reusability within the µX-Bagua system.
  * These patterns ensure consistent integration across all UI elements while
  * maintaining the philosophical coherence of the system.
  */
 
 import type { /* DesktopItemData, */ UDPosition } from '../types'; // TODO: DesktopItemData unused
-import type { μ7_ContextMenuProvider } from '../types/ContextMenuTypes';
+import type { µ7_ContextMenuProvider } from '../types/ContextMenuTypes';
 import type { FileSystemItem } from '../types/FileManagerTypes';
 
 // Base Component Pattern
-export interface μX_BaseComponent {
+export interface µX_BaseComponent {
   id: string;
-  baguaType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // μ1-μ8 mapping
+  baguaType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; // µ1-µ8 mapping
   position?: UDPosition;
   dimensions?: { width: number; height: number };
   metadata?: {
@@ -25,7 +25,7 @@ export interface μX_BaseComponent {
 }
 
 // Hook Integration Pattern
-export interface μX_HookIntegration<TState, TActions> {
+export interface µX_HookIntegration<TState, TActions> {
   // State exposure following Campus-Model pattern
   state: TState;
   actions: TActions;
@@ -40,13 +40,13 @@ export interface μX_HookIntegration<TState, TActions> {
   emit?: (event: string, data: any) => void;
   
   // Context integration
-  contextManager?: any; // μ6_useContextManager
-  workspaceManager?: any; // μ1_useWorkspace
+  contextManager?: any; // µ6_useContextManager
+  workspaceManager?: any; // µ1_useWorkspace
 }
 
 // Context Menu Integration Pattern
-export interface μX_ContextMenuIntegration {
-  contextMenuProvider: μ7_ContextMenuProvider;
+export interface µX_ContextMenuIntegration {
+  contextMenuProvider: µ7_ContextMenuProvider;
   contextActions: Array<{
     id: string;
     label: string;
@@ -64,7 +64,7 @@ export interface μX_ContextMenuIntegration {
 }
 
 // File System Integration Pattern
-export interface μX_FileSystemIntegration {
+export interface µX_FileSystemIntegration {
   // File operations support
   canHandleFiles?: boolean;
   supportedFileTypes?: string[];
@@ -82,7 +82,7 @@ export interface μX_FileSystemIntegration {
 }
 
 // Spatial Integration Pattern (Canvas-aware components)
-export interface μX_SpatialIntegration {
+export interface µX_SpatialIntegration {
   position: UDPosition;
   dimensions: { width: number; height: number };
   
@@ -99,13 +99,13 @@ export interface μX_SpatialIntegration {
   onDragEnd?: (position: UDPosition) => void;
   
   // Canvas integration
-  canvasManager?: any; // μ3_useCanvasNavigation
+  canvasManager?: any; // µ3_useCanvasNavigation
   zIndex?: number;
   layer?: 'background' | 'content' | 'overlay' | 'ui';
 }
 
 // AI Integration Pattern
-export interface μX_AIIntegration {
+export interface µX_AIIntegration {
   // AI context awareness
   canBeAddedToContext?: boolean;
   contextPriority?: 'high' | 'medium' | 'low';
@@ -130,7 +130,7 @@ export interface μX_AIIntegration {
 }
 
 // Performance Pattern
-export interface μX_PerformancePattern {
+export interface µX_PerformancePattern {
   // Virtualization support
   supportsVirtualization?: boolean;
   virtualItemHeight?: number;
@@ -150,7 +150,7 @@ export interface μX_PerformancePattern {
 }
 
 // Accessibility Pattern
-export interface μX_AccessibilityPattern {
+export interface µX_AccessibilityPattern {
   // ARIA support
   ariaLabel?: string;
   ariaDescription?: string;
@@ -179,15 +179,15 @@ export interface μX_AccessibilityPattern {
 
 // Complete Component Pattern (combines all patterns)
 // TODO: Fix dimensions type conflict between BaseComponent and SpatialIntegration
-export interface μX_CompleteComponent<TState = any, TActions = any> 
-  extends μX_BaseComponent,
-          μX_HookIntegration<TState, TActions>,
-          μX_ContextMenuIntegration,
-          μX_FileSystemIntegration,
-          // μX_SpatialIntegration, // Commented out due to dimensions type conflict
-          μX_AIIntegration,
-          μX_PerformancePattern,
-          μX_AccessibilityPattern {
+export interface µX_CompleteComponent<TState = any, TActions = any> 
+  extends µX_BaseComponent,
+          µX_HookIntegration<TState, TActions>,
+          µX_ContextMenuIntegration,
+          µX_FileSystemIntegration,
+          // µX_SpatialIntegration, // Commented out due to dimensions type conflict
+          µX_AIIntegration,
+          µX_PerformancePattern,
+          µX_AccessibilityPattern {
   
   // Component lifecycle
   lifecycle: {
@@ -208,7 +208,7 @@ export interface μX_CompleteComponent<TState = any, TActions = any>
 }
 
 // Component Factory Pattern
-export interface μX_ComponentFactory<T extends μX_BaseComponent> {
+export interface µX_ComponentFactory<T extends µX_BaseComponent> {
   create: (config: Partial<T>) => T;
   register: (type: string, factory: (config: any) => T) => void;
   unregister: (type: string) => void;
@@ -225,32 +225,32 @@ export interface μX_ComponentFactory<T extends μX_BaseComponent> {
 }
 
 // Component Registry Pattern
-export interface μX_ComponentRegistry {
+export interface µX_ComponentRegistry {
   // Registration
-  register: (id: string, component: μX_CompleteComponent) => void;
+  register: (id: string, component: µX_CompleteComponent) => void;
   unregister: (id: string) => void;
   
   // Lookup
-  get: (id: string) => μX_CompleteComponent | null;
-  getByType: (baguaType: number) => μX_CompleteComponent[];
-  getByTag: (tag: string) => μX_CompleteComponent[];
+  get: (id: string) => µX_CompleteComponent | null;
+  getByType: (baguaType: number) => µX_CompleteComponent[];
+  getByTag: (tag: string) => µX_CompleteComponent[];
   
   // Query
-  query: (predicate: (component: μX_CompleteComponent) => boolean) => μX_CompleteComponent[];
+  query: (predicate: (component: µX_CompleteComponent) => boolean) => µX_CompleteComponent[];
   count: () => number;
   
   // Events
-  onChange: (callback: (event: { type: 'add' | 'remove' | 'update'; component: μX_CompleteComponent }) => void) => () => void;
+  onChange: (callback: (event: { type: 'add' | 'remove' | 'update'; component: µX_CompleteComponent }) => void) => () => void;
 }
 
 // Integration Helper Functions
-export class μX_IntegrationHelpers {
+export class µX_IntegrationHelpers {
   // Context Menu Integration
-  static integrateContextMenu<T extends μX_BaseComponent>(
+  static integrateContextMenu<T extends µX_BaseComponent>(
     component: T,
-    contextMenuProvider: μ7_ContextMenuProvider,
+    contextMenuProvider: µ7_ContextMenuProvider,
     actions: Array<{ id: string; label: string; icon: string; handler: () => void }>
-  ): T & μX_ContextMenuIntegration {
+  ): T & µX_ContextMenuIntegration {
     return {
       ...component,
       contextMenuProvider,
@@ -260,28 +260,28 @@ export class μX_IntegrationHelpers {
         // TODO: Fix condition property type - !action.condition || action.condition(context)
         true // Temporary workaround
       )
-    } as T & μX_ContextMenuIntegration;
+    } as T & µX_ContextMenuIntegration;
   }
   
   // File System Integration
-  static integrateFileSystem<T extends μX_BaseComponent>(
+  static integrateFileSystem<T extends µX_BaseComponent>(
     component: T,
     config: {
       canHandleFiles?: boolean;
       supportedTypes?: string[];
       onFileOpen?: (file: FileSystemItem) => void;
     }
-  ): T & μX_FileSystemIntegration {
+  ): T & µX_FileSystemIntegration {
     return {
       ...component,
       canHandleFiles: config.canHandleFiles ?? false,
       supportedFileTypes: config.supportedTypes || [],
       onFileOpen: config.onFileOpen
-    } as T & μX_FileSystemIntegration;
+    } as T & µX_FileSystemIntegration;
   }
   
   // Spatial Integration  
-  static integrateSpatial<T extends μX_BaseComponent>(
+  static integrateSpatial<T extends µX_BaseComponent>(
     component: T,
     config: {
       position: UDPosition;
@@ -289,7 +289,7 @@ export class μX_IntegrationHelpers {
       isDraggable?: boolean;
       isResizable?: boolean;
     }
-  ): T & μX_SpatialIntegration {
+  ): T & µX_SpatialIntegration {
     return {
       ...component,
       position: config.position,
@@ -298,37 +298,37 @@ export class μX_IntegrationHelpers {
       isResizable: config.isResizable ?? true,
       zIndex: component.baguaType, // Use Bagua type as default z-index
       layer: 'content'
-    } as T & μX_SpatialIntegration;
+    } as T & µX_SpatialIntegration;
   }
   
   // AI Integration
-  static integrateAI<T extends μX_BaseComponent>(
+  static integrateAI<T extends µX_BaseComponent>(
     component: T,
     config: {
       canBeAddedToContext?: boolean;
       contextPriority?: 'high' | 'medium' | 'low';
       aiWorkflows?: Array<{ id: string; name: string; handler: (context: any) => Promise<any> }>;
     }
-  ): T & μX_AIIntegration {
+  ): T & µX_AIIntegration {
     return {
       ...component,
       canBeAddedToContext: config.canBeAddedToContext ?? true,
       contextPriority: config.contextPriority || 'medium',
       contextType: 'reference',
       aiWorkflows: config.aiWorkflows || []
-    } as T & μX_AIIntegration;
+    } as T & µX_AIIntegration;
   }
   
   // Complete Integration (combines all)
-  static integrateComplete<T extends μX_BaseComponent>(
+  static integrateComplete<T extends µX_BaseComponent>(
     component: T,
     config: {
-      contextMenu?: { provider: μ7_ContextMenuProvider; actions: any[] };
+      contextMenu?: { provider: µ7_ContextMenuProvider; actions: any[] };
       fileSystem?: { canHandle: boolean; types: string[] };
       spatial?: { position: UDPosition; dimensions: { width: number; height: number } };
       ai?: { canBeAddedToContext: boolean; workflows: any[] };
     }
-  ): μX_CompleteComponent {
+  ): µX_CompleteComponent {
     let integrated: any = component;
     
     if (config.contextMenu) {
@@ -372,8 +372,8 @@ export class μX_IntegrationHelpers {
 }
 
 // Component Validation
-export class μX_ComponentValidator {
-  static validateComponent(component: μX_CompleteComponent): { valid: boolean; errors: string[] } {
+export class µX_ComponentValidator {
+  static validateComponent(component: µX_CompleteComponent): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
     
     // Basic validation
@@ -406,7 +406,7 @@ export class μX_ComponentValidator {
     };
   }
   
-  static validateBaguaCoherence(components: μX_CompleteComponent[]): { valid: boolean; warnings: string[] } {
+  static validateBaguaCoherence(components: µX_CompleteComponent[]): { valid: boolean; warnings: string[] } {
     const warnings: string[] = [];
     const baguaCounts = new Map<number, number>();
     
@@ -426,8 +426,8 @@ export class μX_ComponentValidator {
     }
     
     // Check for missing essential types
-    if (!baguaCounts.has(1)) warnings.push('Missing μ1 (HIMMEL) components - consider adding structural templates');
-    if (!baguaCounts.has(8)) warnings.push('Missing μ8 (ERDE) components - consider adding foundation systems');
+    if (!baguaCounts.has(1)) warnings.push('Missing µ1 (HIMMEL) components - consider adding structural templates');
+    if (!baguaCounts.has(8)) warnings.push('Missing µ8 (ERDE) components - consider adding foundation systems');
     
     return {
       valid: warnings.length === 0,
@@ -437,6 +437,6 @@ export class μX_ComponentValidator {
 }
 
 export default {
-  IntegrationHelpers: μX_IntegrationHelpers,
-  ComponentValidator: μX_ComponentValidator
+  IntegrationHelpers: µX_IntegrationHelpers,
+  ComponentValidator: µX_ComponentValidator
 };

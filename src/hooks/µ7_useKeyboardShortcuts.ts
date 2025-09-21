@@ -39,7 +39,7 @@ interface ShortcutHandlers {
   onOptimizeContext?: () => void;
 }
 
-export const μ7_useKeyboardShortcuts = (handlers: ShortcutHandlers = {}) => {
+export const µ7_useKeyboardShortcuts = (handlers: ShortcutHandlers = {}) => {
   const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>([]);
   const [activeContext, setActiveContext] = useState<'global' | 'canvas' | 'panel' | 'input'>('global');
   const [shortcutsEnabled, setShortcutsEnabled] = useState(true);

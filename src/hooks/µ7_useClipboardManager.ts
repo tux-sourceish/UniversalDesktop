@@ -43,7 +43,7 @@ interface ClipboardCapabilities {
   supportedFormats: string[];
 }
 
-export const μ7_useClipboardManager = () => {
+export const µ7_useClipboardManager = () => {
   const [clipboardHistory, setClipboardHistory] = useState<ClipboardHistory[]>([]);
   const [operationHistory, setOperationHistory] = useState<ClipboardOperation[]>([]);
   const [capabilities, setCapabilities] = useState<ClipboardCapabilities>({
@@ -453,7 +453,7 @@ export const μ7_useClipboardManager = () => {
     return clipboardHistory[0] || null;
   }, [clipboardHistory]);
 
-  // μ7_ Get latest clipboard item (algebraic approach)
+  // µ7_ Get latest clipboard item (algebraic approach)
   const getLatest = useCallback(() => {
     const latest = clipboardHistory[0];
     return latest ? {
@@ -463,7 +463,7 @@ export const μ7_useClipboardManager = () => {
     } : null;
   }, [clipboardHistory]);
 
-  // μ7_ Check if clipboard has content (algebraic transistor)
+  // µ7_ Check if clipboard has content (algebraic transistor)
   const hasContent = useCallback(() => {
     return clipboardHistory.length > 0;
   }, [clipboardHistory]);
@@ -492,8 +492,8 @@ export const μ7_useClipboardManager = () => {
     // Utilities
     clearHistory,
     getLastClipboardItem,
-    getLatest, // μ7_ Bagua method for context menu
-    hasContent, // μ7_ Bagua method for algebraic transistor
+    getLatest, // µ7_ Bagua method for context menu
+    hasContent, // µ7_ Bagua method for algebraic transistor
     initializeCapabilities,
 
     // Getters

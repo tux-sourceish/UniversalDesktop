@@ -1,16 +1,16 @@
 /**
- * μX Performance Optimization Strategies
+ * µX Performance Optimization Strategies
  * 
  * Comprehensive performance optimization patterns for the Universal Context Menu 
  * and File Manager systems, designed for handling large datasets and complex
- * file system operations while maintaining the μX-Bagua architectural coherence.
+ * file system operations while maintaining the µX-Bagua architectural coherence.
  */
 
 import { UDFormat } from '../core/UDFormat';
 import type { FileSystemItem } from '../types/FileManagerTypes';
 
 // Virtualization Pattern for Large Lists
-export interface μX_VirtualizationConfig {
+export interface µX_VirtualizationConfig {
   enabled: boolean;
   itemHeight: number | ((index: number, item: any) => number);
   containerHeight: number;
@@ -20,13 +20,13 @@ export interface μX_VirtualizationConfig {
   scrollingDelay?: number; // Debounce scrolling updates
 }
 
-export class μX_VirtualizationEngine<T = any> {
-  private config: μX_VirtualizationConfig;
+export class µX_VirtualizationEngine<T = any> {
+  private config: µX_VirtualizationConfig;
   private items: T[] = [];
   private scrollTop: number = 0;
   private cache: Map<number, { height: number; offset: number }> = new Map();
   
-  constructor(config: μX_VirtualizationConfig) {
+  constructor(config: µX_VirtualizationConfig) {
     this.config = config;
   }
   
@@ -115,7 +115,7 @@ export class μX_VirtualizationEngine<T = any> {
 }
 
 // File System Performance Optimization
-export interface μX_FileSystemPerformance {
+export interface µX_FileSystemPerformance {
   // Caching strategies
   cache: {
     directoryCache: Map<string, { items: FileSystemItem[]; timestamp: Date; ttl: number }>;
@@ -145,7 +145,7 @@ export interface μX_FileSystemPerformance {
   };
 }
 
-export class μX_FileSystemOptimizer implements μX_FileSystemPerformance {
+export class µX_FileSystemOptimizer implements µX_FileSystemPerformance {
   cache = {
     directoryCache: new Map<string, { items: FileSystemItem[]; timestamp: Date; ttl: number }>(),
     thumbnailCache: new Map<string, { data: string; timestamp: Date }>(),
@@ -334,7 +334,7 @@ export class μX_FileSystemOptimizer implements μX_FileSystemPerformance {
 }
 
 // Context Menu Performance Optimization
-export interface μX_ContextMenuPerformance {
+export interface µX_ContextMenuPerformance {
   // Menu item calculation optimization
   menuItemCache: Map<string, { items: any[]; timestamp: Date }>;
   
@@ -350,7 +350,7 @@ export interface μX_ContextMenuPerformance {
   debounceEvent: (eventType: string, handler: Function, delay: number) => Function;
 }
 
-export class μX_ContextMenuOptimizer implements μX_ContextMenuPerformance {
+export class µX_ContextMenuOptimizer implements µX_ContextMenuPerformance {
   menuItemCache = new Map<string, { items: any[]; timestamp: Date }>();
   positionCache = new Map<string, { x: number; y: number; timestamp: Date }>();
   debouncedHandlers = new Map<string, { handler: Function; timeout: NodeJS.Timeout | null }>();
@@ -453,7 +453,7 @@ export class μX_ContextMenuOptimizer implements μX_ContextMenuPerformance {
 }
 
 // Memory Management Pattern
-export interface μX_MemoryManagement {
+export interface µX_MemoryManagement {
   // Garbage collection for large datasets
   garbageCollect: () => void;
   
@@ -476,7 +476,7 @@ export interface μX_MemoryManagement {
   cleanupWeakRefs: () => void;
 }
 
-export class μX_MemoryManager implements μX_MemoryManagement {
+export class µX_MemoryManager implements µX_MemoryManagement {
   private weakRefs: Set<any> = new Set();
   private cleanupInterval: NodeJS.Timeout | null = null;
   
@@ -551,7 +551,7 @@ export class μX_MemoryManager implements μX_MemoryManagement {
 }
 
 // Performance Monitoring
-export interface μX_PerformanceMonitor {
+export interface µX_PerformanceMonitor {
   // Performance metrics collection
   metrics: {
     renderTimes: number[];
@@ -570,8 +570,8 @@ export interface μX_PerformanceMonitor {
 }
 
 export default {
-  VirtualizationEngine: μX_VirtualizationEngine,
-  FileSystemOptimizer: μX_FileSystemOptimizer,
-  ContextMenuOptimizer: μX_ContextMenuOptimizer,
-  MemoryManager: μX_MemoryManager
+  VirtualizationEngine: µX_VirtualizationEngine,
+  FileSystemOptimizer: µX_FileSystemOptimizer,
+  ContextMenuOptimizer: µX_ContextMenuOptimizer,
+  MemoryManager: µX_MemoryManager
 };

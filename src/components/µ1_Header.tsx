@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { μ8_PanelState, μ8_PanelConfig } from '../hooks/µ8_usePanelLayout';
+import { µ8_PanelState, µ8_PanelConfig } from '../hooks/µ8_usePanelLayout';
 import { UDFormat } from '../core/UDFormat';
 
 /**
@@ -18,9 +18,9 @@ interface µ1_HeaderProps {
   onZoomOut?: () => void;
   currentZoom?: number;
   // NEW: Panel-State als Props vom Parent
-  panelState?: μ8_PanelState;
-  panelConfigs?: μ8_PanelConfig[];
-  onPanelToggle?: (panelId: keyof μ8_PanelState) => void;
+  panelState?: µ8_PanelState;
+  panelConfigs?: µ8_PanelConfig[];
+  onPanelToggle?: (panelId: keyof µ8_PanelState) => void;
   // NEW: Logout functionality
   onLogout?: () => void;
 }
@@ -38,8 +38,8 @@ export const µ1_Header: React.FC<µ1_HeaderProps> = ({
   const panelLayout = {
     panelState: panelState || { tools: false, ai: false, territory: false, context: false, minimap: true },
     panelConfigs: panelConfigs || [],
-    isPanelVisible: (id: keyof μ8_PanelState) => panelState ? panelState[id] : false,
-    togglePanel: onPanelToggle || ((id: keyof μ8_PanelState) => console.warn('⚠️ Panel toggle not connected:', id))
+    isPanelVisible: (id: keyof µ8_PanelState) => panelState ? panelState[id] : false,
+    togglePanel: onPanelToggle || ((id: keyof µ8_PanelState) => console.warn('⚠️ Panel toggle not connected:', id))
   };
 
   // µ1_ Zoom-Handler mit Props (kein eigener Hook mehr!)
@@ -67,8 +67,8 @@ export const µ1_Header: React.FC<µ1_HeaderProps> = ({
     // TODO: Add onZoomReset prop if needed
   }, []);
 
-  // μ7_ Logout Handler - DONNER (☳) Events - Algebraischer Transistor
-  const μ7_handleLogout = useCallback(() => {
+  // µ7_ Logout Handler - DONNER (☳) Events - Algebraischer Transistor
+  const µ7_handleLogout = useCallback(() => {
     const hasLogoutCallback = UDFormat.transistor(onLogout !== undefined);
     if (hasLogoutCallback && onLogout) {
       console.log('🚪 Header Logout triggered');
@@ -78,7 +78,7 @@ export const µ1_Header: React.FC<µ1_HeaderProps> = ({
     }
   }, [onLogout]);
 
-  // µ1_ Panel-Toggle mit neuem μ8_usePanelLayout System
+  // µ1_ Panel-Toggle mit neuem µ8_usePanelLayout System
   const µ1_renderPanelToggle = useCallback((config: typeof panelLayout.panelConfigs[0]) => {
     const isVisible = panelLayout.isPanelVisible(config.id);
     
@@ -226,14 +226,14 @@ export const µ1_Header: React.FC<µ1_HeaderProps> = ({
         </button>
       </div>
 
-      {/* μ7_ Logout Button - DONNER (☳) Events */}
+      {/* µ7_ Logout Button - DONNER (☳) Events */}
       <div className="header-logout" style={{
         display: 'flex',
         alignItems: 'center',
         marginLeft: '12px'
       }}>
         <button
-          onClick={μ7_handleLogout}
+          onClick={µ7_handleLogout}
           title="Abmelden"
           style={{
             background: 'rgba(255, 255, 255, 0.1)',

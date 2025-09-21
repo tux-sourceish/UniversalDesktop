@@ -1,5 +1,5 @@
 /**
- * μ3_useFileManagerDualMode - WASSER (☵) Procedures/Workflows
+ * µ3_useFileManagerDualMode - WASSER (☵) Procedures/Workflows
  * 
  * Advanced dual-mode file manager hook supporting both GUI and TUI interfaces
  * with Norton Commander inspiration and Tauri-ready architecture.
@@ -12,14 +12,14 @@
  * - Search and indexing capabilities
  * - Drag & drop support
  * - Bookmark and history management
- * - Integration with μ7_ContextMenu and μ6_AIContext
+ * - Integration with µ7_ContextMenu and µ6_AIContext
  */
 
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { UDFormat } from '../core/UDFormat';
-import { μ8_FileSystemAPI, μ8_PlatformCapabilities } from '../services/μ8_FileSystemAbstraction';
+import { µ8_FileSystemAPI, µ8_PlatformCapabilities } from '../services/µ8_FileSystemAbstraction';
 import type {
-  μ3_FileManagerState,
+  µ3_FileManagerState,
   FileSystemItem,
   FileOperation,
   NavigationHistoryEntry,
@@ -33,7 +33,7 @@ import type {
   SearchOptions
 } from '../types/FileManagerTypes';
 
-interface μ3_FileManagerOptions {
+interface µ3_FileManagerOptions {
   initialPath?: string;
   mode?: 'gui' | 'tui' | 'dual';
   enableDualPane?: boolean;
@@ -49,7 +49,7 @@ interface μ3_FileManagerOptions {
   aiContextManager?: any;
 }
 
-export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {}) => {
+export const µ3_useFileManagerDualMode = (options: µ3_FileManagerOptions = {}) => {
   // Configuration with defaults
   const config = useMemo(() => ({
     initialPath: options.initialPath || '/home',
@@ -57,14 +57,14 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
     enableDualPane: options.enableDualPane ?? true,
     enableVirtualization: options.enableVirtualization ?? true,
     virtualizationThreshold: options.virtualizationThreshold || 1000,
-    enableRealTimeWatch: options.enableRealTimeWatch ?? μ8_PlatformCapabilities.fileWatcher,
+    enableRealTimeWatch: options.enableRealTimeWatch ?? µ8_PlatformCapabilities.fileWatcher,
     maxHistoryEntries: options.maxHistoryEntries || 100,
     maxRecentFiles: options.maxRecentFiles || 20,
     ...options
   }), [options]);
 
   // Core State Management
-  const [state, setState] = useState<μ3_FileManagerState>({
+  const [state, setState] = useState<µ3_FileManagerState>({
     // Navigation
     currentPath: config.initialPath,
     history: [],
@@ -154,12 +154,12 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Algebraic Transistor Utilities
-  const μ3_shouldVirtualize = useCallback((itemCount: number): number => {
+  const µ3_shouldVirtualize = useCallback((itemCount: number): number => {
     return UDFormat.transistor(virtualizationConfig.enabled && itemCount > virtualizationConfig.threshold);
   }, [virtualizationConfig]);
 
-  const μ3_canPerformOperation = useCallback((operation: string): number => {
-    const platformSupport = μ8_PlatformCapabilities.nativeFileSystem;
+  const µ3_canPerformOperation = useCallback((operation: string): number => {
+    const platformSupport = µ8_PlatformCapabilities.nativeFileSystem;
     const hasSelection = state.selectedItems.size > 0;
     
     switch (operation) {
@@ -182,7 +182,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
       
-      const items = await μ8_FileSystemAPI.listDirectory(path, state.showHidden);
+      const items = await µ8_FileSystemAPI.listDirectory(path, state.showHidden);
       
       if (config.enableDualPane && panelId) {
         // Update Norton Commander layout
@@ -207,7 +207,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
       // Set up file watcher if enabled
       if (config.enableRealTimeWatch && !watchersRef.current.has(path)) {
         try {
-          const unwatch = await μ8_FileSystemAPI.watchDirectory(path, (changes) => {
+          const unwatch = await µ8_FileSystemAPI.watchDirectory(path, (changes) => {
             // Reload directory on changes
             loadDirectory(path, panelId);
           });
@@ -414,7 +414,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
           for (let i = 0; i < operation.source.length; i++) {
             const sourcePath = operation.source[i];
             const destPath = operation.destination + '/' + sourcePath.split('/').pop();
-            await μ8_FileSystemAPI.copyItem(sourcePath, destPath);
+            await µ8_FileSystemAPI.copyItem(sourcePath, destPath);
             
             // Update progress
             const progress = ((i + 1) / operation.source.length) * 100;
@@ -431,7 +431,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
           for (let i = 0; i < operation.source.length; i++) {
             const sourcePath = operation.source[i];
             const destPath = operation.destination + '/' + sourcePath.split('/').pop();
-            await μ8_FileSystemAPI.moveItem(sourcePath, destPath);
+            await µ8_FileSystemAPI.moveItem(sourcePath, destPath);
             
             const progress = ((i + 1) / operation.source.length) * 100;
             setState(prev => ({
@@ -446,7 +446,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
         case 'delete':
           for (let i = 0; i < operation.source.length; i++) {
             const sourcePath = operation.source[i];
-            await μ8_FileSystemAPI.deleteItem(sourcePath);
+            await µ8_FileSystemAPI.deleteItem(sourcePath);
             
             const progress = ((i + 1) / operation.source.length) * 100;
             setState(prev => ({
@@ -463,7 +463,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
             const sourcePath = operation.source[0];
             const parentPath = sourcePath.split('/').slice(0, -1).join('/');
             const newPath = parentPath + '/' + operation.newName;
-            await μ8_FileSystemAPI.renameItem(sourcePath, newPath);
+            await µ8_FileSystemAPI.renameItem(sourcePath, newPath);
           }
           break;
       }
@@ -504,7 +504,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
     setState(prev => ({ ...prev, loading: true, searchQuery: query }));
     
     try {
-      const searchResults = await μ8_FileSystemAPI.searchFiles(
+      const searchResults = await µ8_FileSystemAPI.searchFiles(
         query, 
         state.currentPath, 
         ({
@@ -545,7 +545,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
     setState(prev => ({ ...prev, clipboard: clipboardData }));
     
     // Integrate with system clipboard if available
-    if (μ8_PlatformCapabilities.systemIntegration) {
+    if (µ8_PlatformCapabilities.systemIntegration) {
       try {
         // Future Tauri implementation would copy file paths to system clipboard
         const filePaths = items.map(item => item.path).join('\n');
@@ -582,7 +582,7 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
         ...prev.tuiConfig,
         enabled: newMode === 'tui'
       }
-    }) as μ3_FileManagerState);
+    }) as µ3_FileManagerState);
   }, []);
 
   // Panel Management (Norton Commander)
@@ -709,12 +709,12 @@ export const μ3_useFileManagerDualMode = (options: μ3_FileManagerOptions = {})
     syncPanels,
     
     // Virtualization
-    shouldVirtualize: μ3_shouldVirtualize(filteredAndSortedItems.length),
+    shouldVirtualize: µ3_shouldVirtualize(filteredAndSortedItems.length),
     virtualizationConfig,
     
     // Platform Capabilities
-    platformCapabilities: μ8_PlatformCapabilities,
-    canPerformOperation: μ3_canPerformOperation,
+    platformCapabilities: µ8_PlatformCapabilities,
+    canPerformOperation: µ3_canPerformOperation,
     
     // Utilities
     formatFileSize: (bytes: number) => {

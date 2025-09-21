@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import { UDFormat } from '../../core/UDFormat';
-import { μ1_WindowFactory, μ1_WINDOW_REGISTRY } from '../factories/μ1_WindowFactory';
+import { µ1_WindowFactory, µ1_WINDOW_REGISTRY } from '../factories/µ1_WindowFactory';
 
 /**
- * μ2_ToolPanel - WIND (☴) Views/UI 
+ * µ2_ToolPanel - WIND (☴) Views/UI 
  * 
  * Separate Werkzeugkasten-Komponente mit Raimunds Bagua-System.
  * Nutzt algebraische Transistoren für Button-States.
  */
 
-interface μ2_ToolPanelProps {
-  /** Callback für μ1_WindowFactory UDItem Creation */
+interface µ2_ToolPanelProps {
+  /** Callback für µ1_WindowFactory UDItem Creation */
   onCreateUDItem: (udItem: any) => void;
   /** Smart positioning calculator for viewport-centered windows */
   positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
@@ -20,7 +20,7 @@ interface μ2_ToolPanelProps {
   onToggle: () => void;
 }
 
-export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
+export const µ2_ToolPanel: React.FC<µ2_ToolPanelProps> = ({
   onCreateUDItem,
   positionCalculator,
   position = 'left',
@@ -29,9 +29,9 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   onToggle
 }) => {
 
-  // μ2_ Unified Creation Handler (WIND-Pattern: Views/UI Creation via μ1_WindowFactory)
-  const μ2_createWindow = useCallback((windowType: string, customContent?: any) => {
-    console.log('🚀 μ2_ToolPanel.μ2_createWindow called with:', { windowType, customContent });
+  // µ2_ Unified Creation Handler (WIND-Pattern: Views/UI Creation via µ1_WindowFactory)
+  const µ2_createWindow = useCallback((windowType: string, customContent?: any) => {
+    console.log('🚀 µ2_ToolPanel.µ2_createWindow called with:', { windowType, customContent });
     
     // FIXED: Use default position (0,0,0) to trigger viewport-centered positioning
     const pos = {
@@ -41,36 +41,36 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
     };
     
     try {
-      console.log('🏭 Calling μ1_WindowFactory.createUDItem with:', {
+      console.log('🏭 Calling µ1_WindowFactory.createUDItem with:', {
         type: windowType,
         position: pos,
         content: customContent,
         origin: 'human-tool'
       });
       
-      const udItem = μ1_WindowFactory.createUDItem({
+      const udItem = µ1_WindowFactory.createUDItem({
         type: windowType,
         position: pos,
         content: customContent,
         origin: 'human-tool'
       }, positionCalculator);
       
-      console.log('✅ μ1_WindowFactory created UDItem:', udItem);
+      console.log('✅ µ1_WindowFactory created UDItem:', udItem);
       
       onCreateUDItem(udItem);
     } catch (error) {
-      console.error(`μ2_ToolPanel: Failed to create ${windowType}:`, error);
+      console.error(`µ2_ToolPanel: Failed to create ${windowType}:`, error);
     }
   }, [onCreateUDItem]);
 
-  // μ2_ Tool Configuration from μ1_WindowFactory Registry (UNIFIED!)
-  const μ2_toolConfigs = useMemo(() => {
+  // µ2_ Tool Configuration from µ1_WindowFactory Registry (UNIFIED!)
+  const µ2_toolConfigs = useMemo(() => {
     // Get primary window types from factory registry  
     const primaryTypes = ['notizzettel', 'tabelle', 'terminal', 'tui', 'code', 'filemanager'];
     
     return primaryTypes
       .map(typeId => {
-        const registryConfig = μ1_WINDOW_REGISTRY[typeId];
+        const registryConfig = µ1_WINDOW_REGISTRY[typeId];
         if (!registryConfig) return null;
         
         // Color mapping for UI consistency
@@ -88,7 +88,7 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
           icon: registryConfig.icon,
           label: registryConfig.displayName,
           handler: () => {
-            μ2_createWindow(registryConfig.id, { 
+            µ2_createWindow(registryConfig.id, { 
               initialPath: '/home/tux/SingularUniverse/UniversalDesktop'
             });
           },
@@ -98,14 +98,14 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
         };
       })
       .filter((tool): tool is NonNullable<typeof tool> => tool !== null);
-  }, [μ2_createWindow]);
+  }, [µ2_createWindow]);
 
   // Raimunds algebraischer Transistor für Panel-Sichtbarkeit
-  const μ2_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
-  const μ2_panelTransform = visible ? 'translateX(0)' : 
+  const µ2_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
+  const µ2_panelTransform = visible ? 'translateX(0)' : 
     (position === 'left' ? 'translateX(-100%)' : 'translateX(100%)');
 
-  const μ2_panelStyle: React.CSSProperties = {
+  const µ2_panelStyle: React.CSSProperties = {
     position: 'fixed',
     top: '80px', // Unter Header
     [position]: '0',
@@ -115,8 +115,8 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
     backdropFilter: 'blur(10px)',
     borderRight: position === 'left' ? '2px solid rgba(26, 127, 86, 0.3)' : 'none',
     borderLeft: position === 'right' ? '2px solid rgba(26, 127, 86, 0.3)' : 'none',
-    transform: μ2_panelTransform,
-    opacity: μ2_panelOpacity,
+    transform: µ2_panelTransform,
+    opacity: µ2_panelOpacity,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 200,
     overflowY: 'auto',
@@ -126,13 +126,13 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
   };
 
   // Early return mit algebraischem Transistor
-  const μ2_shouldRender = UDFormat.transistor(visible);
-  if (μ2_shouldRender === 0) return null;
+  const µ2_shouldRender = UDFormat.transistor(visible);
+  if (µ2_shouldRender === 0) return null;
 
   return (
-    <div className="μ2-tool-panel" style={μ2_panelStyle}>
+    <div className="µ2-tool-panel" style={µ2_panelStyle}>
       {/* Panel Header */}
-      <div className="μ2-panel-header" style={{
+      <div className="µ2-panel-header" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(26, 127, 86, 0.3)',
         backgroundColor: 'rgba(26, 127, 86, 0.1)'
@@ -174,23 +174,23 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
       </div>
 
       {/* Tools Grid */}
-      <div className="μ2-tools-grid" style={{
+      <div className="µ2-tools-grid" style={{
         padding: '16px',
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '12px'
       }}>
-        {μ2_toolConfigs.map(tool => {
+        {µ2_toolConfigs.map(tool => {
           // Raimunds algebraischer Transistor für Button-Verfügbarkeit
-          const μ2_toolEnabled = true; // TODO: Logik für Tool-Verfügbarkeit
-          const μ2_buttonOpacity = UDFormat.transistor(!μ2_toolEnabled) * 0.3 + 0.7;
+          const µ2_toolEnabled = true; // TODO: Logik für Tool-Verfügbarkeit
+          const µ2_buttonOpacity = UDFormat.transistor(!µ2_toolEnabled) * 0.3 + 0.7;
           
           return (
             <button
               key={tool.id}
-              className="μ2-tool-button"
+              className="µ2-tool-button"
               onClick={tool.handler}
-              disabled={!μ2_toolEnabled}
+              disabled={!µ2_toolEnabled}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -200,23 +200,23 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
                 backgroundColor: 'rgba(45, 45, 45, 0.8)',
                 border: `2px solid ${tool.color}40`,
                 borderRadius: '12px',
-                cursor: μ2_toolEnabled ? 'pointer' : 'not-allowed',
-                opacity: μ2_buttonOpacity,
+                cursor: µ2_toolEnabled ? 'pointer' : 'not-allowed',
+                opacity: µ2_buttonOpacity,
                 transition: 'all 0.2s ease',
                 fontSize: '14px',
                 fontWeight: '500',
                 color: '#e5e7eb',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                transform: μ2_toolEnabled ? 'scale(1)' : 'scale(0.95)'
+                transform: µ2_toolEnabled ? 'scale(1)' : 'scale(0.95)'
               }}
               onMouseEnter={(e) => {
-                if (μ2_toolEnabled) {
+                if (µ2_toolEnabled) {
                   e.currentTarget.style.transform = 'scale(1.02)';
                   e.currentTarget.style.borderColor = tool.color;
                 }
               }}
               onMouseLeave={(e) => {
-                if (μ2_toolEnabled) {
+                if (µ2_toolEnabled) {
                   e.currentTarget.style.transform = 'scale(1)';
                   e.currentTarget.style.borderColor = `${tool.color}20`;
                 }
@@ -230,7 +230,7 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
       </div>
 
       {/* Bagua Info Footer */}
-      <div className="μ2-bagua-info" style={{
+      <div className="µ2-bagua-info" style={{
         position: 'absolute',
         bottom: '16px',
         left: '16px',
@@ -242,7 +242,7 @@ export const μ2_ToolPanel: React.FC<μ2_ToolPanelProps> = ({
         color: '#6b7280'
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-          μ2 WIND (☴) - Views/UI Creation
+          µ2 WIND (☴) - Views/UI Creation
         </div>
         <div>
           Folgt Raimunds Bagua-System mit algebraischen Transistoren

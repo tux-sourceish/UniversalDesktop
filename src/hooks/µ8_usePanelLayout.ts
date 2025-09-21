@@ -2,13 +2,13 @@ import { useState, useCallback, useEffect } from 'react';
 import { UDFormat } from '../core/UDFormat';
 
 /**
- * μ8_usePanelLayout - ERDE (☷) Global/Base Panel Management
+ * µ8_usePanelLayout - ERDE (☷) Global/Base Panel Management
  * 
  * V1-Style Multi-Panel System mit Raimunds Bagua-Algebra.
  * Verwaltet separate floating Panels statt zusammengequetschte Sidebar.
  */
 
-export interface μ8_PanelState {
+export interface µ8_PanelState {
   tools: boolean;
   ai: boolean;
   territory: boolean;
@@ -16,8 +16,8 @@ export interface μ8_PanelState {
   minimap: boolean;
 }
 
-export interface μ8_PanelConfig {
-  id: keyof μ8_PanelState;
+export interface µ8_PanelConfig {
+  id: keyof µ8_PanelState;
   title: string;
   icon: string;
   position: 'left' | 'right' | 'bottom-right' | 'floating';
@@ -27,18 +27,18 @@ export interface μ8_PanelConfig {
   shortcut?: string;
 }
 
-export const μ8_usePanelLayout = () => {
-  // μ8_ Panel Visibility State (Campus-Model: Ein Hook, eine Aufgabe)
-  const [μ8_panelState, setμ8_PanelState] = useState<μ8_PanelState>({
-    tools: false,    // μ2 WIND - Views/UI Creation
-    ai: false,       // μ6 FEUER - Functions/Processing  
-    territory: false, // μ5 SEE - Properties/Spatial
-    context: false,   // μ6 FEUER - AI Context Management (V1 Genius-Feature!)
-    minimap: true     // μ3 WASSER - Procedures/Flow
+export const µ8_usePanelLayout = () => {
+  // µ8_ Panel Visibility State (Campus-Model: Ein Hook, eine Aufgabe)
+  const [µ8_panelState, setµ8_PanelState] = useState<µ8_PanelState>({
+    tools: false,    // µ2 WIND - Views/UI Creation
+    ai: false,       // µ6 FEUER - Functions/Processing  
+    territory: false, // µ5 SEE - Properties/Spatial
+    context: false,   // µ6 FEUER - AI Context Management (V1 Genius-Feature!)
+    minimap: true     // µ3 WASSER - Procedures/Flow
   });
 
-  // μ8_ Panel Configurations (V1-Style Layout)
-  const μ8_panelConfigs: μ8_PanelConfig[] = [
+  // µ8_ Panel Configurations (V1-Style Layout)
+  const µ8_panelConfigs: µ8_PanelConfig[] = [
     {
       id: 'tools',
       title: 'Werkzeugkasten',
@@ -87,9 +87,9 @@ export const μ8_usePanelLayout = () => {
     }
   ];
 
-  // μ8_ Toggle Panel mit algebraischem Transistor
-  const μ8_togglePanel = useCallback((panelId: keyof μ8_PanelState) => {
-    setμ8_PanelState(prev => {
+  // µ8_ Toggle Panel mit algebraischem Transistor
+  const µ8_togglePanel = useCallback((panelId: keyof µ8_PanelState) => {
+    setµ8_PanelState(prev => {
       const currentState = prev[panelId];
       
       // Raimunds algebraischer Transistor für State-Change
@@ -104,31 +104,31 @@ export const μ8_usePanelLayout = () => {
     });
   }, []);
 
-  // μ8_ Panel-Sichtbarkeit prüfen
-  const μ8_isPanelVisible = useCallback((panelId: keyof μ8_PanelState): boolean => {
-    return μ8_panelState[panelId];
-  }, [μ8_panelState]);
+  // µ8_ Panel-Sichtbarkeit prüfen
+  const µ8_isPanelVisible = useCallback((panelId: keyof µ8_PanelState): boolean => {
+    return µ8_panelState[panelId];
+  }, [µ8_panelState]);
 
-  // μ8_ Aktive Panel-Anzahl (für Layout-Berechnungen)
-  const μ8_getActivePanelCount = useCallback((): number => {
-    return Object.values(μ8_panelState).filter(visible => visible).length;
-  }, [μ8_panelState]);
+  // µ8_ Aktive Panel-Anzahl (für Layout-Berechnungen)
+  const µ8_getActivePanelCount = useCallback((): number => {
+    return Object.values(µ8_panelState).filter(visible => visible).length;
+  }, [µ8_panelState]);
 
-  // μ8_ Panels nach Position gruppieren
-  const μ8_getPanelsByPosition = useCallback((position: 'left' | 'right' | 'bottom-right' | 'floating'): μ8_PanelConfig[] => {
-    return μ8_panelConfigs.filter(config => config.position === position);
+  // µ8_ Panels nach Position gruppieren
+  const µ8_getPanelsByPosition = useCallback((position: 'left' | 'right' | 'bottom-right' | 'floating'): µ8_PanelConfig[] => {
+    return µ8_panelConfigs.filter(config => config.position === position);
   }, []);
 
-  // μ8_ Smart Panel-Sizing und Kollisionsvermeidung
-  const μ8_getSmartPanelDimensions = useCallback((panelId: keyof μ8_PanelState): { width: number; offset: number } => {
-    const rightPanels = μ8_getPanelsByPosition('right');
-    const visibleRightPanels = rightPanels.filter(p => μ8_isPanelVisible(p.id));
+  // µ8_ Smart Panel-Sizing und Kollisionsvermeidung
+  const µ8_getSmartPanelDimensions = useCallback((panelId: keyof µ8_PanelState): { width: number; offset: number } => {
+    const rightPanels = µ8_getPanelsByPosition('right');
+    const visibleRightPanels = rightPanels.filter(p => µ8_isPanelVisible(p.id));
     const panelIndex = rightPanels.findIndex(p => p.id === panelId);
     
     
     // Verfügbare Bildschirmbreite berechnen (minus Tools Panel und Margins)
     const screenWidth = window.innerWidth;
-    const toolsWidth = μ8_isPanelVisible('tools') ? 280 : 0;
+    const toolsWidth = µ8_isPanelVisible('tools') ? 280 : 0;
     const availableRightSpace = screenWidth - toolsWidth - 100; // 100px Margin
     
     let panelWidth: number;
@@ -157,26 +157,26 @@ export const μ8_usePanelLayout = () => {
     // Offset für das aktuelle Panel berechnen
     for (let i = 0; i < panelIndex; i++) {
       const prevPanel = rightPanels[i];
-      if (μ8_isPanelVisible(prevPanel.id)) {
+      if (µ8_isPanelVisible(prevPanel.id)) {
         offset += panelWidth; // Alle verwenden jetzt die gleiche smarte Breite
       }
     }
     
     return { width: panelWidth, offset };
-  }, [μ8_getPanelsByPosition, μ8_isPanelVisible]);
+  }, [µ8_getPanelsByPosition, µ8_isPanelVisible]);
 
-  // μ8_ Legacy-Kompatibilität für getRightPanelOffset
-  const μ8_getRightPanelOffset = useCallback((panelId: keyof μ8_PanelState): number => {
-    return μ8_getSmartPanelDimensions(panelId).offset;
-  }, [μ8_getSmartPanelDimensions]);
+  // µ8_ Legacy-Kompatibilität für getRightPanelOffset
+  const µ8_getRightPanelOffset = useCallback((panelId: keyof µ8_PanelState): number => {
+    return µ8_getSmartPanelDimensions(panelId).offset;
+  }, [µ8_getSmartPanelDimensions]);
 
-  // μ8_ Keyboard Shortcuts (V1-Style)
+  // µ8_ Keyboard Shortcuts (V1-Style)
   useEffect(() => {
-    const μ8_handleKeyboard = (e: KeyboardEvent) => {
+    const µ8_handleKeyboard = (e: KeyboardEvent) => {
       if (!e.ctrlKey) return;
       
       // Raimunds algebraischer Transistor für Shortcut-Matching
-      const shortcuts: Record<string, keyof μ8_PanelState> = {
+      const shortcuts: Record<string, keyof µ8_PanelState> = {
         '1': 'tools',
         '2': 'ai', 
         '3': 'territory',
@@ -187,46 +187,46 @@ export const μ8_usePanelLayout = () => {
       const panelId = shortcuts[e.key.toLowerCase()];
       if (panelId) {
         e.preventDefault();
-        μ8_togglePanel(panelId);
+        µ8_togglePanel(panelId);
       }
     };
 
-    window.addEventListener('keydown', μ8_handleKeyboard);
-    return () => window.removeEventListener('keydown', μ8_handleKeyboard);
-  }, [μ8_togglePanel]);
+    window.addEventListener('keydown', µ8_handleKeyboard);
+    return () => window.removeEventListener('keydown', µ8_handleKeyboard);
+  }, [µ8_togglePanel]);
 
-  // μ8_ Panel-Layout-Berechnungen für Canvas-Offset (SMART VERSION)
-  const μ8_getCanvasOffset = useCallback((): { left: number; right: number; bottom: number } => {
+  // µ8_ Panel-Layout-Berechnungen für Canvas-Offset (SMART VERSION)
+  const µ8_getCanvasOffset = useCallback((): { left: number; right: number; bottom: number } => {
     let leftOffset = 0;
     let rightOffset = 0; 
     let bottomOffset = 0;
 
     // Links: Tools Panel
-    if (μ8_isPanelVisible('tools')) {
+    if (µ8_isPanelVisible('tools')) {
       leftOffset = 280;
     }
 
     // Rechts: Smart calculation based on visible panels
-    const rightPanels = μ8_getPanelsByPosition('right');
-    const visibleRightPanels = rightPanels.filter(p => μ8_isPanelVisible(p.id));
+    const rightPanels = µ8_getPanelsByPosition('right');
+    const visibleRightPanels = rightPanels.filter(p => µ8_isPanelVisible(p.id));
     
     if (visibleRightPanels.length > 0) {
       // Berechne die tatsächliche Gesamtbreite aller sichtbaren rechten Panels
-      const firstPanelDimensions = μ8_getSmartPanelDimensions(visibleRightPanels[0].id);
+      const firstPanelDimensions = µ8_getSmartPanelDimensions(visibleRightPanels[0].id);
       rightOffset = firstPanelDimensions.width * visibleRightPanels.length;
     }
 
     // Unten: Minimap
-    if (μ8_isPanelVisible('minimap')) {
+    if (µ8_isPanelVisible('minimap')) {
       bottomOffset = 180;
     }
 
     return { left: leftOffset, right: rightOffset, bottom: bottomOffset };
-  }, [μ8_isPanelVisible, μ8_getPanelsByPosition, μ8_getSmartPanelDimensions]);
+  }, [µ8_isPanelVisible, µ8_getPanelsByPosition, µ8_getSmartPanelDimensions]);
 
-  // μ8_ Panel-Animationen (V1-Style mit algebraischem Transistor)
-  const μ8_getPanelTransform = useCallback((panelId: keyof μ8_PanelState, position: 'left' | 'right' | 'bottom-right' | 'floating'): string => {
-    const isVisible = μ8_isPanelVisible(panelId);
+  // µ8_ Panel-Animationen (V1-Style mit algebraischem Transistor)
+  const µ8_getPanelTransform = useCallback((panelId: keyof µ8_PanelState, position: 'left' | 'right' | 'bottom-right' | 'floating'): string => {
+    const isVisible = µ8_isPanelVisible(panelId);
     
     // Raimunds algebraischer Transistor für Animation-Direction
     const hiddenMultiplier = UDFormat.transistor(isVisible); // 0 wenn sichtbar, 1 wenn versteckt
@@ -243,37 +243,37 @@ export const μ8_usePanelLayout = () => {
       default:
         return 'none';
     }
-  }, [μ8_isPanelVisible]);
+  }, [µ8_isPanelVisible]);
 
-  // μ8_ Panel-Opazität mit algebraischem Transistor
-  const μ8_getPanelOpacity = useCallback((panelId: keyof μ8_PanelState): number => {
-    const isVisible = μ8_isPanelVisible(panelId);
+  // µ8_ Panel-Opazität mit algebraischem Transistor
+  const µ8_getPanelOpacity = useCallback((panelId: keyof µ8_PanelState): number => {
+    const isVisible = µ8_isPanelVisible(panelId);
     
     // Raimunds algebraischer Transistor für Opacity
     const hiddenOpacity = UDFormat.transistor(isVisible) * 0.05; // 0.05 wenn versteckt, 0 wenn sichtbar
     return isVisible ? 1 : hiddenOpacity;
-  }, [μ8_isPanelVisible]);
+  }, [µ8_isPanelVisible]);
 
   return {
     // State
-    panelState: μ8_panelState,
-    panelConfigs: μ8_panelConfigs,
+    panelState: µ8_panelState,
+    panelConfigs: µ8_panelConfigs,
     
     // Actions
-    togglePanel: μ8_togglePanel,
+    togglePanel: µ8_togglePanel,
     
     // Queries
-    isPanelVisible: μ8_isPanelVisible,
-    getActivePanelCount: μ8_getActivePanelCount,
-    getPanelsByPosition: μ8_getPanelsByPosition,
-    getRightPanelOffset: μ8_getRightPanelOffset,
-    getCanvasOffset: μ8_getCanvasOffset,
+    isPanelVisible: µ8_isPanelVisible,
+    getActivePanelCount: µ8_getActivePanelCount,
+    getPanelsByPosition: µ8_getPanelsByPosition,
+    getRightPanelOffset: µ8_getRightPanelOffset,
+    getCanvasOffset: µ8_getCanvasOffset,
     
     // NEW: Smart Panel Sizing
-    getSmartPanelDimensions: μ8_getSmartPanelDimensions,
+    getSmartPanelDimensions: µ8_getSmartPanelDimensions,
     
     // Styling (V1-Style mit algebraischen Transistoren)
-    getPanelTransform: μ8_getPanelTransform,
-    getPanelOpacity: μ8_getPanelOpacity
+    getPanelTransform: µ8_getPanelTransform,
+    getPanelOpacity: µ8_getPanelOpacity
   };
 };

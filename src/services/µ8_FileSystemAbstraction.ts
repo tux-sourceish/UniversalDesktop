@@ -1,11 +1,11 @@
 /**
- * μ8_ File System Abstraction - ERDE (☷) Foundation Systems
+ * µ8_ File System Abstraction - ERDE (☷) Foundation Systems
  * 
  * Tauri-ready file system abstraction implementing the "Schleusen-Prinzip"
  * Pattern for seamless browser-to-native transition.
  * 
  * Architecture:
- * - Single interface (μ3_FileSystemAPI) for all file operations
+ * - Single interface (µ3_FileSystemAPI) for all file operations
  * - Runtime implementation switching based on platform detection
  * - Browser implementation uses File API, downloads, and uploads
  * - Tauri implementation uses native file system APIs via invoke()
@@ -13,7 +13,7 @@
  */
 
 import type { 
-  μ3_FileSystemAPI, 
+  µ3_FileSystemAPI, 
   FileSystemItem, 
   FileSystemEvent,
   OpenDialogOptions,
@@ -34,7 +34,7 @@ interface PlatformContext {
 }
 
 // Browser File System Implementation
-class BrowserFileSystemAPI implements μ3_FileSystemAPI {
+class BrowserFileSystemAPI implements µ3_FileSystemAPI {
   private mockFileSystem: Map<string, FileSystemItem> = new Map();
   private watchers: Map<string, () => void> = new Map();
 
@@ -363,7 +363,7 @@ class BrowserFileSystemAPI implements μ3_FileSystemAPI {
 }
 
 // Tauri File System Implementation
-class TauriFileSystemAPI implements μ3_FileSystemAPI {
+class TauriFileSystemAPI implements µ3_FileSystemAPI {
   private tauriAPI: any = null;
 
   constructor() {
@@ -511,7 +511,7 @@ class TauriFileSystemAPI implements μ3_FileSystemAPI {
 
 // Platform Detection and Factory
 class FileSystemFactory {
-  static createFileSystemAPI(): μ3_FileSystemAPI {
+  static createFileSystemAPI(): µ3_FileSystemAPI {
     const platform = this.detectPlatform();
     
     switch (platform.platform) {
@@ -569,12 +569,12 @@ class FileSystemFactory {
 }
 
 // Export the factory and platform detection
-export const μ8_FileSystemAPI = FileSystemFactory.createFileSystemAPI();
-export const μ8_PlatformCapabilities = FileSystemFactory.getPlatformCapabilities();
-export const μ8_PlatformContext = FileSystemFactory.detectPlatform();
+export const µ8_FileSystemAPI = FileSystemFactory.createFileSystemAPI();
+export const µ8_PlatformCapabilities = FileSystemFactory.getPlatformCapabilities();
+export const µ8_PlatformContext = FileSystemFactory.detectPlatform();
 
 export default {
-  FileSystemAPI: μ8_FileSystemAPI,
-  PlatformCapabilities: μ8_PlatformCapabilities,
-  PlatformContext: μ8_PlatformContext
+  FileSystemAPI: µ8_FileSystemAPI,
+  PlatformCapabilities: µ8_PlatformCapabilities,
+  PlatformContext: µ8_PlatformContext
 };

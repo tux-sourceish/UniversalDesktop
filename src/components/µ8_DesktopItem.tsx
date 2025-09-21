@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { useDraggable, useResizable } from '../hooks';
 import type { DesktopItemData } from '../types';
-const μ2_TuiWindow = lazy(() => import('./windows/μ2_TuiWindow').then(module => ({ default: module.μ2_TuiWindow })));
-const μ2_TableWindow = lazy(() => import('./windows/μ2_TableWindow').then(module => ({ default: module.μ2_TableWindow })));
-const μ8_NoteWindow = lazy(() => import('./windows/μ8_NoteWindow').then(module => ({ default: module.μ8_NoteWindow })));
-const μ2_FileManagerWindow = lazy(() => import('./windows/μ2_FileManagerWindow').then(module => ({ default: module.μ2_FileManagerWindow })));
-const μ2_CodeWindow = lazy(() => import('./windows/μ2_CodeWindow').then(module => ({ default: module.μ2_CodeWindow })));
+const µ2_TuiWindow = lazy(() => import('./windows/µ2_TuiWindow').then(module => ({ default: module.µ2_TuiWindow })));
+const µ2_TableWindow = lazy(() => import('./windows/µ2_TableWindow').then(module => ({ default: module.µ2_TableWindow })));
+const µ8_NoteWindow = lazy(() => import('./windows/µ8_NoteWindow').then(module => ({ default: module.µ8_NoteWindow })));
+const µ2_FileManagerWindow = lazy(() => import('./windows/µ2_FileManagerWindow').then(module => ({ default: module.µ2_FileManagerWindow })));
+const µ2_CodeWindow = lazy(() => import('./windows/µ2_CodeWindow').then(module => ({ default: module.µ2_CodeWindow })));
 import '../styles/DesktopItem.css';
 
 export interface DesktopItemProps {
@@ -197,7 +197,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   const renderContent = () => {
     switch (item.type) {
       case 'filemanager':
-        // Convert DesktopItemData to UDItem for μ2_FileManagerWindow
+        // Convert DesktopItemData to UDItem for µ2_FileManagerWindow
         const fileManagerUDItem = {
           id: item.id,
           type: 3, // File manager type in UDItem system (FLUSS/Flow)
@@ -218,7 +218,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           transformation_history: []
         };
         return (
-          <μ2_FileManagerWindow
+          <µ2_FileManagerWindow
             udItem={fileManagerUDItem}
             onUDItemChange={(updatedItem, _description) => {
               onUpdate(item.id, { 
@@ -235,7 +235,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
         );
       
       case 'tabelle':
-        // Convert DesktopItemData to UDItem for μ2_TableWindow
+        // Convert DesktopItemData to UDItem for µ2_TableWindow
         const tableUDItem = {
           id: item.id,
           type: 8, // Table type in UDItem system
@@ -250,7 +250,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           transformation_history: []
         };
         return (
-          <μ2_TableWindow
+          <µ2_TableWindow
             udItem={tableUDItem}
             onUDItemChange={(updatedItem, _description) => {
               onUpdate(item.id, { content: updatedItem.content });
@@ -260,15 +260,15 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
         );
       
       case 'code':
-        // Convert DesktopItemData to UDItem for μ2_CodeWindow
+        // Convert DesktopItemData to UDItem for µ2_CodeWindow
         const codeUDItem = {
           id: item.id,
           type: 1, // KONSTRUKTOR type for code
           title: item.title,
           position: { x: item.x, y: item.y, z: item.z },
           content: {
-            code: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction μ1_example() {\n  return "UniversalDesktop v2.1";\n}',
-            text: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction μ1_example() {\n  return "UniversalDesktop v2.1";\n}',
+            code: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction µ1_example() {\n  return "UniversalDesktop v2.1";\n}',
+            text: typeof item.content === 'object' ? item.content?.code || item.content?.text : item.content || '// Neuer Code\nfunction µ1_example() {\n  return "UniversalDesktop v2.1";\n}',
             language: (typeof item.content === 'object' ? item.content?.language : null) || item.metadata?.language || 'typescript',
             theme: (typeof item.content === 'object' ? item.content?.theme : null) || item.metadata?.theme || 'light'
           },
@@ -280,7 +280,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           transformation_history: []
         };
         return (
-          <μ2_CodeWindow
+          <µ2_CodeWindow
             udItem={codeUDItem}
             onUDItemChange={(updatedItem, _description) => {
               onUpdate(item.id, { 
@@ -301,7 +301,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       
       case 'terminal':
         return (
-          <μ2_TuiWindow
+          <µ2_TuiWindow
             udItem={{
               id: item.id,
               type: 3,
@@ -357,7 +357,7 @@ $ `,
       
       case 'tui':
         return (
-          <μ2_TuiWindow
+          <µ2_TuiWindow
             udItem={{
               id: item.id,
               type: 3,
@@ -386,7 +386,7 @@ $ `,
       
       default:
         return (
-          <μ8_NoteWindow
+          <µ8_NoteWindow
             udItem={{
               id: item.id,
               type: 1, // Note type in UDItem system
@@ -528,5 +528,5 @@ $ `,
 
 export default DesktopItem;
 
-// μ8_ Bagua Export (ERDE - Global/Base)
-export { DesktopItem as μ8_DesktopItem };
+// µ8_ Bagua Export (ERDE - Global/Base)
+export { DesktopItem as µ8_DesktopItem };

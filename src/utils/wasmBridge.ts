@@ -45,65 +45,65 @@ export class WasmUniversalDocument {
   /**
    * Create new item - uses WASM if available, TypeScript fallback
    */
-  μ6_createItem(itemData: Omit<UDItem, 'id' | 'created_at' | 'updated_at' | 'transformation_history'>, origin: UDOrigin): UDItem {
+  µ6_createItem(itemData: Omit<UDItem, 'id' | 'created_at' | 'updated_at' | 'transformation_history'>, origin: UDOrigin): UDItem {
     if (this.useWasm && this.wasmModule) {
       try {
         // Use WASM engine for performance-critical operations
-        return this.tsDocument.μ6_createItem(itemData, origin);
+        return this.tsDocument.µ6_createItem(itemData, origin);
       } catch (error) {
         console.warn('WASM createItem failed, falling back to TypeScript:', error);
-        return this.tsDocument.μ6_createItem(itemData, origin);
+        return this.tsDocument.µ6_createItem(itemData, origin);
       }
     }
     
     // Fallback to TypeScript implementation
-    return this.tsDocument.μ6_createItem(itemData, origin);
+    return this.tsDocument.µ6_createItem(itemData, origin);
   }
 
   /**
    * Transform existing item
    */
-  μ6_transformItem(itemId: string, transformation: any, changes: Partial<UDItem>): UDItem | null {
+  µ6_transformItem(itemId: string, transformation: any, changes: Partial<UDItem>): UDItem | null {
     if (this.useWasm && this.wasmModule) {
       try {
-        return this.tsDocument.μ6_transformItem(itemId, transformation, changes);
+        return this.tsDocument.µ6_transformItem(itemId, transformation, changes);
       } catch (error) {
         console.warn('WASM transformItem failed, falling back to TypeScript:', error);
-        return this.tsDocument.μ6_transformItem(itemId, transformation, changes);
+        return this.tsDocument.µ6_transformItem(itemId, transformation, changes);
       }
     }
     
-    return this.tsDocument.μ6_transformItem(itemId, transformation, changes);
+    return this.tsDocument.µ6_transformItem(itemId, transformation, changes);
   }
 
   /**
    * Delete item
    */
-  μ6_deleteItem(itemId: string, agent: string): boolean {
+  µ6_deleteItem(itemId: string, agent: string): boolean {
     if (this.useWasm && this.wasmModule) {
       try {
-        return this.tsDocument.μ6_deleteItem(itemId, agent);
+        return this.tsDocument.µ6_deleteItem(itemId, agent);
       } catch (error) {
         console.warn('WASM deleteItem failed, falling back to TypeScript:', error);
-        return this.tsDocument.μ6_deleteItem(itemId, agent);
+        return this.tsDocument.µ6_deleteItem(itemId, agent);
       }
     }
     
-    return this.tsDocument.μ6_deleteItem(itemId, agent);
+    return this.tsDocument.µ6_deleteItem(itemId, agent);
   }
 
   /**
    * Get all items
    */
-  μ6_getAllItems(): UDItem[] {
-    return this.tsDocument.μ6_getAllItems();
+  µ6_getAllItems(): UDItem[] {
+    return this.tsDocument.µ6_getAllItems();
   }
 
   /**
    * Get item by ID
    */
-  μ6_getItem(itemId: string): UDItem | null {
-    return this.tsDocument.μ6_getItem(itemId);
+  µ6_getItem(itemId: string): UDItem | null {
+    return this.tsDocument.µ6_getItem(itemId);
   }
 
   /**
@@ -195,7 +195,7 @@ export class WasmUniversalDocument {
             device: 'server'
           };
 
-          wasmDoc.tsDocument.μ6_createItem(migratedItem, origin);
+          wasmDoc.tsDocument.µ6_createItem(migratedItem, origin);
         } catch (itemError) {
           console.warn('⚠️ Failed to migrate item:', oldItem.id, itemError);
         }
@@ -203,7 +203,7 @@ export class WasmUniversalDocument {
     }
 
     // console.log('✅ Migration completed:', {
-    //   migratedItems: wasmDoc.tsDocument.μ6_getAllItems().length,
+    //   migratedItems: wasmDoc.tsDocument.µ6_getAllItems().length,
     //   originalItems: oldData.items?.length || 0
     // });
 
@@ -214,14 +214,24 @@ export class WasmUniversalDocument {
    * Migrate individual item from old format to new format
    */
   static migrateItem(oldItem: any): any {
+    // Ensure position is a valid object
+    const position = (oldItem.position && typeof oldItem.position === 'object' && 'x' in oldItem.position && 'y' in oldItem.position)
+      ? { x: Number(oldItem.position.x) || 0, y: Number(oldItem.position.y) || 0, z: Number(oldItem.position.z) || 0 }
+      : { x: 0, y: 0, z: 0 };
+
+    // Ensure dimensions is a valid object
+    const dimensions = (oldItem.dimensions && typeof oldItem.dimensions === 'object' && 'width' in oldItem.dimensions && 'height' in oldItem.dimensions)
+      ? { width: Number(oldItem.dimensions.width) || 300, height: Number(oldItem.dimensions.height) || 200 }
+      : { width: 300, height: 200 };
+
     return {
-      type: oldItem.type || 8, // Default to NOTIZZETTEL
-      title: oldItem.title || 'Migrated Item',
-      position: oldItem.position || { x: 0, y: 0, z: 0 },
-      dimensions: oldItem.dimensions || { width: 300, height: 200 },
+      type: Number(oldItem.type) || 8, // Default to NOTIZZETTEL
+      title: String(oldItem.title || 'Migrated Item'),
+      position: position,
+      dimensions: dimensions,
       content: oldItem.content || '',
-      is_contextual: oldItem.is_contextual !== undefined ? oldItem.is_contextual : false,
-      bagua_descriptor: oldItem.bagua_descriptor || oldItem.type || 8
+      is_contextual: oldItem.is_contextual === true, // Coerce to boolean
+      bagua_descriptor: Number(oldItem.bagua_descriptor || oldItem.type) || 8
     };
   }
 
@@ -236,7 +246,7 @@ export class WasmUniversalDocument {
    * Get items as readonly array (for compatibility)
    */
   get allItems(): readonly UDItem[] {
-    return this.tsDocument.μ6_getAllItems();
+    return this.tsDocument.µ6_getAllItems();
   }
 
   /**

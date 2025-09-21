@@ -49,7 +49,7 @@ describe('WASM Engine Transplant', () => {
       device: 'test-runner'
     };
 
-    const item = doc.μ6_createItem(itemOptions, origin);
+    const item = doc.µ6_createItem(itemOptions, origin);
     
     expect(item).toBeDefined();
     expect(item.id).toBeDefined();

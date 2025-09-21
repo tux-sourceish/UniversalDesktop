@@ -1,27 +1,27 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { UDFormat } from '../../core/UDFormat';
-import { μ1_WindowFactory } from '../factories/μ1_WindowFactory';
-// μ1_ Agent Personas Integration - HIMMEL (☰) Templates/Configuration
+import { µ1_WindowFactory } from '../factories/µ1_WindowFactory';
+// µ1_ Agent Personas Integration - HIMMEL (☰) Templates/Configuration
 import {
   AGENT_PERSONAS,
-  μ1_generateAgentPrompt,
-  μ1_validateAgentResponse
-} from '../../config/μ1_AgentPersonas';
+  µ1_generateAgentPrompt,
+  µ1_validateAgentResponse
+} from '../../config/µ1_AgentPersonas';
 
 /**
- * μ2_AIPanel - WIND (☴) Views/UI - KI-Assistent Panel
+ * µ2_AIPanel - WIND (☴) Views/UI - KI-Assistent Panel
  * 
  * V1-Style AI Panel mit flexiblem Three-Phase Agent System.
  * Jetzt mit Checkboxen für individuelle Agent-Auswahl!
  */
 
-interface μ2_AIPanelProps {
+interface µ2_AIPanelProps {
   position?: 'right' | 'left' | 'floating';
   width?: number;
   visible: boolean;
   onToggle: () => void;
   rightOffset?: number; // Für Panel-Kollisionsvermeidung
-  /** Callback für μ1_WindowFactory UDItem Creation */
+  /** Callback für µ1_WindowFactory UDItem Creation */
   onCreateUDItem?: (udItem: any) => void;
   /** Smart positioning calculator for viewport-centered windows */
   positionCalculator?: (requestedPosition: { x: number; y: number; z: number }) => { x: number; y: number; z: number };
@@ -33,7 +33,7 @@ interface μ2_AIPanelProps {
   };
 }
 
-interface μ2_AgentState {
+interface µ2_AgentState {
   isActive: boolean;
   currentTask: string;
   status: 'idle' | 'processing' | 'completed' | 'error';
@@ -46,8 +46,8 @@ interface μ2_AgentState {
   };
 }
 
-interface μ2_AgentConfig {
-  key: keyof μ2_AgentState['agents'];
+interface µ2_AgentConfig {
+  key: keyof µ2_AgentState['agents'];
   icon: string;
   name: string;
   description: string;
@@ -57,7 +57,7 @@ interface μ2_AgentConfig {
 }
 
 // Available models for agent selection
-const μ2_AVAILABLE_MODELS = [
+const µ2_AVAILABLE_MODELS = [
   'kira-online/gemini-2.5-flash',
   'nexus-online/claude-sonnet-4', 
   'kira-online/gemini-2.5-pro',
@@ -66,7 +66,7 @@ const μ2_AVAILABLE_MODELS = [
   'kira-local/llama3.1-8b'
 ];
 
-export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
+export const µ2_AIPanel: React.FC<µ2_AIPanelProps> = ({
   position: _position = 'right',
   width = 320,
   visible,
@@ -77,8 +77,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
   contextManager
 }) => {
   
-  // μ2_ Agent State Management with Philosophy Tracking (WIND-Pattern: UI-State-Management) 
-  const [μ2_agentState, setμ2_AgentState] = useState<μ2_AgentState>({
+  // µ2_ Agent State Management with Philosophy Tracking (WIND-Pattern: UI-State-Management) 
+  const [µ2_agentState, setµ2_AgentState] = useState<µ2_AgentState>({
     isActive: false,
     currentTask: '',
     status: 'idle',
@@ -91,8 +91,8 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
   });
 
-  // μ2_ Agent Configuration with Philosophy-Aware Personas (MODULAR SYSTEM!)  
-  const [μ2_agentConfigs, setμ2_AgentConfigs] = useState<μ2_AgentConfig[]>([
+  // µ2_ Agent Configuration with Philosophy-Aware Personas (MODULAR SYSTEM!)  
+  const [µ2_agentConfigs, setµ2_AgentConfigs] = useState<µ2_AgentConfig[]>([
     {
       key: 'reasoner',
       icon: '🏗️',
@@ -131,28 +131,28 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
   ]);
 
-  const [μ2_inputValue, setμ2_InputValue] = useState('');
+  const [µ2_inputValue, setµ2_InputValue] = useState('');
   
-  // μ2_ Output Type Selection (for Window Creation)
+  // µ2_ Output Type Selection (for Window Creation)
   type OutputType = 'notizzettel' | 'code' | 'tui';
-  const [μ2_outputType, setμ2_OutputType] = useState<OutputType>('notizzettel');
+  const [µ2_outputType, setµ2_OutputType] = useState<OutputType>('notizzettel');
 
-  // μ7_ Debug Mode State (DONNER - Events/Debug/Interactions)
-  const [μ7_debugMode, setμ7_DebugMode] = useState(() => 
+  // µ7_ Debug Mode State (DONNER - Events/Debug/Interactions)
+  const [µ7_debugMode, setµ7_DebugMode] = useState(() => 
     localStorage.getItem('ud-debug-mode') === 'true'
   );
-  const [μ7_debugSessionId, setμ7_DebugSessionId] = useState(() => 
+  const [µ7_debugSessionId, setµ7_DebugSessionId] = useState(() => 
     `debug-${Date.now()}`
   );
 
-  // μ4_ Configuration Persistence (BERG - Setup/Init)
+  // µ4_ Configuration Persistence (BERG - Setup/Init)
   useEffect(() => {
     // Load saved configuration on mount
     const savedConfig = localStorage.getItem('ud-agent-config');
     if (savedConfig) {
       try {
         const parsedConfig = JSON.parse(savedConfig);
-        setμ2_AgentConfigs(parsedConfig);
+        setµ2_AgentConfigs(parsedConfig);
       } catch (error) {
         console.warn('Failed to load agent config:', error);
       }
@@ -160,54 +160,54 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 
     const savedOutputType = localStorage.getItem('ud-output-type');
     if (savedOutputType && ['notizzettel', 'code', 'tui'].includes(savedOutputType)) {
-      setμ2_OutputType(savedOutputType as OutputType);
+      setµ2_OutputType(savedOutputType as OutputType);
     }
 
     // Debug mode is already loaded in useState initializer
   }, []);
 
-  // μ4_ Save Configuration Changes
+  // µ4_ Save Configuration Changes
   useEffect(() => {
-    localStorage.setItem('ud-agent-config', JSON.stringify(μ2_agentConfigs));
-  }, [μ2_agentConfigs]);
+    localStorage.setItem('ud-agent-config', JSON.stringify(µ2_agentConfigs));
+  }, [µ2_agentConfigs]);
 
   useEffect(() => {
-    localStorage.setItem('ud-output-type', μ2_outputType);
-  }, [μ2_outputType]);
+    localStorage.setItem('ud-output-type', µ2_outputType);
+  }, [µ2_outputType]);
 
-  // μ7_ Debug Mode Persistence
+  // µ7_ Debug Mode Persistence
   useEffect(() => {
-    localStorage.setItem('ud-debug-mode', String(μ7_debugMode));
-  }, [μ7_debugMode]);
+    localStorage.setItem('ud-debug-mode', String(µ7_debugMode));
+  }, [µ7_debugMode]);
 
 
-  // μ2_ Toggle Agent Checkbox
-  const μ2_toggleAgent = useCallback((agentKey: keyof μ2_AgentState['agents']) => {
-    setμ2_AgentConfigs(prev => prev.map(config => 
+  // µ2_ Toggle Agent Checkbox
+  const µ2_toggleAgent = useCallback((agentKey: keyof µ2_AgentState['agents']) => {
+    setµ2_AgentConfigs(prev => prev.map(config => 
       config.key === agentKey 
         ? { ...config, enabled: !config.enabled }
         : config
     ));
   }, []);
 
-  // μ2_ Change Agent Model
-  const μ2_changeAgentModel = useCallback((agentKey: keyof μ2_AgentState['agents'], model: string) => {
-    setμ2_AgentConfigs(prev => prev.map(config => 
+  // µ2_ Change Agent Model
+  const µ2_changeAgentModel = useCallback((agentKey: keyof µ2_AgentState['agents'], model: string) => {
+    setµ2_AgentConfigs(prev => prev.map(config => 
       config.key === agentKey 
         ? { ...config, model }
         : config
     ));
   }, []);
 
-  // μ2_ Get Enabled Agents (für flexiblen Workflow)
-  const μ2_getEnabledAgents = useCallback((): μ2_AgentConfig[] => {
-    return μ2_agentConfigs.filter(config => config.enabled);
-  }, [μ2_agentConfigs]);
+  // µ2_ Get Enabled Agents (für flexiblen Workflow)
+  const µ2_getEnabledAgents = useCallback((): µ2_AgentConfig[] => {
+    return µ2_agentConfigs.filter(config => config.enabled);
+  }, [µ2_agentConfigs]);
 
-  // μ2_ Real LiteLLM API Integration
-  const μ2_callLiteLLMAPI = useCallback(async (
+  // µ2_ Real LiteLLM API Integration
+  const µ2_callLiteLLMAPI = useCallback(async (
     prompt: string, 
-    enabledAgents: μ2_AgentConfig[], 
+    enabledAgents: µ2_AgentConfig[], 
     model: string,
     contextInfo?: { activeItems?: any[], hasContextInPrompt?: boolean }
   ): Promise<any> => {
@@ -228,7 +228,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       const hasActiveItems = contextInfo?.activeItems && contextInfo.activeItems.length > 0;
       const hasContext = promptHasContext || hasActiveItems || (contextInfo?.hasContextInPrompt === true);
       
-      console.log('🚀 μ2 LiteLLM API Call:', { 
+      console.log('🚀 µ2 LiteLLM API Call:', { 
         model: selectedModel, 
         agents: enabledAgents.length,
         hasContext: hasContext,
@@ -265,7 +265,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       const data = await response.json();
       const aiResponse = data.choices?.[0]?.message?.content || 'No response from AI';
 
-      console.log(`✅ μ2 Response received: ${aiResponse.length} chars`);
+      console.log(`✅ µ2 Response received: ${aiResponse.length} chars`);
 
       // Format response based on agents and model
       if (enabledAgents.some(a => a.key === 'coder') && (aiResponse.includes('```') || aiResponse.includes('function'))) {
@@ -275,7 +275,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       }
 
     } catch (error) {
-      console.error('❌ μ2 LiteLLM API Error:', error);
+      console.error('❌ µ2 LiteLLM API Error:', error);
       
       // Fallback simulation with error info
       const agentNames = enabledAgents.map(a => a.name).join(' + ');
@@ -294,11 +294,11 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
   }, []);
 
-  // μ6_ Sequential Agent Processing Chain with Modular Personas (FEUER - Functions)
-  const μ6_processWithAgents = useCallback(async (
+  // µ6_ Sequential Agent Processing Chain with Modular Personas (FEUER - Functions)
+  const µ6_processWithAgents = useCallback(async (
     initialPrompt: string,
     context: any[],
-    enabledAgents: μ2_AgentConfig[],
+    enabledAgents: µ2_AgentConfig[],
     outputType: string = 'notizzettel'
   ): Promise<string> => {
     let result = initialPrompt;
@@ -316,20 +316,20 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       
       try {
         const mcpContext = contextManager?.getContextSummary?.() || '';
-        const finalAgentPrompt = μ1_generateAgentPrompt(agent.key, result, contextString, mcpContext, outputType);
+        const finalAgentPrompt = µ1_generateAgentPrompt(agent.key, result, contextString, mcpContext, outputType);
 
-        const response = await μ2_callLiteLLMAPI(finalAgentPrompt, [agent], agent.model, {
+        const response = await µ2_callLiteLLMAPI(finalAgentPrompt, [agent], agent.model, {
             activeItems: contextManager?.activeContextItems || [],
             hasContextInPrompt: finalAgentPrompt.includes('Pinned Items:')
         });
 
-        if (μ7_debugMode && !isLastAgent && onCreateUDItem) {
+        if (µ7_debugMode && !isLastAgent && onCreateUDItem) {
           // Debug window logic can be inserted here if needed
         }
 
-        const validation = μ1_validateAgentResponse(response.text || '', agent.key);
+        const validation = µ1_validateAgentResponse(response.text || '', agent.key);
         if (!validation.valid) {
-          setμ2_AgentState(prev => ({
+          setµ2_AgentState(prev => ({
             ...prev,
             validationWarnings: [...prev.validationWarnings, ...validation.issues.map(issue => `${agent.name}: ${issue}`)]
           }));
@@ -344,11 +344,11 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 
     if (guardianAgent) {
         console.log('🛡️ Guardian is now validating the final result...');
-        const finalValidation = μ1_validateAgentResponse(result, 'coder'); // Validate as coder output for now
+        const finalValidation = µ1_validateAgentResponse(result, 'coder'); // Validate as coder output for now
         if (!finalValidation.valid) {
             console.warn('🛡️ Guardian VETO! The result is not philosophically pure.', finalValidation.issues);
             result = `**🛡️ GUARDIAN VETO 🛡️**\n\n*Die Vision bleibt gewahrt.*\n\n**Grund der Ablehnung:**\n${finalValidation.issues.join('\n')}\n\n--- URSPRÜNGLICHES ERGEBNIS ---\n\n${result}`;
-            setμ2_AgentState(prev => ({
+            setµ2_AgentState(prev => ({
                 ...prev,
                 validationWarnings: [...prev.validationWarnings, ...finalValidation.issues.map(issue => `Guardian: ${issue}`)]
             }));
@@ -358,26 +358,26 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
     }
 
     return result;
-  }, [contextManager, μ7_debugMode, μ7_debugSessionId, onCreateUDItem]); // Include debugMode and onCreateUDItem for debug functionality
+  }, [contextManager, µ7_debugMode, µ7_debugSessionId, onCreateUDItem]); // Include debugMode and onCreateUDItem for debug functionality
 
-  // μ7_ Debug Mode Toggle (DONNER - Events/Interactions)
-  const μ7_toggleDebugMode = useCallback(() => {
-    setμ7_DebugMode(prev => !prev);
+  // µ7_ Debug Mode Toggle (DONNER - Events/Interactions)
+  const µ7_toggleDebugMode = useCallback(() => {
+    setµ7_DebugMode(prev => !prev);
     // Generate new session ID when toggling debug mode
-    setμ7_DebugSessionId(`debug-${Date.now()}`);
+    setµ7_DebugSessionId(`debug-${Date.now()}`);
   }, []);
 
-  // μ2_ AI Request Processing (FLEXIBLER Three-Phase Workflow)
-  const μ2_processAIRequest = useCallback(async (prompt: string) => {
+  // µ2_ AI Request Processing (FLEXIBLER Three-Phase Workflow)
+  const µ2_processAIRequest = useCallback(async (prompt: string) => {
     if (!prompt.trim()) return;
 
-    const enabledAgents = μ2_getEnabledAgents();
+    const enabledAgents = µ2_getEnabledAgents();
     if (enabledAgents.length === 0) return;
 
     // Generate new debug session ID for each request
-    setμ7_DebugSessionId(`debug-${Date.now()}`);
+    setµ7_DebugSessionId(`debug-${Date.now()}`);
 
-    setμ2_AgentState(prev => ({ 
+    setµ2_AgentState(prev => ({ 
       ...prev, 
       status: 'processing', 
       currentTask: prompt,
@@ -390,7 +390,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
         const agentKey = agentConfig.key;
         
         // Agent aktivieren
-        setμ2_AgentState(prev => ({
+        setµ2_AgentState(prev => ({
           ...prev,
           agents: { 
             ...prev.agents, 
@@ -408,7 +408,7 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
 
         // Agent als completed markieren (außer es ist der letzte)
         const isLastAgent = index === enabledAgents.length - 1;
-        setμ2_AgentState(prev => ({
+        setµ2_AgentState(prev => ({
           ...prev,
           agents: { 
             ...prev.agents, 
@@ -423,16 +423,16 @@ export const μ2_AIPanel: React.FC<μ2_AIPanelProps> = ({
       }
 
       // Agent-Simulation completed, jetzt beginnt echte AI-Verarbeitung
-      setμ2_AgentState(prev => ({
+      setµ2_AgentState(prev => ({
         ...prev,
         status: 'processing', // Weiter processing für echte AI
         isActive: true
       }));
 
-      // ✨ CREATE AI RESPONSE WINDOW via μ1_WindowFactory with NEW AGENT SYSTEM! ✨
+      // ✨ CREATE AI RESPONSE WINDOW via µ1_WindowFactory with NEW AGENT SYSTEM! ✨
       if (onCreateUDItem) {
-        // μ6_ Generate Context-Aware Prompt using contextManager prop (WORKING VERSION!)
-        const μ6_buildContextAwarePrompt = (userPrompt: string): string => {
+        // µ6_ Generate Context-Aware Prompt using contextManager prop (WORKING VERSION!)
+        const µ6_buildContextAwarePrompt = (userPrompt: string): string => {
           try {
             // Use contextManager prop directly - clean integration!
             if (!contextManager || !contextManager.getContextSummary) {
@@ -456,54 +456,54 @@ ${userPrompt}
             
             return enhancedPrompt;
           } catch (error) {
-            console.warn('μ6_buildContextAwarePrompt error:', error);
+            console.warn('µ6_buildContextAwarePrompt error:', error);
             return userPrompt;
           }
         };
         
-        const contextAwarePrompt = μ6_buildContextAwarePrompt(prompt);
+        const contextAwarePrompt = µ6_buildContextAwarePrompt(prompt);
         
-        // μ6_ Build Context Array for Agent Processing (for backward compatibility)
+        // µ6_ Build Context Array for Agent Processing (for backward compatibility)
         const contextItems = contextManager?.activeContextItems || [];
         
         // Status auf "processing" für echte AI-Calls setzen
-        setμ2_AgentState(prev => ({
+        setµ2_AgentState(prev => ({
           ...prev,
           status: 'processing', // Echte AI-Verarbeitung beginnt jetzt
           isActive: true
         }));
         
-        // μ6_ Process with Sequential Agent Chain using context-aware prompt
-        const finalResult = await μ6_processWithAgents(contextAwarePrompt, contextItems, enabledAgents, μ2_outputType);
+        // µ6_ Process with Sequential Agent Chain using context-aware prompt
+        const finalResult = await µ6_processWithAgents(contextAwarePrompt, contextItems, enabledAgents, µ2_outputType);
         
-        console.log(`🤖 Multi-Agent Complete: ${enabledAgents.map(a => a.name).join(' → ')} (${μ2_outputType})`);
+        console.log(`🤖 Multi-Agent Complete: ${enabledAgents.map(a => a.name).join(' → ')} (${µ2_outputType})`);
         
-        // μ1_ Create Window using μ1_WindowFactory with Agent Results - viewport-centered positioning
+        // µ1_ Create Window using µ1_WindowFactory with Agent Results - viewport-centered positioning
         const position = { x: 0, y: 0, z: 0 }; // Default triggers viewport centering
         
-        // μ6_ Generate Window Title from Agent Results
-        const generateTitle = (result: string, agents: μ2_AgentConfig[]): string => {
+        // µ6_ Generate Window Title from Agent Results
+        const generateTitle = (result: string, agents: µ2_AgentConfig[]): string => {
           const agentNames = agents.map(a => a.name).join('+');
           const firstLine = result.split('\n')[0]?.substring(0, 30) || 'AI Response';
           return `${agentNames}: ${firstLine}${firstLine.length > 27 ? '...' : ''}`;
         };
         
         try {
-          const newWindow = μ1_WindowFactory.createUDItem({
-            type: μ2_outputType, // Use the selected output type directly
+          const newWindow = µ1_WindowFactory.createUDItem({
+            type: µ2_outputType, // Use the selected output type directly
             position,
             title: generateTitle(finalResult, enabledAgents),
             content: {
               text: finalResult,
-              code: μ2_outputType === 'code' ? finalResult : undefined,
-              tui_content: μ2_outputType === 'tui' ? finalResult : undefined
+              code: µ2_outputType === 'code' ? finalResult : undefined,
+              tui_content: µ2_outputType === 'tui' ? finalResult : undefined
             },
             origin: 'ai-multi',
             metadata: {
               agents: enabledAgents.map(a => ({ name: a.name, model: a.model })),
               processingType: 'multi-agent-chain',
               originalPrompt: prompt,
-              outputType: μ2_outputType,
+              outputType: µ2_outputType,
               contextItems: contextItems.length
             }
           }, positionCalculator); // Use positionCalculator for viewport-centered AI response windows
@@ -521,7 +521,7 @@ ${userPrompt}
       }
 
       // AI-Request erfolgreich abgeschlossen - Status auf "completed" dann "idle"
-      setμ2_AgentState(prev => ({
+      setµ2_AgentState(prev => ({
         ...prev,
         status: 'completed',
         isActive: false
@@ -529,7 +529,7 @@ ${userPrompt}
 
       // Nach kurzer Zeit auf "idle" wechseln für bessere UX
       setTimeout(() => {
-        setμ2_AgentState(prev => ({
+        setµ2_AgentState(prev => ({
           ...prev,
           status: 'idle',
           validationWarnings: [], // Clear warnings after timeout
@@ -543,33 +543,33 @@ ${userPrompt}
       }, 1500); // Verkürzt von 2000ms auf 1500ms
 
     } catch (error) {
-      setμ2_AgentState(prev => ({ 
+      setµ2_AgentState(prev => ({ 
         ...prev, 
         status: 'error',
         isActive: false 
       }));
     }
-  }, [μ2_getEnabledAgents]);
+  }, [µ2_getEnabledAgents]);
 
-  // μ2_ Handle Input Submit
-  const μ2_handleSubmit = useCallback(() => {
-    μ2_processAIRequest(μ2_inputValue);
-    setμ2_InputValue('');
-  }, [μ2_inputValue, μ2_processAIRequest]);
+  // µ2_ Handle Input Submit
+  const µ2_handleSubmit = useCallback(() => {
+    µ2_processAIRequest(µ2_inputValue);
+    setµ2_InputValue('');
+  }, [µ2_inputValue, µ2_processAIRequest]);
 
-  // μ2_ Handle Enter Key
-  const μ2_handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+  // µ2_ Handle Enter Key
+  const µ2_handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      μ2_handleSubmit();
+      µ2_handleSubmit();
     }
-  }, [μ2_handleSubmit]);
+  }, [µ2_handleSubmit]);
 
   // Raimunds algebraischer Transistor für Panel-Sichtbarkeit
-  const μ2_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
-  const μ2_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
+  const µ2_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
+  const µ2_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
 
-  const μ2_panelStyle: React.CSSProperties = {
+  const µ2_panelStyle: React.CSSProperties = {
     position: 'fixed',
     top: '80px', // Unter Header
     right: `${rightOffset}px`, // Panel-Kollisionsvermeidung
@@ -578,8 +578,8 @@ ${userPrompt}
     backgroundColor: 'rgba(30, 30, 30, 0.95)',
     backdropFilter: 'blur(10px)',
     borderLeft: '2px solid rgba(74, 144, 226, 0.3)',
-    transform: μ2_panelTransform,
-    opacity: μ2_panelOpacity,
+    transform: µ2_panelTransform,
+    opacity: µ2_panelOpacity,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 200,
     display: 'flex',
@@ -588,13 +588,13 @@ ${userPrompt}
   };
 
   // Early return mit algebraischem Transistor
-  const μ2_shouldRender = UDFormat.transistor(visible);
-  if (μ2_shouldRender === 0) return null;
+  const µ2_shouldRender = UDFormat.transistor(visible);
+  if (µ2_shouldRender === 0) return null;
 
   return (
-    <div className="μ2-ai-panel" style={μ2_panelStyle}>
+    <div className="µ2-ai-panel" style={µ2_panelStyle}>
       {/* Panel Header - V1 Style */}
-      <div className="μ2-ai-header" style={{
+      <div className="µ2-ai-header" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(74, 144, 226, 0.2)',
         backgroundColor: 'rgba(74, 144, 226, 0.05)',
@@ -625,27 +625,27 @@ ${userPrompt}
           gap: '8px'
         }}>
           <div 
-            className={`μ2-ai-status μ2-status-${μ2_agentState.status}`}
+            className={`µ2-ai-status µ2-status-${µ2_agentState.status}`}
             style={{
               padding: '4px 8px',
               borderRadius: '12px',
               fontSize: '12px',
               fontWeight: '500',
               backgroundColor: 
-                μ2_agentState.status === 'processing' ? 'rgba(239, 68, 68, 0.15)' :
-                μ2_agentState.status === 'completed' ? 'rgba(80, 227, 194, 0.2)' :
-                μ2_agentState.status === 'error' ? 'rgba(227, 80, 80, 0.2)' :
+                µ2_agentState.status === 'processing' ? 'rgba(239, 68, 68, 0.15)' :
+                µ2_agentState.status === 'completed' ? 'rgba(80, 227, 194, 0.2)' :
+                µ2_agentState.status === 'error' ? 'rgba(227, 80, 80, 0.2)' :
                 'rgba(176, 176, 176, 0.2)',
               color:
-                μ2_agentState.status === 'processing' ? '#ef4444' :
-                μ2_agentState.status === 'completed' ? '#50e3c2' :
-                μ2_agentState.status === 'error' ? '#e35050' :
+                µ2_agentState.status === 'processing' ? '#ef4444' :
+                µ2_agentState.status === 'completed' ? '#50e3c2' :
+                µ2_agentState.status === 'error' ? '#e35050' :
                 '#b0b0b0'
             }}
           >
-            {μ2_agentState.status === 'processing' ? '🤖 KI denkt...' : 
-             μ2_agentState.status === 'completed' ? '✅ Fertig' :
-             μ2_agentState.status === 'error' ? '❌ Fehler' :
+            {µ2_agentState.status === 'processing' ? '🤖 KI denkt...' : 
+             µ2_agentState.status === 'completed' ? '✅ Fertig' :
+             µ2_agentState.status === 'error' ? '❌ Fehler' :
              '💤 Bereit'}
           </div>
           
@@ -666,7 +666,7 @@ ${userPrompt}
       </div>
 
       {/* FLEXIBLER Agent Configuration - MIT CHECKBOXES! */}
-      <div className="μ2-agent-config" style={{
+      <div className="µ2-agent-config" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(74, 144, 226, 0.1)'
       }}>
@@ -679,8 +679,8 @@ ${userPrompt}
           🎯 Workflow Configuration
         </h4>
         
-        {μ2_agentConfigs.map(config => {
-          const agentState = μ2_agentState.agents[config.key];
+        {µ2_agentConfigs.map(config => {
+          const agentState = µ2_agentState.agents[config.key];
           if (!agentState) return null; // Defensive check to prevent crash
           const isActive = agentState.active;
           const isEnabled = config.enabled;
@@ -688,7 +688,7 @@ ${userPrompt}
           return (
             <div 
               key={config.key}
-              className={`μ2-agent-config-item`}
+              className={`µ2-agent-config-item`}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -711,8 +711,8 @@ ${userPrompt}
               <input
                 type="checkbox"
                 checked={isEnabled}
-                onChange={() => μ2_toggleAgent(config.key)}
-                disabled={μ2_agentState.status === 'processing'}
+                onChange={() => µ2_toggleAgent(config.key)}
+                disabled={µ2_agentState.status === 'processing'}
                 style={{
                   marginRight: '12px',
                   transform: 'scale(1.2)',
@@ -748,8 +748,8 @@ ${userPrompt}
                 {/* Model Selection Dropdown */}
                 <select
                   value={config.model}
-                  onChange={(e) => μ2_changeAgentModel(config.key, e.target.value)}
-                  disabled={!isEnabled || μ2_agentState.status === 'processing'}
+                  onChange={(e) => µ2_changeAgentModel(config.key, e.target.value)}
+                  disabled={!isEnabled || µ2_agentState.status === 'processing'}
                   style={{
                     fontSize: '10px',
                     padding: '2px 4px',
@@ -761,7 +761,7 @@ ${userPrompt}
                     opacity: isEnabled ? 1 : 0.5
                   }}
                 >
-                  {μ2_AVAILABLE_MODELS.map(model => (
+                  {µ2_AVAILABLE_MODELS.map(model => (
                     <option key={model} value={model} style={{ backgroundColor: '#1a1a1a' }}>
                       {model.split('/')[1] || model}
                     </option>
@@ -796,15 +796,15 @@ ${userPrompt}
           );
         })}
         
-        {/* μ7_ Debug Mode Controls (DONNER - Events/Debug) */}
-        <div className="μ7-debug-controls" style={{
+        {/* µ7_ Debug Mode Controls (DONNER - Events/Debug) */}
+        <div className="µ7-debug-controls" style={{
           marginTop: '12px',
           padding: '8px 12px',
-          backgroundColor: μ7_debugMode 
+          backgroundColor: µ7_debugMode 
             ? 'rgba(245, 215, 110, 0.1)' 
             : 'rgba(74, 144, 226, 0.02)',
           borderRadius: '6px',
-          border: `1px solid ${μ7_debugMode 
+          border: `1px solid ${µ7_debugMode 
             ? 'rgba(245, 215, 110, 0.3)' 
             : 'rgba(74, 144, 226, 0.1)'}`
         }}>
@@ -815,13 +815,13 @@ ${userPrompt}
             cursor: 'pointer',
             fontSize: '12px',
             fontWeight: '500',
-            color: μ7_debugMode ? '#f5d76e' : '#6b7280'
+            color: µ7_debugMode ? '#f5d76e' : '#6b7280'
           }}>
             <input
               type="checkbox"
-              checked={μ7_debugMode}
-              onChange={μ7_toggleDebugMode}
-              disabled={μ2_agentState.status === 'processing'}
+              checked={µ7_debugMode}
+              onChange={µ7_toggleDebugMode}
+              disabled={µ2_agentState.status === 'processing'}
               style={{
                 transform: 'scale(1.1)',
                 accentColor: '#f5d76e'
@@ -833,7 +833,7 @@ ${userPrompt}
               gap: '4px' 
             }}>
               🔍 Debug Agent Prompts
-              {μ7_debugMode && (
+              {µ7_debugMode && (
                 <span style={{
                   fontSize: '10px',
                   padding: '2px 6px',
@@ -849,19 +849,19 @@ ${userPrompt}
           </label>
           <div style={{
             fontSize: '10px',
-            color: μ7_debugMode ? 'rgba(245, 215, 110, 0.8)' : '#9ca3af',
+            color: µ7_debugMode ? 'rgba(245, 215, 110, 0.8)' : '#9ca3af',
             marginTop: '4px',
             marginLeft: '28px',
             lineHeight: '1.3'
           }}>
-            {μ7_debugMode 
-              ? `✨ Debug-Windows zeigen Prompts zwischen Agenten (Session: ${μ7_debugSessionId.split('-')[1]})` 
+            {µ7_debugMode 
+              ? `✨ Debug-Windows zeigen Prompts zwischen Agenten (Session: ${µ7_debugSessionId.split('-')[1]})` 
               : 'Zeigt Zwischenergebnisse und Prompts für jeden Agent-Übergang'}
           </div>
         </div>
 
         {/* Quick Presets */}
-        <div className="μ2-quick-presets" style={{
+        <div className="µ2-quick-presets" style={{
           marginTop: '12px',
           padding: '8px',
           backgroundColor: 'rgba(74, 144, 226, 0.02)',
@@ -890,12 +890,12 @@ ${userPrompt}
               <button
                 key={preset.name}
                 onClick={() => {
-                  setμ2_AgentConfigs(prev => prev.map(config => ({
+                  setµ2_AgentConfigs(prev => prev.map(config => ({
                     ...config,
                     enabled: preset.agents.includes(config.key)
                   })));
                 }}
-                disabled={μ2_agentState.status === 'processing'}
+                disabled={µ2_agentState.status === 'processing'}
                 style={{
                   padding: '4px 8px',
                   fontSize: '11px',
@@ -903,8 +903,8 @@ ${userPrompt}
                   border: '1px solid rgba(74, 144, 226, 0.2)',
                   backgroundColor: 'white',
                   color: '#4a90e2',
-                  cursor: μ2_agentState.status === 'processing' ? 'not-allowed' : 'pointer',
-                  opacity: μ2_agentState.status === 'processing' ? 0.5 : 1
+                  cursor: µ2_agentState.status === 'processing' ? 'not-allowed' : 'pointer',
+                  opacity: µ2_agentState.status === 'processing' ? 0.5 : 1
                 }}
               >
                 {preset.name}
@@ -916,12 +916,12 @@ ${userPrompt}
 
 
       {/* Input Area - V1 Style */}
-      <div className="μ2-ai-input" style={{
+      <div className="µ2-ai-input" style={{
         padding: '16px',
         marginTop: 'auto'
       }}>
         {/* Output Type Selection */}
-        <div className="μ2-output-type-selector" style={{
+        <div className="µ2-output-type-selector" style={{
           marginBottom: '12px',
           padding: '8px',
           backgroundColor: 'rgba(74, 144, 226, 0.02)',
@@ -941,9 +941,9 @@ ${userPrompt}
               <input
                 type="radio"
                 value="notizzettel"
-                checked={μ2_outputType === 'notizzettel'}
-                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
-                disabled={μ2_agentState.status === 'processing'}
+                checked={µ2_outputType === 'notizzettel'}
+                onChange={(e) => setµ2_OutputType(e.target.value as OutputType)}
+                disabled={µ2_agentState.status === 'processing'}
                 style={{ marginRight: '4px', accentColor: '#4a90e2' }}
               />
               📝 Note
@@ -952,9 +952,9 @@ ${userPrompt}
               <input
                 type="radio"
                 value="code"
-                checked={μ2_outputType === 'code'}
-                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
-                disabled={μ2_agentState.status === 'processing'}
+                checked={µ2_outputType === 'code'}
+                onChange={(e) => setµ2_OutputType(e.target.value as OutputType)}
+                disabled={µ2_agentState.status === 'processing'}
                 style={{ marginRight: '4px', accentColor: '#4a90e2' }}
               />
               💻 Code
@@ -963,9 +963,9 @@ ${userPrompt}
               <input
                 type="radio"
                 value="tui"
-                checked={μ2_outputType === 'tui'}
-                onChange={(e) => setμ2_OutputType(e.target.value as OutputType)}
-                disabled={μ2_agentState.status === 'processing'}
+                checked={µ2_outputType === 'tui'}
+                onChange={(e) => setµ2_OutputType(e.target.value as OutputType)}
+                disabled={µ2_agentState.status === 'processing'}
                 style={{ marginRight: '4px', accentColor: '#4a90e2' }}
               />
               🖥️ TUI
@@ -974,11 +974,11 @@ ${userPrompt}
         </div>
 
         <textarea
-          value={μ2_inputValue}
-          onChange={(e) => setμ2_InputValue(e.target.value)}
-          onKeyPress={μ2_handleKeyPress}
+          value={µ2_inputValue}
+          onChange={(e) => setµ2_InputValue(e.target.value)}
+          onKeyPress={µ2_handleKeyPress}
           placeholder="Beschreibe was du erstellen möchtest..."
-          disabled={μ2_agentState.status === 'processing'}
+          disabled={µ2_agentState.status === 'processing'}
           style={{
             width: '100%',
             minHeight: '80px',
@@ -995,21 +995,21 @@ ${userPrompt}
         />
         
         <button
-          onClick={μ2_handleSubmit}
-          disabled={!μ2_inputValue.trim() || μ2_agentState.status === 'processing' || μ2_getEnabledAgents().length === 0}
+          onClick={µ2_handleSubmit}
+          disabled={!µ2_inputValue.trim() || µ2_agentState.status === 'processing' || µ2_getEnabledAgents().length === 0}
           style={{
             width: '100%',
             padding: '12px',
             borderRadius: '8px',
             border: 'none',
             backgroundColor: 
-              μ2_getEnabledAgents().length === 0 ? '#ef4444' :
-              μ2_agentState.status === 'processing' ? '#9ca3af' : '#4a90e2',
+              µ2_getEnabledAgents().length === 0 ? '#ef4444' :
+              µ2_agentState.status === 'processing' ? '#9ca3af' : '#4a90e2',
             color: 'white',
             fontSize: '14px',
             fontWeight: '500',
             cursor: 
-              μ2_getEnabledAgents().length === 0 || μ2_agentState.status === 'processing' ? 'not-allowed' : 'pointer',
+              µ2_getEnabledAgents().length === 0 || µ2_agentState.status === 'processing' ? 'not-allowed' : 'pointer',
             transition: 'all 0.2s ease',
             display: 'flex',
             alignItems: 'center',
@@ -1017,32 +1017,32 @@ ${userPrompt}
             gap: '8px'
           }}
         >
-          {μ2_getEnabledAgents().length === 0 ? (
+          {µ2_getEnabledAgents().length === 0 ? (
             <>⚠️ No Agents Selected</>
-          ) : μ2_agentState.status === 'processing' ? (
+          ) : µ2_agentState.status === 'processing' ? (
             <>⏳ Processing...</>
           ) : (
-            <>🚀 Execute {μ2_getEnabledAgents().length} Agent{μ2_getEnabledAgents().length > 1 ? 's' : ''}</>
+            <>🚀 Execute {µ2_getEnabledAgents().length} Agent{µ2_getEnabledAgents().length > 1 ? 's' : ''}</>
           )}
         </button>
       </div>
 
       {/* Current Task Display */}
-      {μ2_agentState.currentTask && (
-        <div className="μ2-current-task" style={{
+      {µ2_agentState.currentTask && (
+        <div className="µ2-current-task" style={{
           padding: '12px 16px',
           backgroundColor: 'rgba(74, 144, 226, 0.05)',
           borderTop: '1px solid rgba(74, 144, 226, 0.1)',
           fontSize: '12px',
           color: '#6b7280'
         }}>
-          <strong>Current Task:</strong> {μ2_agentState.currentTask}
+          <strong>Current Task:</strong> {µ2_agentState.currentTask}
         </div>
       )}
 
       {/* Validation Warnings Display */}
-      {μ2_agentState.validationWarnings.length > 0 && (
-        <div className="μ2-validation-warnings" style={{
+      {µ2_agentState.validationWarnings.length > 0 && (
+        <div className="µ2-validation-warnings" style={{
           padding: '12px 16px',
           backgroundColor: 'rgba(239, 68, 68, 0.05)',
           borderTop: '1px solid rgba(239, 68, 68, 0.2)',
@@ -1052,21 +1052,21 @@ ${userPrompt}
           <div style={{ fontWeight: '600', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
             ⚠️ Philosophy Compliance Issues:
           </div>
-          {μ2_agentState.validationWarnings.slice(-3).map((warning, index) => (
+          {µ2_agentState.validationWarnings.slice(-3).map((warning, index) => (
             <div key={index} style={{ marginBottom: '2px', opacity: 0.8 }}>
               • {warning}
             </div>
           ))}
-          {μ2_agentState.validationWarnings.length > 3 && (
+          {µ2_agentState.validationWarnings.length > 3 && (
             <div style={{ opacity: 0.6, fontStyle: 'italic' }}>
-              ...and {μ2_agentState.validationWarnings.length - 3} more issues
+              ...and {µ2_agentState.validationWarnings.length - 3} more issues
             </div>
           )}
         </div>
       )}
 
       {/* Bagua Info Footer */}
-      <div className="μ2-bagua-info" style={{
+      <div className="µ2-bagua-info" style={{
         padding: '12px 16px',
         backgroundColor: 'rgba(74, 144, 226, 0.05)',
         borderTop: '1px solid rgba(74, 144, 226, 0.1)',
@@ -1074,11 +1074,11 @@ ${userPrompt}
         color: '#6b7280'
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-          μ2 WIND (☴) - Philosophy-Aware AI Workflow v2.0
+          µ2 WIND (☴) - Philosophy-Aware AI Workflow v2.0
         </div>
         <div>
-          Enabled: {μ2_getEnabledAgents().map(a => a.name).join(' → ') || 'None'}
-          {μ7_debugMode && (
+          Enabled: {µ2_getEnabledAgents().map(a => a.name).join(' → ') || 'None'}
+          {µ7_debugMode && (
             <span style={{ 
               color: '#f5d76e', 
               marginLeft: '8px',
@@ -1091,7 +1091,7 @@ ${userPrompt}
         </div>
         <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '2px' }}>
           Modular Personas | MCP Integration | TypeScript-Only Enforcement
-          {μ7_debugMode && (
+          {µ7_debugMode && (
             <span style={{ color: '#f5d76e', marginLeft: '4px' }}>
               | Debug: Agent-zu-Agent Prompt Flow
             </span>

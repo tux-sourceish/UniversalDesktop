@@ -51,7 +51,7 @@ interface AIModels {
   local: ModelInfo;
 }
 
-export const μ6_useAIAgent = (
+export const µ6_useAIAgent = (
   liteLLMClient?: any,
   contextItems: any[] = [],
   onError?: (error: string) => void

@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { UDFormat } from '../../core/UDFormat';
 
 /**
- * μ6_ContextPanel - FEUER (☲) Functions - AI Context Management UI
+ * µ6_ContextPanel - FEUER (☲) Functions - AI Context Management UI
  * 
  * V1 Genius-Feature als Panel! Selektive AI-Kontexte mit Visual Management.
  */
 
-interface μ6_ContextPanelProps {
+interface µ6_ContextPanelProps {
   activeContextItems: Array<{
     id: string;
     title: string; 
@@ -36,7 +36,7 @@ interface μ6_ContextPanelProps {
   rightOffset?: number;
 }
 
-export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
+export const µ6_ContextPanel: React.FC<µ6_ContextPanelProps> = ({
   activeContextItems,
   tokenUsage,
   onRemoveItem,
@@ -50,20 +50,20 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
   rightOffset = 0
 }) => {
 
-  // μ6_ Token Display Helpers
-  const μ6_formatTokens = (tokens: number): string => {
+  // µ6_ Token Display Helpers
+  const µ6_formatTokens = (tokens: number): string => {
     if (tokens > 1000) return `${(tokens / 1000).toFixed(1)}k`;
     return tokens.toString();
   };
 
-  const μ6_getTokenWarningClass = (): string => {
+  const µ6_getTokenWarningClass = (): string => {
     if (tokenUsage.critical) return 'token-critical';
     if (tokenUsage.warning) return 'token-warning';
     return 'token-ok';
   };
 
-  // μ6_ Type Icon Mapping
-  const μ6_getTypeIcon = (type: string): string => {
+  // µ6_ Type Icon Mapping
+  const µ6_getTypeIcon = (type: string): string => {
     switch (type) {
       case 'window': return '🪟';
       case 'document': return '📄';
@@ -74,8 +74,8 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
     }
   };
 
-  // μ6_ Priority Color Mapping  
-  const μ6_getPriorityColor = (priority?: string): string => {
+  // µ6_ Priority Color Mapping  
+  const µ6_getPriorityColor = (priority?: string): string => {
     switch (priority) {
       case 'high': return '#ef4444';
       case 'medium': return '#f59e0b';
@@ -84,8 +84,8 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
     }
   };
 
-  // μ6_ Bagua Info Display
-  const μ6_getBaguaInfo = (descriptor?: number): string => {
+  // µ6_ Bagua Info Display
+  const µ6_getBaguaInfo = (descriptor?: number): string => {
     if (!descriptor) return '';
     
     const baguaNames = {
@@ -103,8 +103,8 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
     return baguaNames[descriptor as keyof typeof baguaNames] || `Bagua ${descriptor}`;
   };
 
-  // μ6_ Context Statistics
-  const μ6_contextStats = useMemo(() => {
+  // µ6_ Context Statistics
+  const µ6_contextStats = useMemo(() => {
     const typeCount = activeContextItems.reduce((acc, item) => {
       acc[item.type] = (acc[item.type] || 0) + 1;
       return acc;
@@ -120,10 +120,10 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
   }, [activeContextItems]);
 
   // Raimunds algebraischer Transistor für Panel-Sichtbarkeit
-  const μ6_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
-  const μ6_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
+  const µ6_panelTransform = visible ? 'translateX(0)' : 'translateX(100%)';
+  const µ6_panelOpacity = UDFormat.transistor(!visible) * 0.05 + 0.95;
 
-  const μ6_panelStyle: React.CSSProperties = {
+  const µ6_panelStyle: React.CSSProperties = {
     position: 'fixed',
     top: '80px',
     right: `${rightOffset}px`,
@@ -132,8 +132,8 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
     backgroundColor: 'rgba(30, 30, 30, 0.95)',
     backdropFilter: 'blur(10px)',
     borderLeft: '2px solid rgba(239, 68, 68, 0.3)',
-    transform: μ6_panelTransform,
-    opacity: μ6_panelOpacity,
+    transform: µ6_panelTransform,
+    opacity: µ6_panelOpacity,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 200,
     display: 'flex',
@@ -142,13 +142,13 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
   };
 
   // Early return mit algebraischem Transistor
-  const μ6_shouldRender = UDFormat.transistor(visible);
-  if (μ6_shouldRender === 0) return null;
+  const µ6_shouldRender = UDFormat.transistor(visible);
+  if (µ6_shouldRender === 0) return null;
 
   return (
-    <div className="μ6-context-panel" style={μ6_panelStyle}>
+    <div className="µ6-context-panel" style={µ6_panelStyle}>
       {/* Panel Header */}
-      <div className="μ6-context-header" style={{
+      <div className="µ6-context-header" style={{
         padding: '16px',
         borderBottom: '1px solid rgba(239, 68, 68, 0.2)',
         backgroundColor: 'rgba(239, 68, 68, 0.05)'
@@ -190,7 +190,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
         </div>
 
         {/* Token Usage Display */}
-        <div className={`μ6-token-display μ6-${μ6_getTokenWarningClass()}`} style={{
+        <div className={`µ6-token-display µ6-${µ6_getTokenWarningClass()}`} style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -220,10 +220,10 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
                 tokenUsage.warning ? '#f59e0b' :
                 '#22c55e'
             }}>
-              {μ6_formatTokens(tokenUsage.current)}
+              {µ6_formatTokens(tokenUsage.current)}
             </span>
             <span style={{ fontSize: '12px', color: '#6b7280' }}>
-              / {μ6_formatTokens(tokenUsage.limit)}
+              / {µ6_formatTokens(tokenUsage.limit)}
             </span>
           </div>
           <div style={{
@@ -240,13 +240,13 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
       </div>
 
       {/* Context Items List */}
-      <div className="μ6-context-items" style={{
+      <div className="µ6-context-items" style={{
         flex: 1,
         overflowY: 'auto',
         padding: '16px'
       }}>
         {activeContextItems.length === 0 ? (
-          <div className="μ6-context-empty" style={{
+          <div className="µ6-context-empty" style={{
             textAlign: 'center',
             padding: '40px 20px',
             color: '#6b7280'
@@ -263,7 +263,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
           activeContextItems.map(item => (
             <div
               key={item.id}
-              className="μ6-context-item"
+              className="µ6-context-item"
               style={{
                 padding: '12px',
                 marginBottom: '8px',
@@ -286,7 +286,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
                     gap: '8px',
                     marginBottom: '6px'
                   }}>
-                    <span style={{ fontSize: '16px' }}>{μ6_getTypeIcon(item.type)}</span>
+                    <span style={{ fontSize: '16px' }}>{µ6_getTypeIcon(item.type)}</span>
                     <span style={{
                       fontSize: '14px',
                       fontWeight: '600',
@@ -303,7 +303,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
                         width: '8px',
                         height: '8px',
                         borderRadius: '50%',
-                        backgroundColor: μ6_getPriorityColor(item.priority),
+                        backgroundColor: µ6_getPriorityColor(item.priority),
                         flexShrink: 0
                       }}
                       title={`Priority: ${item.priority || 'medium'}`}
@@ -318,10 +318,10 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
                     fontSize: '11px',
                     color: '#6b7280'
                   }}>
-                    <span>🪙 {μ6_formatTokens(item.tokenEstimate || 0)}</span>
+                    <span>🪙 {µ6_formatTokens(item.tokenEstimate || 0)}</span>
                     {item.bagua_descriptor && (
                       <span title="Bagua Descriptor">
-                        {μ6_getBaguaInfo(item.bagua_descriptor)}
+                        {µ6_getBaguaInfo(item.bagua_descriptor)}
                       </span>
                     )}
                     <span>{item.addedAt.toLocaleTimeString()}</span>
@@ -371,7 +371,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
 
       {/* Context Actions */}
       {activeContextItems.length > 0 && (
-        <div className="μ6-context-actions" style={{
+        <div className="µ6-context-actions" style={{
           padding: '16px',
           borderTop: '1px solid rgba(239, 68, 68, 0.1)',
           backgroundColor: 'rgba(239, 68, 68, 0.02)'
@@ -435,7 +435,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
 
       {/* Context Statistics */}
       {activeContextItems.length > 0 && (
-        <div className="μ6-context-stats" style={{
+        <div className="µ6-context-stats" style={{
           padding: '12px 16px',
           backgroundColor: 'rgba(239, 68, 68, 0.05)',
           borderTop: '1px solid rgba(239, 68, 68, 0.1)',
@@ -454,17 +454,17 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
               <strong>Avg:</strong> {Math.round(tokenUsage.current / activeContextItems.length)} tokens
             </div>
             <div>
-              <strong>Types:</strong> {Object.keys(μ6_contextStats.typeCount).length}
+              <strong>Types:</strong> {Object.keys(µ6_contextStats.typeCount).length}
             </div>
             <div>
-              <strong>High Priority:</strong> {μ6_contextStats.priorityCount.high || 0}
+              <strong>High Priority:</strong> {µ6_contextStats.priorityCount.high || 0}
             </div>
           </div>
         </div>
       )}
 
       {/* Bagua Info Footer */}
-      <div className="μ6-bagua-info" style={{
+      <div className="µ6-bagua-info" style={{
         padding: '12px 16px',
         backgroundColor: 'rgba(239, 68, 68, 0.05)',
         borderTop: '1px solid rgba(239, 68, 68, 0.1)',
@@ -472,7 +472,7 @@ export const μ6_ContextPanel: React.FC<μ6_ContextPanelProps> = ({
         color: '#6b7280'
       }}>
         <div style={{ fontWeight: '600', marginBottom: '4px' }}>
-          μ6 FEUER (☲) - AI Context Functions
+          µ6 FEUER (☲) - AI Context Functions
         </div>
         <div>
           Selektive AI-Kontexte mit Token-Management und Auto-Optimization

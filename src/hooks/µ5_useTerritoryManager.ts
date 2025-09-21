@@ -70,7 +70,7 @@ interface TerritoryAnalytics {
   territoryTypes: Record<string, number>;
 }
 
-export const μ5_useTerritoryManager = (
+export const µ5_useTerritoryManager = (
   items: DesktopItemData[] = [],
   canvasState?: { position: Position; scale: number }
 ) => {

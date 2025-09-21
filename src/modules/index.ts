@@ -5,46 +5,46 @@
  */
 
 // Authentication & Session
-export { AuthModule } from './μ4_AuthModule';
+export { AuthModule } from './µ4_AuthModule';
 
 // Data Management  
-export { useDataModule } from './μ8_DataModule';
-export type { DataModuleReturn } from './μ8_DataModule';
+export { useDataModule } from './µ8_DataModule';
+export type { DataModuleReturn } from './µ8_DataModule';
 
 // Canvas & Rendering
-export { CanvasModule } from './μ8_CanvasModule';
+export { CanvasModule } from './µ8_CanvasModule';
 
 // Panel System
-export { PanelModule } from './μ2_PanelModule';
+export { PanelModule } from './µ2_PanelModule';
 
 // Context Menu System
-export { ContextModule } from './μ6_ContextModule';
+export { ContextModule } from './µ6_ContextModule';
 
 // Module Composition Patterns
 export const ModulePatterns = {
   // Minimal setup - basic desktop functionality
   minimal: [
-    'μ4_AuthModule',
-    'μ8_DataModule', 
-    'μ8_CanvasModule'
+    'µ4_AuthModule',
+    'µ8_DataModule', 
+    'µ8_CanvasModule'
   ],
   
   // Standard setup - full desktop experience
   standard: [
-    'μ4_AuthModule',
-    'μ8_DataModule',
-    'μ8_CanvasModule', 
-    'μ2_PanelModule',
-    'μ6_ContextModule'
+    'µ4_AuthModule',
+    'µ8_DataModule',
+    'µ8_CanvasModule', 
+    'µ2_PanelModule',
+    'µ6_ContextModule'
   ],
   
   // Enterprise setup - all features + security
   enterprise: [
-    'μ4_AuthModule',
-    'μ8_DataModule',
-    'μ8_CanvasModule',
-    'μ2_PanelModule', 
-    'μ6_ContextModule',
+    'µ4_AuthModule',
+    'µ8_DataModule',
+    'µ8_CanvasModule',
+    'µ2_PanelModule', 
+    'µ6_ContextModule',
     'SecurityModule', // Future
     'AuditModule'     // Future
   ]

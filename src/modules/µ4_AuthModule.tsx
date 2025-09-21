@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { enhancedSupabase } from '../services/μ8_supabaseClient';
+import { enhancedSupabase } from '../services/µ8_supabaseClient';
 import LoginPage from '../components/LoginPage';
 import type { UniversalDesktopSession } from '../types';
 
@@ -20,8 +20,8 @@ export const AuthModule: React.FC<AuthModuleProps> = ({
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // μ7_ Logout Function - DONNER (☳) Events
-  const μ7_handleLogout = async () => {
+  // µ7_ Logout Function - DONNER (☳) Events
+  const µ7_handleLogout = async () => {
     console.log('🚪 AuthModule logout initiated');
     try {
       await enhancedSupabase.auth.signOut();
@@ -64,5 +64,5 @@ export const AuthModule: React.FC<AuthModuleProps> = ({
     return <LoginPage onLogin={() => {}} />;
   }
 
-  return <>{children({ session, user: session.user, logout: μ7_handleLogout })}</>;
+  return <>{children({ session, user: session.user, logout: µ7_handleLogout })}</>;
 };

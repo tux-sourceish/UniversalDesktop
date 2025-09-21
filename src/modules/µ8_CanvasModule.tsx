@@ -5,7 +5,7 @@
 
 import React, { useRef } from 'react';
 import { CanvasController } from '../components/bridges/CanvasController';
-import DesktopItem from '../components/μ8_DesktopItem';
+import DesktopItem from '../components/µ8_DesktopItem';
 import type { DesktopItemData, CanvasState } from '../types';
 
 interface CanvasModuleProps {
@@ -76,7 +76,7 @@ export const CanvasModule: React.FC<CanvasModuleProps> = ({
     onContextMenu?.(e);
   };
 
-  // μ6_FEUER - File Import Processing via Drag & Drop
+  // µ6_FEUER - File Import Processing via Drag & Drop
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();

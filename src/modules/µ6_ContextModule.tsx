@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { μ7_UniversalContextMenu } from '../components/contextMenu/μ7_UniversalContextMenu';
+import { µ7_UniversalContextMenu } from '../components/contextMenu/µ7_UniversalContextMenu';
 import type { DesktopItemData, ContextMenuData } from '../types';
 
 interface ContextModuleProps {
@@ -27,7 +27,7 @@ interface ContextModuleProps {
   onUnifiedContextMenuClose: () => void;
   onItemCreate?: (type: string, position: { x: number; y: number; z: number }) => void;
   onItemAction?: (action: string, item?: DesktopItemData) => void;
-  clipboard?: ReturnType<typeof import('../hooks/μ7_useClipboardManager').μ7_useClipboardManager>; // μ7_ Clipboard manager
+  clipboard?: ReturnType<typeof import('../hooks/µ7_useClipboardManager').µ7_useClipboardManager>; // µ7_ Clipboard manager
 }
 
 export const ContextModule: React.FC<ContextModuleProps> = ({
@@ -119,9 +119,9 @@ export const ContextModule: React.FC<ContextModuleProps> = ({
         />
       )} */}
 
-      {/* ✅ V2 μX-Universal Context Menu - SINGLE SOURCE OF TRUTH! */}
+      {/* ✅ V2 µX-Universal Context Menu - SINGLE SOURCE OF TRUTH! */}
       {unifiedContextMenu.visible && (
-        <μ7_UniversalContextMenu
+        <µ7_UniversalContextMenu
           element={unifiedContextMenu.targetItem}
           visible={unifiedContextMenu.visible}
           x={unifiedContextMenu.x}

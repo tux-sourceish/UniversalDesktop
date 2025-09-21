@@ -14,10 +14,10 @@
  */
 
 import React, { useCallback, useMemo, Suspense, lazy } from 'react';
-import { AuthModule } from './modules/μ4_AuthModule';
-const CanvasModule = lazy(() => import('./modules/μ8_CanvasModule').then(module => ({ default: module.CanvasModule })));
-const PanelModule = lazy(() => import('./modules/μ2_PanelModule').then(module => ({ default: module.PanelModule })));
-import { ContextModule } from './modules/μ6_ContextModule';
+import { AuthModule } from './modules/µ4_AuthModule';
+const CanvasModule = lazy(() => import('./modules/µ8_CanvasModule').then(module => ({ default: module.CanvasModule })));
+const PanelModule = lazy(() => import('./modules/µ2_PanelModule').then(module => ({ default: module.PanelModule })));
+import { ContextModule } from './modules/µ6_ContextModule';
 import { µ1_Header } from './components/µ1_Header';
 import { UDFormat } from './core/UDFormat';
 
@@ -27,16 +27,16 @@ import {
   µ2_useMinimap,
   µ2_useBaguaColors,
   µ3_useNavigation,
-  μ3_useCanvasNavigation,
-  μ8_usePanelLayout,
-  μ1_useWindowManager,
-  μ7_useKeyboardShortcuts,
-  μ6_useAIAgent,
-  μ7_useClipboardManager
+  µ3_useCanvasNavigation,
+  µ8_usePanelLayout,
+  µ1_useWindowManager,
+  µ7_useKeyboardShortcuts,
+  µ6_useAIAgent,
+  µ7_useClipboardManager
 } from './hooks';
 
-// Import μ6_useContextManager directly (not from index.ts)
-import { μ6_useContextManager } from './hooks/µ6_useContextManager';
+// Import µ6_useContextManager directly (not from index.ts)
+import { µ6_useContextManager } from './hooks/µ6_useContextManager';
 
 // Type imports
 import type { 
@@ -66,7 +66,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   const { workspaceState, documentState } = workspace;
 
   // 🎮 Navigation Hook - Canvas physics and movement (declared early for other hooks)
-  const canvas = μ3_useCanvasNavigation();
+  const canvas = µ3_useCanvasNavigation();
 
   // 🎨 µ2_ Bagua Color System - Visual philosophy integration
   const baguaColors = µ2_useBaguaColors();
@@ -79,7 +79,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   
   // 🪟 Window Management Hook - Intelligent item creation (v1 relic) - declared early for useEffect
   // TODO: Revive window management with v2 Campus-Model
-  const windows = μ1_useWindowManager();
+  const windows = µ1_useWindowManager();
   
   // Use hooks to prevent "unused" warnings (v2 ready hooks)
   React.useEffect(() => {
@@ -169,11 +169,11 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   // (Canvas already declared above for hook dependencies)
 
   // 🎛️ Panel Management Hook - NEW V2 System! (shared instance)
-  const panels = μ8_usePanelLayout();
+  const panels = µ8_usePanelLayout();
   
 
-  // 🧠 Context Management Hook - AI context optimization (μ6_ Bagua-powered)
-  const context = μ6_useContextManager(100000, (id: string, updates: any) => {
+  // 🧠 Context Management Hook - AI context optimization (µ6_ Bagua-powered)
+  const context = µ6_useContextManager(100000, (id: string, updates: any) => {
     // Delegate to µ1_ Campus-Model workspace methods
     workspace.µ1_transformItem(id, {
       verb: 'context-update',
@@ -185,7 +185,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   // (Windows hook already declared above for useEffect dependency)
 
   // ⌨️ Keyboard Shortcuts Hook - Context-aware shortcuts
-  μ7_useKeyboardShortcuts({
+  µ7_useKeyboardShortcuts({
     onZoomToLevel: (level: string) => {
       const zoomLevel = level as keyof typeof ZoomLevels;
       canvas.navigateToZoomLevel(zoomLevel);
@@ -198,14 +198,14 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
   // 🤖 AI Agent Hook - Three-phase AI workflow (v1 relic)
   // TODO: Revive AI agent system with v2 Bagua logic
-  μ6_useAIAgent(null, context.activeContextItems);
+  µ6_useAIAgent(null, context.activeContextItems);
 
   // 🏛️ Territory Management Hook - Spatial organization (v1 relic - disabled in v2)
   // TODO: Revive territory management for v2 when ready
   // useTerritoryManager(items);
 
-  // 📋 Clipboard Management Hook - μ7_ DONNER Events/Interactions
-  const clipboard = μ7_useClipboardManager();
+  // 📋 Clipboard Management Hook - µ7_ DONNER Events/Interactions
+  const clipboard = µ7_useClipboardManager();
 
   // 💾 Auto-hide state for sync status
   const [showSyncStatus, setShowSyncStatus] = React.useState(true);
@@ -502,7 +502,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
   const handleToggleContext = useCallback((item: DesktopItemData) => {
     // Context toggle debug info removed for performance
     
-    // Use μ6_useContextManager's toggleItemContext function
+    // Use µ6_useContextManager's toggleItemContext function
     context.toggleItemContext(item, 'medium');
     
     // Context state updates automatically via hooks
@@ -536,7 +536,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         }
         break;
       case 'paste':
-        // μ7_ Paste functionality with algebraic transistor logic
+        // µ7_ Paste functionality with algebraic transistor logic
         const clipboardData = clipboard.getLatest();
         if (clipboardData) {
           const pastePosition = {
@@ -567,7 +567,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       case 'add_to_context':
         if (item) context.addToContext(item);
         break;
-      // μ7_ AI Workflow Actions
+      // µ7_ AI Workflow Actions
       case 'ai-reasoner':
         if (item) {
           // TODO: Integrate with AI Panel reasoner agent
@@ -583,7 +583,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
           // TODO: Integrate with AI Panel refiner agent
         }
         break;
-      // μ7_ Text Editing Actions (from Bearbeiten submenu)
+      // µ7_ Text Editing Actions (from Bearbeiten submenu)
       case 'select-all':
         if (item) {
           // Trigger select all in the focused window
@@ -608,7 +608,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
           document.dispatchEvent(new CustomEvent('universal-paste-text', { detail: { itemId: item.id } }));
         }
         break;
-      // μ7_ Navigation Actions
+      // µ7_ Navigation Actions
       case 'zoom-to-fit':
         // Use existing zoom functionality
         if (canvas.setZoomLevel) {
@@ -619,7 +619,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
         // Use existing navigation to center view
         canvas.setCanvasState(prev => ({ ...prev, x: 0, y: 0 }));
         break;
-      // μ8_ERDE - Export Actions
+      // µ8_ERDE - Export Actions
       case 'export-standard':
         handleExportWorkspace('standard');
         break;
@@ -634,7 +634,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     }
   }, [clipboard, handleItemDelete, handleItemCreate, context, unifiedContextMenu, canvas]);
 
-  // μ6_FEUER - File Import Handler
+  // µ6_FEUER - File Import Handler
   const handleFilesDrop = useCallback(async (files: FileList, dropPosition: { x: number, y: number }) => {
     try {
       console.log('🔥 handleFilesDrop triggered:', {
@@ -651,7 +651,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
     }
   }, [workspace]);
 
-  // μ8_ERDE - Workspace Export Handler 
+  // µ8_ERDE - Workspace Export Handler 
   const handleExportWorkspace = useCallback(async (strategy: 'standard' | 'traditional' | 'algebraic') => {
     try {
       console.log('🏔️ handleExportWorkspace triggered:', { strategy });
@@ -661,7 +661,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
       const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
       const filename = `workspace-${timestamp}-${strategy}`;
 
-      const success = await workspace.μ1_exportWorkspace(filename, strategy);
+      const success = await workspace.µ1_exportWorkspace(filename, strategy);
       
       if (success) {
         console.log('✅ Workspace export completed successfully');
@@ -731,8 +731,8 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
           positionCalculator={calculateSmartPosition}
           onItemUpdate={handleItemUpdate}
           position="left"
-          μ8_panelState={panels.panelState}
-          μ8_panelConfigs={panels.panelConfigs}
+          µ8_panelState={panels.panelState}
+          µ8_panelConfigs={panels.panelConfigs}
           contextManager={context}
         />
       </Suspense>
@@ -823,7 +823,7 @@ const DesktopWorkspace: React.FC<{ sessionData: UniversalDesktopSession }> = ({
 
       {/* Development Debug Info - Smart Positioning */}
       {import.meta.env.DEV && (() => {
-        // μ8_ Smart Debug Panel Positioning (vermeidet Panel-Kollisionen)
+        // µ8_ Smart Debug Panel Positioning (vermeidet Panel-Kollisionen)
         const canvasOffset = panels.getCanvasOffset();
         const debugPosition = {
           // Wenn rechte Panels aktiv sind, gehe weiter nach links
