@@ -21,9 +21,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
-          'canvas-module': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/modules/μ8_CanvasModule.tsx'],
-          'panel-module': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/modules/μ2_PanelModule.tsx'],
-          'file-manager-window': ['/home/tux/SingularUniverse/opt/UniversalDesktop/src/components/windows/μ2_FileManagerWindow.tsx']
+          'canvas-module': ['./src/modules/μ8_CanvasModule.tsx'],
+          'panel-module': ['./src/modules/μ2_PanelModule.tsx'],
+          'file-manager-window': ['./src/components/windows/μ2_FileManagerWindow.tsx']
         }
       },
       onwarn(warning, warn) {
