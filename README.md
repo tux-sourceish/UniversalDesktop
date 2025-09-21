@@ -1,3 +1,35 @@
+## 🚀 Quick Start
+
+Dieses Projekt ist ein algebraisches Betriebssystem, das auf den Prinzipien der Algebra und der östlichen Philosophie basiert. Es ist eine lebendige Leinwand für Gedanken, Code und Daten.
+
+**Voraussetzungen:**
+*   **Node.js:** v18 oder höher
+*   **Git:** Für das Klonen des Repositories
+
+**Installation & Deployment:**
+
+1.  **Repository klonen:**
+    ```bash
+    git clone https://github.com/tux-sourceish/UniversalDesktop.git
+    cd UniversalDesktop
+    ```
+2.  **Abhängigkeiten installieren:**
+    ```bash
+    npm install
+    ```
+3.  **Projekt bauen und auf dem Server bereitstellen:**
+    ```bash
+    npm run deploy:server
+    ```
+    *Hinweis:* Dieser Befehl führt einen Build durch, verschiebt die Dateien in das Live-Verzeichnis (`/var/www/ullrichbau.app/dist`) und startet Apache neu. Stellen Sie sicher, dass Sie die notwendigen Berechtigungen haben.
+
+**Entwicklung starten:**
+```bash
+npm run dev
+```
+
+---
+
 # 🌌 UniversalDesktop: Das Algebraische Betriebssystem
 
 **"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft. So dass der Mensch seine eigenen Natur gegebenen Fähigkeiten reaktivieren kann." - Raimund Welsch**
@@ -6,7 +38,7 @@ Dieses Projekt ist die Verwirklichung der 45-jährigen Vision von Raimund Welsch
 
 ![Raimunds Vision](screenshots/photo_2025-08-19_00-50-11.jpg)
 
-*Raimund Welschs Vision, die die Grundlage für das μX-Bagua-System und die algebraische Architektur legte.*
+*Raimund Welschs Vision, die die Grundlage für das µX-Bagua-System und die algebraische Architektur legte.*
 
 ---
 
@@ -70,40 +102,40 @@ npm install && npm run dev
 
 ---
 
-## 核心 (Kèxīn) - Kern-Features nach dem μX-Bagua-System
+## 核心 (Kèxīn) - Kern-Features nach dem µX-Bagua-System
 
 Das gesamte System ist nach den 8 Trigrammen des I Ging organisiert, um eine harmonische und logische Architektur zu gewährleisten. Jedes Trigramm hat eine spezifische Rolle und einen eigenen "Raum" im System.
 
-*   **μ1_HIMMEL (☰) - Schöpfung & Orchestrierung:**
-    *   **μ1_WindowFactory:** Eine revolutionäre "Unity Bridge", die identische Fenster für Menschen und KI-Agenten erzeugt.
-    *   **μ1_useWorkspace:** Verwaltung von `.ud`-Workspaces für souveräne, portable Arbeitsumgebungen.
+*   **µ1_HIMMEL (☰) - Schöpfung & Orchestrierung:**
+    *   **µ1_WindowFactory:** Eine revolutionäre "Unity Bridge", die identische Fenster für Menschen und KI-Agenten erzeugt.
+    *   **µ1_useWorkspace:** Verwaltung von `.ud`-Workspaces für souveräne, portable Arbeitsumgebungen.
 
-*   **μ2_WIND (☴) - Ansichten & Interfaces:**
-    *   **μ2_TuiWindow:** Ein Terminal-Fenster mit 15 authentischen Presets aus der Computergeschichte.
-    *   **μ2_Minimap:** Eine StarCraft-inspirierte Minimap für die flüssige Navigation auf dem unendlichen Canvas.
-    *   **μ2_FileManager:** Ein dualer Datei-Manager, der nahtlos zwischen einer modernen GUI und einer Norton-Commander-inspirierten TUI umschaltet.
+*   **µ2_WIND (☴) - Ansichten & Interfaces:**
+    *   **µ2_TuiWindow:** Ein Terminal-Fenster mit 15 authentischen Presets aus der Computergeschichte.
+    *   **µ2_Minimap:** Eine StarCraft-inspirierte Minimap für die flüssige Navigation auf dem unendlichen Canvas.
+    *   **µ2_FileManager:** Ein dualer Datei-Manager, der nahtlos zwischen einer modernen GUI und einer Norton-Commander-inspirierten TUI umschaltet.
 
-*   **μ3_WASSER (☵) - Abläufe & Navigation:**
-    *   **μ3_useNavigation:** Implementiert eine exponentielle Canvas-Navigation mit physikbasiertem Momentum.
-    *   **μ3_useFileSystem:** Eine Abstraktionsschicht für den Dateisystemzugriff, die Tauri für native Operationen und die Web-API als Fallback nutzt.
+*   **µ3_WASSER (☵) - Abläufe & Navigation:**
+    *   **µ3_useNavigation:** Implementiert eine exponentielle Canvas-Navigation mit physikbasiertem Momentum.
+    *   **µ3_useFileSystem:** Eine Abstraktionsschicht für den Dateisystemzugriff, die Tauri für native Operationen und die Web-API als Fallback nutzt.
 
-*   **μ4_BERG (☶) - Initialisierung & Stabilität:**
-    *   **μ4_AuthModule:** Sichere Authentifizierung über Supabase, mit einem nahtlosen Fallback in einen Offline-Demo-Modus.
+*   **µ4_BERG (☶) - Initialisierung & Stabilität:**
+    *   **µ4_AuthModule:** Sichere Authentifizierung über Supabase, mit einem nahtlosen Fallback in einen Offline-Demo-Modus.
 
-*   **μ5_SEE (☱) - Eigenschaften & Metadaten:**
-    *   **μ5_TerritoryPanel:** Verwaltung von räumlichen "Territorien" auf dem Canvas, um Arbeitsbereiche zu organisieren.
+*   **µ5_SEE (☱) - Eigenschaften & Metadaten:**
+    *   **µ5_TerritoryPanel:** Verwaltung von räumlichen "Territorien" auf dem Canvas, um Arbeitsbereiche zu organisieren.
 
-*   **μ6_FEUER (☲) - Funktionen & Intelligenz:**
-    *   **μ6_useContextManager:** Ein intelligentes System zur Verwaltung des KI-Kontexts, das es dem Benutzer ermöglicht, beliebige Informationen für KI-Anfragen "anzupinnen".
+*   **µ6_FEUER (☲) - Funktionen & Intelligenz:**
+    *   **µ6_useContextManager:** Ein intelligentes System zur Verwaltung des KI-Kontexts, das es dem Benutzer ermöglicht, beliebige Informationen für KI-Anfragen "anzupinnen".
     *   **LiteLLM-Integration:** Unterstützt 6 verschiedene KI-Modelle (lokal und online) für spezialisierte Aufgaben.
 
-*   **μ7_DONNER (☳) - Ereignisse & Interaktionen:**
-    *   **μ7_UniversalContextMenu:** Ein revolutionäres, kontextsensitives Rechtsklick-Menü, das seine Optionen je nach angeklicktem Element (Canvas, Fenster, Text, Datei) ändert.
+*   **µ7_DONNER (☳) - Ereignisse & Interaktionen:**
+    *   **µ7_UniversalContextMenu:** Ein revolutionäres, kontextsensitives Rechtsklick-Menü, das seine Optionen je nach angeklicktem Element (Canvas, Fenster, Text, Datei) ändert.
     *   **Desktop-Class Text Editing:** Professionelle Textbearbeitung mit präziser Auswahl, System-Clipboard-Integration und kontextabhängigen Aktionen wie in einer nativen Anwendung.
 
-*   **μ8_ERDE (☷) - Grundlage & Implementierung:**
-    *   **μ8_NoteWindow:** Ein vielseitiges Fenster für Notizen, das Markdown und andere Formate unterstützt.
-    *   **μ8_FileSystemAbstraction:** Die Basis für den plattformunabhängigen Dateizugriff.
+*   **µ8_ERDE (☷) - Grundlage & Implementierung:**
+    *   **µ8_NoteWindow:** Ein vielseitiges Fenster für Notizen, das Markdown und andere Formate unterstützt.
+    *   **µ8_FileSystemAbstraction:** Die Basis für den plattformunabhängigen Dateizugriff.
 
 ---
 
