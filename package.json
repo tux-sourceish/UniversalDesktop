@@ -23,6 +23,7 @@
     "test:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=test-results.json",
     "test:parallel": "vitest run --threads",
     "test:coverage:upload": "npm run test:coverage && codecov",
+    "deploy:server": "bash ./scripts/deploy.sh /var/www/ullrichbau.app/dist",
     "startup": "./scripts/"
   },
   "dependencies": {
