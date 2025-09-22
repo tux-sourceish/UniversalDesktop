@@ -68,26 +68,7 @@ const isVisible = 1 * Math.pow(0, condition1 ? 0 : 1) * Math.pow(0, condition2 ?
 
 ---
 
-## 🚀 Quick Start
 
-**Voraussetzungen:**
-*   **Node.js:** v18 oder höher
-*   **Supabase (Optional):** Für Cloud-Synchronisation. Das System läuft auch im reinen Offline-Modus.
-*   **LiteLLM (Optional):** Für die KI-Integration.
-
-**Installation:**
-```bash
-# 1. Repository klonen
-git clone https://github.com/SingularUniverse/UniversalDesktop.git
-
-# 2. In das Verzeichnis wechseln
-cd UniversalDesktop
-
-# 3. Abhängigkeiten installieren und starten
-npm install && npm run dev
-```
-
----
 
 ## 🖼️ Visueller Eindruck
 

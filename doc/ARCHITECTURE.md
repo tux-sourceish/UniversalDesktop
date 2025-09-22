@@ -11,7 +11,7 @@
 **If you're a new Claude instance working on this project, READ THIS FIRST:**
 
 1. **Philosophy**: This is NOT a typical React app - it's an **algebraic operating system** with Eastern philosophy integration
-2. **Naming System**: Every component uses **μX-Bagua prefixes** (μ1-μ8) corresponding to I Ching trigrams
+2. **Naming System**: Every component uses **µX-Bagua prefixes** (µ1-µ8) corresponding to I Ching trigrams
 3. **Architecture**: **Campus-Model** - specialized hooks and modules instead of monolithic components
 4. **File Format**: Native **.ud format** for binary document storage with Bagua metadata
 5. **Current Focus**: **File Manager integration** with Tauri-ready dual-mode TUI/GUI system
@@ -20,7 +20,7 @@
 - `AI-CONTEXT.ud` - Complete project knowledge in native format
 - `src/core/universalDocument.ts` (1,916 LOC) - Core document engine
 - `src/UniversalDesktopv2.tsx` (673 LOC) - Main orchestrator
-- `src/components/factories/μ1_WindowFactory.tsx` - Human-AI unity bridge
+- `src/components/factories/µ1_WindowFactory.tsx` - Human-AI unity bridge
 
 ---
 
@@ -32,9 +32,9 @@ UniversalDesktop v2.1 represents a **revolutionary transformation** from traditi
 ```
 V1 (Monolith):           V2 (Campus-Model):              V2.1 (File Manager Era):
 ┌─────────────────┐      ┌──────────────────────────┐     ┌─────────────────────────────────┐
-│ UniversalDesktop│      │ μ1_Factory  μ6_Context   │     │ μ2_FileManager   μ7_ContextMenu │
-│    2000+ LOC    │  →   │ μ2_Hooks    μ2_Minimap   │  →  │ μ3_FileSystem    μ8_Abstraction │  
-│ Everything here │      │ μ8_Windows  μ4_Modules   │     │ Tauri-Ready      Native OS      │
+│ UniversalDesktop│      │ µ1_Factory  µ6_Context   │     │ µ2_FileManager   µ7_ContextMenu │
+│    2000+ LOC    │  →   │ µ2_Hooks    µ2_Minimap   │  →  │ µ3_FileSystem    µ8_Abstraction │  
+│ Everything here │      │ µ8_Windows  µ4_Modules   │     │ Tauri-Ready      Native OS      │
 └─────────────────┘      └──────────────────────────┘     └─────────────────────────────────┘
   Performance: 😵‍💫         Performance: ⚡ -90% Re-Renders   Status: 100% File Integration ✅
 ```
@@ -57,28 +57,28 @@ The File Manager represents the culmination of the Tauri-Ready architecture, ach
 **Key Components:**
 ```
 📁 File Manager Flow:
-μ2_ToolPanel (Human Click) → μ1_WindowFactory → μ8_DesktopItem → μ2_FileManagerWindow
+µ2_ToolPanel (Human Click) → µ1_WindowFactory → µ8_DesktopItem → µ2_FileManagerWindow
      ↓                              ↓                    ↓                    ↓
  Button Handler          Registry Lookup        Component Routing    Dual-Mode Rendering
      ↓                              ↓                    ↓                    ↓
-μ3_useFileManagerDualMode ← μ3_useFileSystem ← μ8_FileSystemAbstraction ← Platform Detection
+µ3_useFileManagerDualMode ← µ3_useFileSystem ← µ8_FileSystemAbstraction ← Platform Detection
 ```
 
 **Technical Implementation:**
-- **μ2_ToolPanel.tsx**: File Manager button with Bagua-themed UI
-- **μ1_WindowFactory.tsx**: Unified creation system (Human + AI)
-- **μ8_DesktopItem.tsx**: Universal component renderer with file manager routing
-- **μ2_FileManagerWindow.tsx**: Dual-mode TUI/GUI interface
-- **μ3_useFileManagerDualMode.ts**: Norton Commander inspired dual-pane system
-- **μ3_useFileSystem.ts**: Platform-agnostic file operations
-- **μ8_FileSystemAbstraction.ts**: Tauri/Browser runtime switching
+- **µ2_ToolPanel.tsx**: File Manager button with Bagua-themed UI
+- **µ1_WindowFactory.tsx**: Unified creation system (Human + AI)
+- **µ8_DesktopItem.tsx**: Universal component renderer with file manager routing
+- **µ2_FileManagerWindow.tsx**: Dual-mode TUI/GUI interface
+- **µ3_useFileManagerDualMode.ts**: Norton Commander inspired dual-pane system
+- **µ3_useFileSystem.ts**: Platform-agnostic file operations
+- **µ8_FileSystemAbstraction.ts**: Tauri/Browser runtime switching
 
 **Achievements:**
 - ✅ File Manager button opens dual-mode interface correctly
 - ✅ All TypeScript build errors resolved
 - ✅ Tauri-ready with graceful browser fallback
 - ✅ Norton Commander dual-pane layout
-- ✅ Complete integration with μX-Bagua system
+- ✅ Complete integration with µX-Bagua system
 - ✅ AI and Human creation paths unified
 
 ---
@@ -96,62 +96,62 @@ src/core/
 **Responsibilities:**
 - **UniversalDocument Class**: Complete .UD file management with Bagua metadata integration
 - **Algebraic Transistor**: `Math.pow(0, condition ? 0 : 1)` mathematical control flow
-- **Bagua Constants**: Immutable Früher Himmel trigram order (μ1-μ8)
+- **Bagua Constants**: Immutable Früher Himmel trigram order (µ1-µ8)
 - **Binary Serialization**: 40,000+ items/second performance with .ud format
 - **Transformation History**: Complete change tracking for all document operations
 
-### **Layer 2: μX-Hook Specialists (Campus-Model)**
+### **Layer 2: µX-Hook Specialists (Campus-Model)**
 ```typescript
 src/hooks/ (21 specialized hooks total)
-├── μ1_useWorkspace.ts           # HIMMEL - Workspace/Document Management  
-├── μ1_useUniversalDocument.ts   # HIMMEL - Core Document Operations
-├── μ1_useWindowManager.ts       # HIMMEL - Window Factory Integration
-├── μ2_useMinimap.ts            # WIND - Spatial Minimap UI
-├── μ2_useBaguaColors.ts        # WIND - Theme/Color Management
-├── μ3_useNavigation.ts         # WASSER - Canvas Flow Navigation
-├── μ3_useCanvasNavigation.ts   # WASSER - Exponential Movement System
-├── μ3_useFileSystem.ts         # WASSER - File System Abstraction ★
-├── μ3_useFileManagerDualMode.ts # WASSER - TUI/GUI Dual Mode ★
-├── μ5_useTerritoryManager.ts   # SEE - Spatial Territory Management
-├── μ6_useContextManager.ts     # FEUER - AI Context Functions
-├── μ6_useAIAgent.ts           # FEUER - AI Agent Integration
-├── μ7_useKeyboardShortcuts.ts  # DONNER - Event Handling
-├── μ7_useClipboardManager.ts   # DONNER - System Clipboard Integration
-├── μ7_useDraggable.ts         # DONNER - Drag Operations
-├── μ7_useResizable.ts         # DONNER - Resize Operations
-├── μ7_useUniversalContextMenu.ts # DONNER - Context Menu System ★
-└── μ8_usePanelLayout.ts       # ERDE - Global Panel State Management
+├── µ1_useWorkspace.ts           # HIMMEL - Workspace/Document Management  
+├── µ1_useUniversalDocument.ts   # HIMMEL - Core Document Operations
+├── µ1_useWindowManager.ts       # HIMMEL - Window Factory Integration
+├── µ2_useMinimap.ts            # WIND - Spatial Minimap UI
+├── µ2_useBaguaColors.ts        # WIND - Theme/Color Management
+├── µ3_useNavigation.ts         # WASSER - Canvas Flow Navigation
+├── µ3_useCanvasNavigation.ts   # WASSER - Exponential Movement System
+├── µ3_useFileSystem.ts         # WASSER - File System Abstraction ★
+├── µ3_useFileManagerDualMode.ts # WASSER - TUI/GUI Dual Mode ★
+├── µ5_useTerritoryManager.ts   # SEE - Spatial Territory Management
+├── µ6_useContextManager.ts     # FEUER - AI Context Functions
+├── µ6_useAIAgent.ts           # FEUER - AI Agent Integration
+├── µ7_useKeyboardShortcuts.ts  # DONNER - Event Handling
+├── µ7_useClipboardManager.ts   # DONNER - System Clipboard Integration
+├── µ7_useDraggable.ts         # DONNER - Drag Operations
+├── µ7_useResizable.ts         # DONNER - Resize Operations
+├── µ7_useUniversalContextMenu.ts # DONNER - Context Menu System ★
+└── µ8_usePanelLayout.ts       # ERDE - Global Panel State Management
 ```
 
 **Campus-Model Rules (95% consistency achieved):**
 - **Ein Hook = Eine Aufgabe** (Single responsibility principle)
-- **μX-Prefix = Sofortige Erkennbarkeit** (Instant specialization recognition)
+- **µX-Prefix = Sofortige Erkennbarkeit** (Instant specialization recognition)
 - **Algebraische Kommunikation** (Transistor-based state management)
 - **Polare Ergänzung** (Complementary hook relationships)
 
 **★ NEW**: File Manager hooks implementing Tauri-ready dual-mode architecture
 
-### **Layer 3: μX-Bagua Windows & Components**
+### **Layer 3: µX-Bagua Windows & Components**
 ```typescript
 src/components/
 ├── windows/
-│   ├── μ8_NoteWindow.tsx        # ERDE - Universal text/markdown (458 LOC)
-│   ├── μ2_TuiWindow.tsx         # WIND - Terminal UI with 15 presets (680 LOC)
-│   ├── μ2_TableWindow.tsx       # WIND - Interactive data tables (754 LOC)
-│   └── μ2_FileManagerWindow.tsx # WIND - File Manager Window Container ★
+│   ├── µ8_NoteWindow.tsx        # ERDE - Universal text/markdown (458 LOC)
+│   ├── µ2_TuiWindow.tsx         # WIND - Terminal UI with 15 presets (680 LOC)
+│   ├── µ2_TableWindow.tsx       # WIND - Interactive data tables (754 LOC)
+│   └── µ2_FileManagerWindow.tsx # WIND - File Manager Window Container ★
 ├── factories/
-│   └── μ1_WindowFactory.tsx     # HIMMEL - Human-AI Unity Bridge (377 LOC)
+│   └── µ1_WindowFactory.tsx     # HIMMEL - Human-AI Unity Bridge (377 LOC)
 ├── panels/
-│   ├── μ2_ToolPanel.tsx        # WIND - Human tool creation (229 LOC)
-│   ├── μ2_AIPanel.tsx          # WIND - AI communication (869 LOC)
-│   ├── μ5_TerritoryPanel.tsx   # SEE - Spatial territory management (507 LOC)
-│   └── μ6_ContextPanel.tsx     # FEUER - AI context management (482 LOC)
+│   ├── µ2_ToolPanel.tsx        # WIND - Human tool creation (229 LOC)
+│   ├── µ2_AIPanel.tsx          # WIND - AI communication (869 LOC)
+│   ├── µ5_TerritoryPanel.tsx   # SEE - Spatial territory management (507 LOC)
+│   └── µ6_ContextPanel.tsx     # FEUER - AI context management (482 LOC)
 ├── contextMenu/
-│   ├── μ7_UnifiedContextMenu.tsx     # DONNER - Legacy context system
-│   └── μ7_UniversalContextMenu.tsx  # DONNER - Universal context system ★
-├── μ2_FileManager.tsx          # WIND - Core File Manager Component ★
-├── μ8_DesktopItem.tsx         # ERDE - Spatial item container
-└── μ1_Header.tsx              # HIMMEL - Global navigation
+│   ├── µ7_UnifiedContextMenu.tsx     # DONNER - Legacy context system
+│   └── µ7_UniversalContextMenu.tsx  # DONNER - Universal context system ★
+├── µ2_FileManager.tsx          # WIND - Core File Manager Component ★
+├── µ8_DesktopItem.tsx         # ERDE - Spatial item container
+└── µ1_Header.tsx              # HIMMEL - Global navigation
 ```
 
 **Window Architecture Innovations:**
@@ -169,29 +169,29 @@ UniversalDesktop v2.1 introduces a **revolutionary dual-mode File Manager** that
 ```typescript
 📁 File Manager System Architecture:
 ┌─────────────────────────────────────────────────────────────┐
-│ μ2_FileManagerWindow.tsx                                    │ ← Window Integration
+│ µ2_FileManagerWindow.tsx                                    │ ← Window Integration
 ├─────────────────────────────────────────────────────────────┤
-│ μ2_FileManager.tsx (Core Component)                         │ ← Main Component
+│ µ2_FileManager.tsx (Core Component)                         │ ← Main Component
 │ ├── GUI Mode: Modern file browser                          │
 │ ├── TUI Mode: Norton Commander interface                   │
 │ └── Context Integration: Universal context menu support    │
 ├─────────────────────────────────────────────────────────────┤
-│ μ3_useFileSystem.ts (Abstraction Layer)                    │ ← Hook Layer
+│ µ3_useFileSystem.ts (Abstraction Layer)                    │ ← Hook Layer
 │ ├── Tauri API Integration                                  │
 │ ├── Browser File System Access API Fallback               │
 │ └── Development Mock System                                │
 ├─────────────────────────────────────────────────────────────┤
-│ μ3_useFileManagerDualMode.ts (State Management)            │ ← State Hook
+│ µ3_useFileManagerDualMode.ts (State Management)            │ ← State Hook
 │ ├── TUI/GUI Mode Switching                                 │
 │ ├── Norton Commander Layout Logic                          │
 │ └── Search & Filter System                                 │
 ├─────────────────────────────────────────────────────────────┤
-│ μ7_UniversalContextMenu.tsx (Context Actions)              │ ← Context System
+│ µ7_UniversalContextMenu.tsx (Context Actions)              │ ← Context System
 │ ├── File/Folder specific actions                           │
 │ ├── Clipboard integration (Cut/Copy/Paste)                 │
 │ └── Context-aware action visibility                        │
 ├─────────────────────────────────────────────────────────────┤
-│ μ8_FileSystemAbstraction.ts (Service Layer)                │ ← Service Layer
+│ µ8_FileSystemAbstraction.ts (Service Layer)                │ ← Service Layer
 │ ├── BrowserFileSystemAPI (Web fallback)                    │
 │ ├── TauriFileSystemAPI (Native integration)                │
 │ └── Platform detection & capability management             │
@@ -210,17 +210,17 @@ The File Manager implements the **"Schleusen-Prinzip"** (Gateway Principle) - ru
 1. **Universal Context Menu Integration**: Right-click anywhere for contextual actions
 2. **Tauri-Ready Architecture**: Native file system access when available, web fallbacks when not
 3. **Norton Commander Authenticity**: True dual-pane navigation with F-key shortcuts
-4. **Bagua File Organization**: Files categorized using μX-Bagua system principles
+4. **Bagua File Organization**: Files categorized using µX-Bagua system principles
 5. **UDItem Integration**: Files can be converted to UDItems for spatial desktop placement
 
 ### **Layer 4: Unity Bridge (The Innovation)**
 ```typescript
 src/components/factories/
-└── μ1_WindowFactory.tsx    # HIMMEL - The Unity Bridge (377 LOC)
+└── µ1_WindowFactory.tsx    # HIMMEL - The Unity Bridge (377 LOC)
 ```
 
 **Revolutionary Achievement:**
-- **Human-AI Unity**: Same μX-Windows for Human tools + AI responses
+- **Human-AI Unity**: Same µX-Windows for Human tools + AI responses
 - **Algebraic Type Detection**: AI automatically chooses optimal window type
 - **Origin Tracking**: Human vs AI creation documented
 - **Registry System**: Unified window type management
@@ -247,7 +247,7 @@ error TS2307: Cannot find module '@tauri-apps/api'
 **2. TypeScript Index Signature Warnings**
 ```typescript
 // File Manager dual-mode state management - complex but working
-src/hooks/μ3_useFileManagerDualMode.ts:192:16 - error TS7053
+src/hooks/µ3_useFileManagerDualMode.ts:192:16 - error TS7053
 // These are due to dynamic panel ID generation - functionality is correct
 ```
 
@@ -302,12 +302,12 @@ npm run type-check      # Helpful for code quality, not blocking
 ### **Core Modules (Functional Units)**
 ```typescript
 src/modules/
-├── μ4_AuthModule.tsx      # User authentication & session
-├── μ8_CanvasModule.tsx    # Spatial canvas management
-├── μ6_ContextModule.tsx   # Context menu system (✅ V2 COMPLETE)
-├── μ8_DataModule.tsx      # Data persistence & sync
-├── μ2_PanelModule.tsx     # Panel orchestration  
-└── μ2_Minimap.tsx         # Minimap module (553 LOC)
+├── µ4_AuthModule.tsx      # User authentication & session
+├── µ8_CanvasModule.tsx    # Spatial canvas management
+├── µ6_ContextModule.tsx   # Context menu system (✅ V2 COMPLETE)
+├── µ8_DataModule.tsx      # Data persistence & sync
+├── µ2_PanelModule.tsx     # Panel orchestration  
+└── µ2_Minimap.tsx         # Minimap module (553 LOC)
 ```
 
 ### **Bridge Components (V1→V2 Compatibility)**
@@ -319,7 +319,7 @@ src/components/bridges/
 
 **Bridge Philosophy:**
 - **Minimal Bridges Remaining**: Most V1 compatibility removed as V2 matures
-- **Progressive Migration**: MinimapWidget & PanelSidebar successfully migrated to μ2_Minimap & μ2_PanelModule
+- **Progressive Migration**: MinimapWidget & PanelSidebar successfully migrated to µ2_Minimap & µ2_PanelModule
 - **Clean Architecture**: Obsolete bridges removed for cleaner codebase
 
 ---
@@ -329,22 +329,22 @@ src/components/bridges/
 ### **V2 Multi-Panel System**
 ```typescript
 src/components/panels/
-├── μ2_ToolPanel.tsx       # WIND - Human tool creation (229 LOC)
-├── μ2_AIPanel.tsx         # WIND - AI communication (869 LOC)  
-├── μ5_TerritoryPanel.tsx  # SEE - Spatial territory management (507 LOC)
-└── μ6_ContextPanel.tsx    # FEUER - AI context management (482 LOC)
+├── µ2_ToolPanel.tsx       # WIND - Human tool creation (229 LOC)
+├── µ2_AIPanel.tsx         # WIND - AI communication (869 LOC)  
+├── µ5_TerritoryPanel.tsx  # SEE - Spatial territory management (507 LOC)
+└── µ6_ContextPanel.tsx    # FEUER - AI context management (482 LOC)
 ```
 
 ### **Panel State Management**
 ```typescript
-// Centralized panel state via μ8_usePanelLayout
+// Centralized panel state via µ8_usePanelLayout
 interface PanelLayoutState {
     panels: {
-        tools: boolean;      // μ2_ToolPanel
-        ai: boolean;         // μ2_AIPanel  
-        territory: boolean;  // μ5_TerritoryPanel
-        context: boolean;    // μ6_ContextPanel
-        minimap: boolean;    // μ2_Minimap
+        tools: boolean;      // µ2_ToolPanel
+        ai: boolean;         // µ2_AIPanel  
+        territory: boolean;  // µ5_TerritoryPanel
+        context: boolean;    // µ6_ContextPanel
+        minimap: boolean;    // µ2_Minimap
     };
     positions: Record<string, { x: number; y: number; width: number; height: number; }>;
     zIndexes: Record<string, number>;
@@ -354,10 +354,10 @@ interface PanelLayoutState {
 ### **Panel Communication Flow**
 ```typescript
 // Data flow between panels:
-μ2_ToolPanel → μ1_WindowFactory → UDItem → μ6_ContextPanel
-μ2_AIPanel   → μ1_WindowFactory → UDItem → μ6_ContextPanel
-μ5_Territory → Spatial Bounds   → μ2_Minimap
-μ6_Context   → AI Prompts       → μ2_AIPanel
+µ2_ToolPanel → µ1_WindowFactory → UDItem → µ6_ContextPanel
+µ2_AIPanel   → µ1_WindowFactory → UDItem → µ6_ContextPanel
+µ5_Territory → Spatial Bounds   → µ2_Minimap
+µ6_Context   → AI Prompts       → µ2_AIPanel
 ```
 
 ---
@@ -368,35 +368,35 @@ interface PanelLayoutState {
 ```typescript
 // src/UniversalDesktopv2.tsx (673 LOC) - Main orchestrator
 UniversalDesktopv2
-├── μ1_Header                    # HIMMEL - Global navigation
-├── μ4_AuthModule                # User authentication  
-├── μ8_CanvasModule              # Spatial canvas
+├── µ1_Header                    # HIMMEL - Global navigation
+├── µ4_AuthModule                # User authentication  
+├── µ8_CanvasModule              # Spatial canvas
 │   ├── CanvasController        # Canvas interaction bridge
-│   └── μ8_DesktopItem[]        # Individual spatial items
-├── μ2_PanelModule               # Panel orchestration
-│   ├── μ2_ToolPanel           # Human tools
-│   ├── μ2_AIPanel             # AI communication
-│   ├── μ5_TerritoryPanel      # Territory management
-│   └── μ6_ContextPanel        # Context management
-├── μ2_Minimap                  # Spatial overview
-└── μ8_DataModule               # Persistence layer
+│   └── µ8_DesktopItem[]        # Individual spatial items
+├── µ2_PanelModule               # Panel orchestration
+│   ├── µ2_ToolPanel           # Human tools
+│   ├── µ2_AIPanel             # AI communication
+│   ├── µ5_TerritoryPanel      # Territory management
+│   └── µ6_ContextPanel        # Context management
+├── µ2_Minimap                  # Spatial overview
+└── µ8_DataModule               # Persistence layer
 ```
 
 ### **Component Communication Patterns**
 ```typescript
 // Props Flow (Top-Down):
 UniversalDesktopv2 
-  → μ2_PanelModule { contextManager, onCreateUDItem }
-    → μ2_AIPanel { contextManager, onCreateUDItem }
-      → μ1_WindowFactory { createUDItem }
-        → μ8_NoteWindow { udItem, onUDItemChange, onAddToContext }
+  → µ2_PanelModule { contextManager, onCreateUDItem }
+    → µ2_AIPanel { contextManager, onCreateUDItem }
+      → µ1_WindowFactory { createUDItem }
+        → µ8_NoteWindow { udItem, onUDItemChange, onAddToContext }
 
 // Event Flow (Bottom-Up):  
-μ8_NoteWindow [user edit]
+µ8_NoteWindow [user edit]
   → onUDItemChange(updatedItem, "Content updated")
-    → μ2_PanelModule [state update]
+    → µ2_PanelModule [state update]
       → UniversalDesktopv2 [persistence]
-        → μ8_DataModule [auto-save]
+        → µ8_DataModule [auto-save]
 ```
 
 ---
@@ -406,8 +406,8 @@ UniversalDesktopv2
 ### **UDItem Lifecycle**
 ```typescript
 // Creation Flow:
-User Tool Click → μ2_ToolPanel.μ2_createWindow()
-  → μ1_WindowFactory.createUDItem({
+User Tool Click → µ2_ToolPanel.µ2_createWindow()
+  → µ1_WindowFactory.createUDItem({
       type: 'notizzettel',
       position: { x, y, z },
       origin: 'human-tool'
@@ -416,10 +416,10 @@ User Tool Click → μ2_ToolPanel.μ2_createWindow()
   → onCreateUDItem(udItem) → Parent state update
 
 // AI Response Flow:  
-User AI Prompt → μ2_AIPanel.μ2_handleSubmit()
+User AI Prompt → µ2_AIPanel.µ2_handleSubmit()
   → LiteLLM API call with context
-  → μ1_WindowFactory.detectOptimalType(response, agents)  
-  → μ1_WindowFactory.createUDItem({
+  → µ1_WindowFactory.detectOptimalType(response, agents)  
+  → µ1_WindowFactory.createUDItem({
       type: detectedType,
       content: aiResponse,
       origin: 'ai-multi'
@@ -430,12 +430,12 @@ User AI Prompt → μ2_AIPanel.μ2_handleSubmit()
 ### **Context Management Flow**
 ```typescript
 // Context Addition:
-μ8_NoteWindow [📌 click] → μ6_useContextManager.addToContext(udItem)
+µ8_NoteWindow [📌 click] → µ6_useContextManager.addToContext(udItem)
   → Context state update with priority/tokens
-  → μ6_ContextPanel displays updated list
+  → µ6_ContextPanel displays updated list
 
 // AI Context Usage:
-μ2_AIPanel [submit] → μ6_useContextManager.buildContextAwarePrompt()
+µ2_AIPanel [submit] → µ6_useContextManager.buildContextAwarePrompt()
   → Original prompt + context summary
   → LiteLLM API call with enhanced context
   → Response uses pinned information
@@ -445,13 +445,13 @@ User AI Prompt → μ2_AIPanel.μ2_handleSubmit()
 ```typescript
 // Auto-Save Flow (2s debounced):
 UDItem change → onUDItemChange(item, description)
-  → μ1_useWorkspace.updateWorkspace()
+  → µ1_useWorkspace.updateWorkspace()
   → 2000ms debounce
   → toWorkspaceSnapshot() → ArrayBuffer
   → Supabase BYTEA storage (or localStorage fallback)
 
 // Load Flow:
-App startup → μ1_useWorkspace.loadWorkspace()
+App startup → µ1_useWorkspace.loadWorkspace()
   → Supabase query (or localStorage)
   → fromWorkspaceSnapshot(buffer) → UniversalDocument
   → UDItem[] extraction → Canvas rendering
@@ -471,9 +471,9 @@ function UniversalDesktopV1() {
 
 // V2 Solution: Specialized hook optimization  
 function UniversalDesktopV2() {
-    const minimap = μ2_useMinimap();        // Only re-renders on minimap changes
-    const navigation = μ3_useNavigation();  // Only re-renders on navigation
-    const context = μ6_useContextManager(); // Only re-renders on context changes
+    const minimap = µ2_useMinimap();        // Only re-renders on minimap changes
+    const navigation = µ3_useNavigation();  // Only re-renders on navigation
+    const context = µ6_useContextManager(); // Only re-renders on context changes
     // Isolation → -90% re-renders! ⚡
 }
 ```
@@ -506,18 +506,18 @@ result = value *
 ### **React Optimization Patterns**
 ```typescript
 // Memoization for expensive calculations:
-const μ6_expensiveCalculation = useMemo(() => {
+const µ6_expensiveCalculation = useMemo(() => {
     return heavyMath * UDFormat.transistor(shouldCalculate);
 }, [dependency1, dependency2]);
 
 // Callback optimization for event handlers:
-const μ7_handleClick = useCallback((event: MouseEvent) => {
+const µ7_handleClick = useCallback((event: MouseEvent) => {
     const shouldHandle = UDFormat.transistor(isEnabled);
     return shouldHandle * processClick(event);
 }, [isEnabled]);
 
 // Component memoization for stable props:
-const MemoizedWindow = React.memo(μ8_NoteWindow, (prev, next) => {
+const MemoizedWindow = React.memo(µ8_NoteWindow, (prev, next) => {
     return prev.udItem.updated_at === next.udItem.updated_at;
 });
 ```
@@ -549,7 +549,7 @@ const SPATIAL_LAYERS = {
 ### **Minimap Spatial Intelligence**
 ```typescript
 // StarCraft-style minimap with collision avoidance:
-const μ2_minimapLogic = {
+const µ2_minimapLogic = {
     // 3-level damping system for smooth navigation:
     viewport: {
         scale: 0.2,                    // 20% of full canvas visible
@@ -579,7 +579,7 @@ interface Territory {
 }
 
 // Spatial queries:
-const μ5_territoryQueries = {
+const µ5_territoryQueries = {
     itemsInBounds(bounds: UDBounds): UDItem[],
     territoriesContaining(position: UDPosition): Territory[],
     nearestTerritory(position: UDPosition): Territory | null
@@ -606,7 +606,7 @@ const AI_MODELS = {
 ### **Context-Aware AI Architecture**
 ```typescript
 // AI Context Pipeline:
-User Prompt → μ6_ContextManager.buildContextAwarePrompt()
+User Prompt → µ6_ContextManager.buildContextAwarePrompt()
   → { 
       originalPrompt: string,
       contextSummary: string,
@@ -614,7 +614,7 @@ User Prompt → μ6_ContextManager.buildContextAwarePrompt()
       contextItems: UDItem[]
     }
   → LiteLLM API call → AI Response
-  → μ1_WindowFactory.detectOptimalType(response, contributingAgents)
+  → µ1_WindowFactory.detectOptimalType(response, contributingAgents)
   → UDItem creation with origin tracking
 
 // Context Management:
@@ -632,10 +632,10 @@ interface ContextState {
 ### **Human-AI Unity Bridge**
 ```typescript
 // Revolutionary achievement: Same windows for human + AI!
-const μ1_unityBridge = {
+const µ1_unityBridge = {
     // Human tool click:
     humanCreate: (type: string, position: UDPosition) => {
-        return μ1_WindowFactory.createUDItem({
+        return µ1_WindowFactory.createUDItem({
             type,
             position,
             origin: 'human-tool',
@@ -645,8 +645,8 @@ const μ1_unityBridge = {
     
     // AI response processing:
     aiCreate: (response: string, agents: string[]) => {
-        const detectedType = μ1_WindowFactory.detectOptimalType(response, agents);
-        return μ1_WindowFactory.createUDItem({
+        const detectedType = µ1_WindowFactory.detectOptimalType(response, agents);
+        return µ1_WindowFactory.createUDItem({
             type: detectedType,
             position: findSafePosition(),
             origin: 'ai-multi',
@@ -655,7 +655,7 @@ const μ1_unityBridge = {
         });
     }
     
-    // Result: Identical μX-Windows with full UDItem metadata! ✨
+    // Result: Identical µX-Windows with full UDItem metadata! ✨
 };
 ```
 
@@ -690,20 +690,20 @@ export default defineConfig({
 ```typescript
 // Strict mode with Bagua type safety:
 interface BaguaFunction {
-    prefix: 'μ1' | 'μ2' | 'μ3' | 'μ4' | 'μ5' | 'μ6' | 'μ7' | 'μ8';
+    prefix: 'µ1' | 'µ2' | 'µ3' | 'µ4' | 'µ5' | 'µ6' | 'µ7' | 'µ8';
     name: string;
     responsibility: BaguaResponsibility;
 }
 
 type BaguaResponsibility = 
-    | 'Classes/Templates'    // μ1_HIMMEL
-    | 'Views/UI'            // μ2_WIND
-    | 'Procedures/Flow'     // μ3_WASSER
-    | 'Init/Setup'          // μ4_BERG
-    | 'Properties'          // μ5_SEE
-    | 'Functions'           // μ6_FEUER
-    | 'Events'              // μ7_DONNER
-    | 'Global/Base';        // μ8_ERDE
+    | 'Classes/Templates'    // µ1_HIMMEL
+    | 'Views/UI'            // µ2_WIND
+    | 'Procedures/Flow'     // µ3_WASSER
+    | 'Init/Setup'          // µ4_BERG
+    | 'Properties'          // µ5_SEE
+    | 'Functions'           // µ6_FEUER
+    | 'Events'              // µ7_DONNER
+    | 'Global/Base';        // µ8_ERDE
 ```
 
 ### **Development Commands**
@@ -723,37 +723,37 @@ npm run preview
 
 ---
 
-## 🏷️ **CRITICAL: μX-Bagua Filename Convention (NEW FILES ONLY)**
+## 🏷️ **CRITICAL: µX-Bagua Filename Convention (NEW FILES ONLY)**
 
-### **MANDATORY RULE: ALL NEW FILES must start with μX_ prefix**
+### **MANDATORY RULE: ALL NEW FILES must start with µX_ prefix**
 
 **✅ CORRECT Examples for NEW files:**
 ```typescript
 // NEW Components (choose appropriate Bagua type):
-μ1_NewTemplate.tsx        // HIMMEL - Classes/Templates
-μ2_NewUIComponent.tsx     // WIND - Views/UI  
-μ3_newProcedure.ts        // WASSER - Procedures/Flow
-μ4_newSetupFunction.ts    // BERG - Init/Setup
-μ5_newProperties.ts       // SEE - Properties
-μ6_newFunction.ts         // FEUER - Functions
-μ7_newEventHandler.ts     // DONNER - Events
-μ8_newGlobalState.ts      // ERDE - Global/Base
+µ1_NewTemplate.tsx        // HIMMEL - Classes/Templates
+µ2_NewUIComponent.tsx     // WIND - Views/UI  
+µ3_newProcedure.ts        // WASSER - Procedures/Flow
+µ4_newSetupFunction.ts    // BERG - Init/Setup
+µ5_newProperties.ts       // SEE - Properties
+µ6_newFunction.ts         // FEUER - Functions
+µ7_newEventHandler.ts     // DONNER - Events
+µ8_newGlobalState.ts      // ERDE - Global/Base
 
 // NEW Hooks (specialized responsibilities):
-μ1_useNewWorkspace.ts     // HIMMEL - Document/workspace management
-μ2_useNewUI.ts           // WIND - UI state management
-μ3_useNewFlow.ts         // WASSER - Process/workflow management
-μ6_useNewCalculation.ts   // FEUER - Function/calculation hooks
-μ7_useNewEvents.ts       // DONNER - Event handling
-μ8_useNewGlobal.ts       // ERDE - Global state management
+µ1_useNewWorkspace.ts     // HIMMEL - Document/workspace management
+µ2_useNewUI.ts           // WIND - UI state management
+µ3_useNewFlow.ts         // WASSER - Process/workflow management
+µ6_useNewCalculation.ts   // FEUER - Function/calculation hooks
+µ7_useNewEvents.ts       // DONNER - Event handling
+µ8_useNewGlobal.ts       // ERDE - Global state management
 ```
 
 **⚠️ CRITICAL WARNING: DO NOT RENAME EXISTING FILES**
 ```typescript
 // ❌ DO NOT RENAME these working files (separate TODO for later):
-- UniversalDesktopv2.tsx  → μ1_UniversalDesktop.tsx (LATER)
-- CanvasController.tsx    → μ3_CanvasController.tsx (LATER) 
-- LoginPage.tsx          → μ4_LoginPage.tsx (LATER)
+- UniversalDesktopv2.tsx  → µ1_UniversalDesktop.tsx (LATER)
+- CanvasController.tsx    → µ3_CanvasController.tsx (LATER) 
+- LoginPage.tsx          → µ4_LoginPage.tsx (LATER)
 - Any bridge components  → Keep working during V2 transition
 
 // Renaming existing files is a separate refactoring task
@@ -761,48 +761,48 @@ npm run preview
 ```
 
 **Bagua Responsibility Guide:**
-- **μ1 HIMMEL (☰)**: Templates, factories, orchestrators, main entry points
-- **μ2 WIND (☴)**: UI components, panels, visual elements, user interfaces
-- **μ3 WASSER (☵)**: Procedures, workflows, navigation, file operations
-- **μ4 BERG (☶)**: Initialization, setup, configuration, bootstrapping
-- **μ5 SEE (☱)**: Properties, metadata, configuration states
-- **μ6 FEUER (☲)**: Functions, calculations, processing, AI integration
-- **μ7 DONNER (☳)**: Events, interactions, keyboard shortcuts, context menus
-- **μ8 ERDE (☷)**: Global state, foundation systems, core abstractions
+- **µ1 HIMMEL (☰)**: Templates, factories, orchestrators, main entry points
+- **µ2 WIND (☴)**: UI components, panels, visual elements, user interfaces
+- **µ3 WASSER (☵)**: Procedures, workflows, navigation, file operations
+- **µ4 BERG (☶)**: Initialization, setup, configuration, bootstrapping
+- **µ5 SEE (☱)**: Properties, metadata, configuration states
+- **µ6 FEUER (☲)**: Functions, calculations, processing, AI integration
+- **µ7 DONNER (☳)**: Events, interactions, keyboard shortcuts, context menus
+- **µ8 ERDE (☷)**: Global state, foundation systems, core abstractions
 
 ---
 
 ## 🎯 **EXTENSION POINTS & PATTERNS**
 
-### **Adding New μX-Components**
+### **Adding New µX-Components**
 ```typescript
 // 1. Choose appropriate Bagua prefix:
-const newComponent = μ2_NewUIComponent; // WIND for UI
-const newHook = μ6_newCalculation;      // FEUER for functions
+const newComponent = µ2_NewUIComponent; // WIND for UI
+const newHook = µ6_newCalculation;      // FEUER for functions
 
 // 2. Follow naming conventions:
-export const μ2_NewWindow: React.FC<μ2_WindowProps> = () => {
-    // μ4_ Setup/Init patterns
-    const μ4_initialize = useCallback(() => {}, []);
+export const µ2_NewWindow: React.FC<µ2_WindowProps> = () => {
+    // µ4_ Setup/Init patterns
+    const µ4_initialize = useCallback(() => {}, []);
     
-    // μ5_ Properties patterns  
-    const μ5_windowProps = useMemo(() => ({}), []);
+    // µ5_ Properties patterns  
+    const µ5_windowProps = useMemo(() => ({}), []);
     
-    // μ6_ Functions patterns
-    const μ6_handleTransform = useCallback(() => {}, []);
+    // µ6_ Functions patterns
+    const µ6_handleTransform = useCallback(() => {}, []);
     
-    // μ7_ Events patterns
-    const μ7_onClick = (e: MouseEvent) => {};
+    // µ7_ Events patterns
+    const µ7_onClick = (e: MouseEvent) => {};
     
-    // μ2_ Render (WIND)
-    return <div onClick={μ7_onClick}>{/* UI */}</div>;
+    // µ2_ Render (WIND)
+    return <div onClick={µ7_onClick}>{/* UI */}</div>;
 };
 
-// 3. Register in μ1_WindowFactory:
-export const μ1_WINDOW_REGISTRY = {
+// 3. Register in µ1_WindowFactory:
+export const µ1_WINDOW_REGISTRY = {
     'new-window': {
         id: 'new-window',
-        component: μ2_NewWindow,
+        component: µ2_NewWindow,
         defaultBagua: UDFormat.BAGUA.WIND | UDFormat.BAGUA.FEUER,
         // ... other config
     }
@@ -812,19 +812,19 @@ export const μ1_WINDOW_REGISTRY = {
 ### **Hook Integration Patterns**
 ```typescript
 // New hooks follow Campus-Modell:
-export const μ6_useNewFunction = () => {
+export const µ6_useNewFunction = () => {
     // One responsibility only!
     const [state, setState] = useState(initialState);
     
     // Algebraic transistor patterns:
-    const μ6_processData = useCallback((data: any, condition: boolean) => {
+    const µ6_processData = useCallback((data: any, condition: boolean) => {
         return data * UDFormat.transistor(condition);
     }, []);
     
     // Polar relationship awareness:
-    const μ1_polarOpposite = μ8_useGlobalState(); // HIMMEL ↔ ERDE
+    const µ1_polarOpposite = µ8_useGlobalState(); // HIMMEL ↔ ERDE
     
-    return { state, μ6_processData };
+    return { state, µ6_processData };
 };
 ```
 
@@ -837,11 +837,11 @@ UniversalDesktop v2.1 features a **revolutionary context menu system** that adap
 ### **Context Menu System Components**
 ```typescript
 src/components/contextMenu/
-├── μ7_UnifiedContextMenu.tsx      # DONNER - Legacy context system (legacy)
-└── μ7_UniversalContextMenu.tsx    # DONNER - Universal context system ★ (NEW)
+├── µ7_UnifiedContextMenu.tsx      # DONNER - Legacy context system (legacy)
+└── µ7_UniversalContextMenu.tsx    # DONNER - Universal context system ★ (NEW)
 
 Supporting Hook:
-src/hooks/μ7_useUniversalContextMenu.ts  # Context menu state management
+src/hooks/µ7_useUniversalContextMenu.ts  # Context menu state management
 ```
 
 ### **Context-Aware Menu Architecture**
@@ -928,48 +928,48 @@ const showAI = UDFormat.transistor(contextManager.isEnabled);
 src/main.tsx → src/UniversalDesktopv2.tsx (673 LOC - Main Orchestrator)
 │
 ├── Authentication Layer
-│   └── μ4_AuthModule.tsx → LoginPage.tsx (if not authenticated)
+│   └── µ4_AuthModule.tsx → LoginPage.tsx (if not authenticated)
 │
 ├── Core Spatial Canvas
-│   ├── μ8_CanvasModule.tsx → CanvasController.tsx (bridge)
-│   │   └── μ8_DesktopItem.tsx[] (spatial items with physics)
-│   │       ├── μ8_NoteWindow.tsx (text/markdown editing)
-│   │       ├── μ2_TuiWindow.tsx (terminal with 15 themes)
-│   │       ├── μ2_TableWindow.tsx (data visualization)
-│   │       └── μ2_FileManagerWindow.tsx ★ (file operations)
+│   ├── µ8_CanvasModule.tsx → CanvasController.tsx (bridge)
+│   │   └── µ8_DesktopItem.tsx[] (spatial items with physics)
+│   │       ├── µ8_NoteWindow.tsx (text/markdown editing)
+│   │       ├── µ2_TuiWindow.tsx (terminal with 15 themes)
+│   │       ├── µ2_TableWindow.tsx (data visualization)
+│   │       └── µ2_FileManagerWindow.tsx ★ (file operations)
 │   │
-│   └── μ2_Minimap.tsx (StarCraft-style spatial overview)
+│   └── µ2_Minimap.tsx (StarCraft-style spatial overview)
 │
 ├── Panel System (Multi-panel Architecture)
-│   └── μ2_PanelModule.tsx → μ8_usePanelLayout.ts
-│       ├── μ2_ToolPanel.tsx (human tool creation)
-│       ├── μ2_AIPanel.tsx (AI communication with 6 models)
-│       ├── μ5_TerritoryPanel.tsx (spatial region management)
-│       └── μ6_ContextPanel.tsx (AI context management)
+│   └── µ2_PanelModule.tsx → µ8_usePanelLayout.ts
+│       ├── µ2_ToolPanel.tsx (human tool creation)
+│       ├── µ2_AIPanel.tsx (AI communication with 6 models)
+│       ├── µ5_TerritoryPanel.tsx (spatial region management)
+│       └── µ6_ContextPanel.tsx (AI context management)
 │
 ├── Global Navigation
-│   └── μ1_Header.tsx (workspace switching + global controls)
+│   └── µ1_Header.tsx (workspace switching + global controls)
 │
 ├── Context Systems
-│   ├── μ6_ContextModule.tsx (AI context coordination)
-│   └── μ7_UniversalContextMenu.tsx ★ (universal right-click system)
+│   ├── µ6_ContextModule.tsx (AI context coordination)
+│   └── µ7_UniversalContextMenu.tsx ★ (universal right-click system)
 │
 └── Data Persistence
-    └── μ8_DataModule.tsx → μ1_useWorkspace.ts (Supabase + .ud format)
+    └── µ8_DataModule.tsx → µ1_useWorkspace.ts (Supabase + .ud format)
 ```
 
 ### **Window Creation & Management Flow**
 ```typescript
 // Human-initiated window creation:
-User clicks Tool Panel → μ2_ToolPanel.tsx → μ1_WindowFactory.tsx
-  → createUDItem() → μ8_DesktopItem.tsx → Window Component
+User clicks Tool Panel → µ2_ToolPanel.tsx → µ1_WindowFactory.tsx
+  → createUDItem() → µ8_DesktopItem.tsx → Window Component
 
 // AI-initiated window creation (Revolutionary Unity):
-User sends AI prompt → μ2_AIPanel.tsx → LiteLLM API → AI Response
-  → μ1_WindowFactory.detectOptimalType() → createUDItem() → Same Windows!
+User sends AI prompt → µ2_AIPanel.tsx → LiteLLM API → AI Response
+  → µ1_WindowFactory.detectOptimalType() → createUDItem() → Same Windows!
 
 // File Manager integration:
-File Manager action → μ2_FileManager.tsx → μ3_useFileSystem.ts
+File Manager action → µ2_FileManager.tsx → µ3_useFileSystem.ts
   → Native/Web file operations → Optional UDItem creation
 ```
 
@@ -977,35 +977,35 @@ File Manager action → μ2_FileManager.tsx → μ3_useFileSystem.ts
 ```typescript
 Hook Interdependencies (Campus-Model):
 ┌─────────────────────────────────────────────────────────────┐
-│ μ1_useWorkspace (HIMMEL - Document Management)              │ ← Core State
-│ ├── Uses: μ1_useUniversalDocument                          │
+│ µ1_useWorkspace (HIMMEL - Document Management)              │ ← Core State
+│ ├── Uses: µ1_useUniversalDocument                          │
 │ └── Provides: Document persistence & workspace management   │
 ├─────────────────────────────────────────────────────────────┤
-│ μ2_useMinimap (WIND - Spatial UI)                          │ ← Spatial State
-│ ├── Uses: μ3_useNavigation, spatial bounds                 │
+│ µ2_useMinimap (WIND - Spatial UI)                          │ ← Spatial State
+│ ├── Uses: µ3_useNavigation, spatial bounds                 │
 │ └── Provides: StarCraft-style minimap with collision       │
 ├─────────────────────────────────────────────────────────────┤
-│ μ3_useNavigation (WASSER - Flow Control)                   │ ← Navigation
-│ ├── Uses: μ3_useCanvasNavigation (exponential movement)    │
+│ µ3_useNavigation (WASSER - Flow Control)                   │ ← Navigation
+│ ├── Uses: µ3_useCanvasNavigation (exponential movement)    │
 │ └── Provides: Canvas physics & zoom management             │
 ├─────────────────────────────────────────────────────────────┤
-│ μ6_useContextManager (FEUER - AI Functions)                │ ← AI Integration
+│ µ6_useContextManager (FEUER - AI Functions)                │ ← AI Integration
 │ ├── Uses: UDItem context, priority management              │
 │ └── Provides: AI context-aware prompt building             │
 ├─────────────────────────────────────────────────────────────┤
-│ μ7_useKeyboardShortcuts (DONNER - Events)                  │ ← Event System
+│ µ7_useKeyboardShortcuts (DONNER - Events)                  │ ← Event System
 │ ├── Uses: Global key handlers, window focus                │
 │ └── Provides: System-wide keyboard shortcut management     │
 ├─────────────────────────────────────────────────────────────┤
-│ μ8_usePanelLayout (ERDE - Global State)                    │ ← Panel Control
+│ µ8_usePanelLayout (ERDE - Global State)                    │ ← Panel Control
 │ ├── Uses: Panel visibility, positioning, z-indexes         │
 │ └── Provides: Multi-panel system orchestration             │
 └─────────────────────────────────────────────────────────────┘
 
 ★ NEW File Manager Hooks:
-├── μ3_useFileSystem (File operations abstraction)
-├── μ3_useFileManagerDualMode (TUI/GUI state management)
-└── μ7_useUniversalContextMenu (Context menu system)
+├── µ3_useFileSystem (File operations abstraction)
+├── µ3_useFileManagerDualMode (TUI/GUI state management)
+└── µ7_useUniversalContextMenu (Context menu system)
 ```
 
 ### **Data Flow Architecture (Complete)**
@@ -1017,12 +1017,12 @@ Hook Interdependencies (Campus-Model):
    → Spatial placement → Canvas rendering → Auto-save persistence
 
 2. AI Context Management:
-   Window 📌 click → μ6_useContextManager.addToContext(udItem)
+   Window 📌 click → µ6_useContextManager.addToContext(udItem)
    → Priority calculation → Token estimation → Context building
    → AI prompt enhancement → Response processing → New UDItem
 
 3. File Operations (NEW):
-   File Manager action → μ3_useFileSystem abstraction
+   File Manager action → µ3_useFileSystem abstraction
    → Platform detection (Tauri/Browser) → Native/Web API calls
    → Optional UDItem conversion → Spatial desktop integration
 
@@ -1032,11 +1032,11 @@ Hook Interdependencies (Campus-Model):
 ```
 
 ### **Critical Routing Understanding for Swarms**
-1. **Everything flows through μ1_WindowFactory** for consistent UDItem creation
-2. **All spatial items are μ8_DesktopItem containers** with physics integration
-3. **Context management is centralized** in μ6_useContextManager
-4. **File operations abstract** platform differences through μ3_useFileSystem
-5. **Panel system is centrally coordinated** through μ8_usePanelLayout
+1. **Everything flows through µ1_WindowFactory** for consistent UDItem creation
+2. **All spatial items are µ8_DesktopItem containers** with physics integration
+3. **Context management is centralized** in µ6_useContextManager
+4. **File operations abstract** platform differences through µ3_useFileSystem
+5. **Panel system is centrally coordinated** through µ8_usePanelLayout
 
 ---
 
@@ -1081,7 +1081,7 @@ Hook Interdependencies (Campus-Model):
 └── Quantum-inspired superposition states for UI elements
 
 🔄 Perfect Human-AI Unity:
-├── AI agents that create and modify μX-components
+├── AI agents that create and modify µX-components
 ├── Self-evolving Bagua categorization system
 ├── AI-driven architecture optimization
 └── Autonomous code refactoring using algebraic principles
@@ -1089,22 +1089,22 @@ Hook Interdependencies (Campus-Model):
 
 ### **Extension Points for New Features**
 ```typescript
-// Adding new μX-Components:
-1. Choose appropriate Bagua prefix (μ1-μ8)
+// Adding new µX-Components:
+1. Choose appropriate Bagua prefix (µ1-µ8)
 2. Follow Campus-Model single responsibility principle
-3. Integrate with μ1_WindowFactory registration system
+3. Integrate with µ1_WindowFactory registration system
 4. Add universal context menu support
 5. Implement UDItem integration for spatial placement
 
 // Adding new File Types/Operations:
-1. Extend μ3_useFileSystem with new capabilities
+1. Extend µ3_useFileSystem with new capabilities
 2. Add file type detection in FileSystemAbstraction
 3. Create appropriate Bagua categorization rules
 4. Implement context menu actions for new file types
 
 // Adding new AI Capabilities:
-1. Extend μ6_useAIAgent with new model endpoints
-2. Add specialized prompt templates in μ2_AIPanel
+1. Extend µ6_useAIAgent with new model endpoints
+2. Add specialized prompt templates in µ2_AIPanel
 3. Create new window types for AI responses
 4. Enhance context management for new AI features
 ```
@@ -1116,7 +1116,7 @@ Hook Interdependencies (Campus-Model):
 ### **Current State Assessment (v2.1.0-raimund-algebra)**
 ```
 🎯 Architecture Score: 9.5/10
-├── Bagua Naming Consistency: 95% (47 components using μX-prefix)
+├── Bagua Naming Consistency: 95% (47 components using µX-prefix)
 ├── Campus-Model Implementation: 100% (monolith eliminated)
 ├── Performance Optimization: 90% re-render reduction achieved
 ├── File Manager Integration: 95% complete (TUI/GUI dual-mode)
@@ -1135,7 +1135,7 @@ Hook Interdependencies (Campus-Model):
 ```
 
 ### **Revolutionary Achievements**
-1. **Human-AI Unity**: Same μX-Windows for human tools AND AI responses
+1. **Human-AI Unity**: Same µX-Windows for human tools AND AI responses
 2. **Algebraic Computing**: Mathematical control flow replacing traditional conditionals
 3. **Spatial Operating System**: Everything has position, physics, and spatial awareness
 4. **Campus-Model Architecture**: 90% performance improvement through specialization
@@ -1157,7 +1157,7 @@ Hook Interdependencies (Campus-Model):
 UniversalDesktop v2.1.0-raimund-algebra represents a **paradigm shift** from traditional application development to **algebraic operating system architecture**. This is not merely a React application - it's a **living implementation of Eastern philosophy** expressed through modern web technologies.
 
 **Key Principles for Future Development:**
-1. **Preserve the Bagua System** - Every component MUST follow μX-prefix naming
+1. **Preserve the Bagua System** - Every component MUST follow µX-prefix naming
 2. **Maintain Campus-Model Purity** - One hook = one responsibility, always
 3. **Honor Algebraic Principles** - Mathematical elegance over verbose conditionals
 4. **Spatial Computing First** - Everything exists in 3D space with physics

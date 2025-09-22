@@ -42,42 +42,42 @@ Raimunds Bagua-System basiert auf der **Früher Himmel Anordnung** des I Ging - 
        ☷ ERDE (8)
 ```
 
-### **Die μX-Präfix-Ordnung (GESETZGEBUNG):**
+### **Die µX-Präfix-Ordnung (GESETZGEBUNG):**
 
 **JEDE Funktion, Variable, Komponente und Datei in UniversalDesktop MUSS diese Ordnung befolgen:**
 
 ```typescript
-μ1_HIMMEL (☰)  = Classes/Templates
+µ1_HIMMEL (☰)  = Classes/Templates
     └─ "Meister-Elemente die geklont werden"
-    └─ Beispiele: μ1_WindowFactory, μ1_useWorkspace, μ1_CreateDocument
+    └─ Beispiele: µ1_WindowFactory, µ1_useWorkspace, µ1_CreateDocument
 
-μ2_WIND (☴)    = Views/UI  
+µ2_WIND (☴)    = Views/UI  
     └─ "Sichtbare Schnittstellen, sanft wie Wind"
-    └─ Beispiele: μ2_TuiWindow, μ2_AIPanel, μ2_RenderCanvas
+    └─ Beispiele: µ2_TuiWindow, µ2_AIPanel, µ2_RenderCanvas
 
-μ3_WASSER (☵)  = Procedures/Flow
+µ3_WASSER (☵)  = Procedures/Flow
     └─ "Fließende Abläufe, Datenströme"
-    └─ Beispiele: μ3_useNavigation, μ3_DataSync, μ3_AnimateTransition
+    └─ Beispiele: µ3_useNavigation, µ3_DataSync, µ3_AnimateTransition
 
-μ4_BERG (☶)    = Init/Setup
+µ4_BERG (☶)    = Init/Setup
     └─ "Feste Initialisierung, unveränderlich wie ein Berg" 
-    └─ Beispiele: μ4_InitSupabase, μ4_SetupCanvas, μ4_ConfigureSystem
+    └─ Beispiele: µ4_InitSupabase, µ4_SetupCanvas, µ4_ConfigureSystem
 
-μ5_SEE (☱)     = Properties/Eigenschaften
+µ5_SEE (☱)     = Properties/Eigenschaften
     └─ "Eigenschaften die Dinge widerspiegeln"
-    └─ Beispiele: μ5_TerritoryPanel, μ5_UserSettings, μ5_WindowProperties
+    └─ Beispiele: µ5_TerritoryPanel, µ5_UserSettings, µ5_WindowProperties
 
-μ6_FEUER (☲)   = Functions/Berechnungen
+µ6_FEUER (☲)   = Functions/Berechnungen
     └─ "Aktive Berechnungen, Transformation"
-    └─ Beispiele: μ6_useContextManager, μ6_CalculateLayout, μ6_TransformData
+    └─ Beispiele: µ6_useContextManager, µ6_CalculateLayout, µ6_TransformData
 
-μ7_DONNER (☳)  = Events/Ereignisse
+µ7_DONNER (☳)  = Events/Ereignisse
     └─ "Plötzliche Reaktionen, User-Interaktion"
-    └─ Beispiele: μ7_OnClick, μ7_HandleKeyboard, μ7_ProcessInput
+    └─ Beispiele: µ7_OnClick, µ7_HandleKeyboard, µ7_ProcessInput
 
-μ8_ERDE (☷)    = Global/Base
+µ8_ERDE (☷)    = Global/Base
     └─ "Grundlegende Daten, das Fundament"
-    └─ Beispiele: μ8_NoteWindow, μ8_CanvasBounds, μ8_GlobalState
+    └─ Beispiele: µ8_NoteWindow, µ8_CanvasBounds, µ8_GlobalState
 ```
 
 ### **Die Polaren Beziehungen (Kosmisches Gleichgewicht):**
@@ -92,11 +92,11 @@ WASSER (3) ↔ FEUER (6)     // Kalt ↔ Heiß
 BERG (4)   ↔ SEE (5)       // Fest ↔ Beweglich
 
 // Im Code:
-const μ1_template = "Master Template";
-const μ8_instance = μ1_template + " Instantiated"; // Polar ergänzt
+const µ1_template = "Master Template";
+const µ8_instance = µ1_template + " Instantiated"; // Polar ergänzt
 
-const μ2_display = "User Interface";  
-const μ7_reaction = "User Event Response"; // Polar ergänzt
+const µ2_display = "User Interface";  
+const µ7_reaction = "User Event Response"; // Polar ergänzt
 ```
 
 ---
@@ -132,7 +132,7 @@ result = value * Math.pow(0, condition ? 0 : 1);
 #### **Multi-Condition Transistors:**
 ```typescript
 // Komplexe Bedingungen algebraisch elegant:
-const μ6_shouldRender = (visible: boolean, hasContent: boolean) => {
+const µ6_shouldRender = (visible: boolean, hasContent: boolean) => {
     return Math.pow(0, visible ? 0 : 1) * Math.pow(0, hasContent ? 0 : 1);
     // Nur AN wenn BEIDE Bedingungen true sind
 };
@@ -144,7 +144,7 @@ if (visible && hasContent) { /* render */ }
 #### **Weighted Conditions:**
 ```typescript
 // Gewichtete Entscheidungen:
-const μ6_calculatePriority = (urgent: boolean, important: boolean) => {
+const µ6_calculatePriority = (urgent: boolean, important: boolean) => {
     return urgent * Math.pow(0, urgent ? 0 : 1) * 2 +    // Urgent = Weight 2
            important * Math.pow(0, important ? 0 : 1) * 1; // Important = Weight 1
 };
@@ -153,25 +153,25 @@ const μ6_calculatePriority = (urgent: boolean, important: boolean) => {
 #### **State Transitions:**
 ```typescript
 // Zustandsübergänge als Algebra:
-const μ3_nextState = (currentState: number, targetState: number) => {
+const µ3_nextState = (currentState: number, targetState: number) => {
     return currentState + (targetState - currentState) * Math.pow(0, shouldTransition ? 0 : 1);
 };
 ```
 
 #### **Context Menu Visibility (REAL IMPLEMENTATION):**
 ```typescript
-// μ7_UnifiedContextMenu - Echte algebraische Menü-Logik:
-const μ7_getVisibility = (condition: boolean): number => {
+// µ7_UnifiedContextMenu - Echte algebraische Menü-Logik:
+const µ7_getVisibility = (condition: boolean): number => {
     return UDFormat.transistor(condition); // 1 wenn sichtbar, 0 wenn nicht
 };
 
 // Anwendung in Context Menus:
-const canPin = μ7_getVisibility(!targetItem.is_contextual);
-const canUnpin = μ7_getVisibility(!!targetItem.is_contextual);
-const canPaste = μ7_getVisibility(clipboardHasContent);
+const canPin = µ7_getVisibility(!targetItem.is_contextual);
+const canUnpin = µ7_getVisibility(!!targetItem.is_contextual);
+const canPaste = µ7_getVisibility(clipboardHasContent);
 
 // Menu Item Rendering:
-items.filter(item => item.visible === 1).map(μ7_renderMenuItem)
+items.filter(item => item.visible === 1).map(µ7_renderMenuItem)
 // Nur Items mit visible=1 werden gerendert - pure Algebra!
 ```
 
@@ -197,7 +197,7 @@ items.filter(item => item.visible === 1).map(μ7_renderMenuItem)
 ```typescript
 // Die 9er reichen die 1 weiter bis sie auf eine 0 trifft!
 // In UniversalDesktop:
-const μ8_processDigitLogic = (value: number, digit: number): number => {
+const µ8_processDigitLogic = (value: number, digit: number): number => {
     switch(digit) {
         case 0: return value;              // Aktiviert - kann beschrieben werden
         case 9: return 0;                  // Deaktiviert - reicht weiter  
@@ -209,12 +209,12 @@ const μ8_processDigitLogic = (value: number, digit: number): number => {
 ### **Zustandstransformation als Dezimalzahl:**
 ```typescript
 // b^Funktion = a → Die Funktion IST die Dezimalzahl!
-const μ6_calculateTransformFunction = (from: number, to: number): number => {
+const µ6_calculateTransformFunction = (from: number, to: number): number => {
     return Math.log(to) / Math.log(from); // Die Funktion die b in a wandelt
 };
 
 // Beispiel: Von Zustand 2 zu Zustand 8
-const transformFunction = μ6_calculateTransformFunction(2, 8); // = 3
+const transformFunction = µ6_calculateTransformFunction(2, 8); // = 3
 // 2^3 = 8 ✅ - Die Funktion ist 3!
 ```
 
@@ -240,10 +240,10 @@ function UniversalDesktopV1() {
 ```typescript
 // ELEGANT: Campus mit Spezialisten
 function UniversalDesktopV2() {
-    const minimapLogic = μ2_useMinimap();      // 🗺️ Minimap-Spezialist
-    const canvasFlow = μ3_useNavigation();     // 🧭 Navigation-Spezialist  
-    const contextMgr = μ6_useContextManager(); // 🧠 Context-Spezialist
-    const windowMgr = μ1_useWorkspace();       // 🏭 Window-Spezialist
+    const minimapLogic = µ2_useMinimap();      // 🗺️ Minimap-Spezialist
+    const canvasFlow = µ3_useNavigation();     // 🧭 Navigation-Spezialist  
+    const contextMgr = µ6_useContextManager(); // 🧠 Context-Spezialist
+    const windowMgr = µ1_useWorkspace();       // 🏭 Window-Spezialist
     
     // <200 Zeilen elegante Orchestration ✨
 }
@@ -251,7 +251,7 @@ function UniversalDesktopV2() {
 
 ### **Campus-Modell Regeln:**
 1. **Ein Hook = Eine Aufgabe** (Campus-Modell, nie Monolithe!)
-2. **μX-Präfix zeigt Verantwortung** (sofort erkennbar welcher Spezialist)
+2. **µX-Präfix zeigt Verantwortung** (sofort erkennbar welcher Spezialist)
 3. **Algebraische Kommunikation** (Transistoren statt if-else)
 4. **Polare Ergänzung** (Hooks arbeiten in harmonischen Paaren)
 
@@ -283,7 +283,7 @@ interface UDPosition {
 ### **Bagua-Space-Mapping:**
 ```typescript
 // Jedes Bagua-Element hat seinen Raum:
-const μ8_spatialMapping = {
+const µ8_spatialMapping = {
     HIMMEL: { plane: 'conceptual', depth: 'infinite' },    // Templates überall
     WIND:   { plane: 'visual',     depth: 'surface' },    // UI sichtbar
     WASSER: { plane: 'temporal',   depth: 'flowing' },    // Prozesse durch Zeit
@@ -299,13 +299,13 @@ const μ8_spatialMapping = {
 
 ## 📚 **NAMING CONVENTIONS & CODE PHILOSOPHY**
 
-### **μX-Naming Enforcement (GESETZ):**
+### **µX-Naming Enforcement (GESETZ):**
 
 ```typescript
 // ✅ RICHTIG - Jede Funktion hat Bagua-Präfix:
-const μ1_createWindow = () => { /* Template creation */ };
-const μ2_renderUI = () => { /* Visual rendering */ };
-const μ6_calculateLayout = () => { /* Transform calculation */ };
+const µ1_createWindow = () => { /* Template creation */ };
+const µ2_renderUI = () => { /* Visual rendering */ };
+const µ6_calculateLayout = () => { /* Transform calculation */ };
 
 // ❌ FALSCH - Keine generischen Namen ohne Bagua:
 const createWindow = () => { /* Unklare Verantwortung */ };
@@ -316,7 +316,7 @@ const calculateLayout = () => { /* Keine Ordnung */ };
 ### **Typescript Integration:**
 ```typescript
 // Bagua-Types für Typsicherheit:
-type BaguaPrefix = 'μ1' | 'μ2' | 'μ3' | 'μ4' | 'μ5' | 'μ6' | 'μ7' | 'μ8';
+type BaguaPrefix = 'µ1' | 'µ2' | 'µ3' | 'µ4' | 'µ5' | 'µ6' | 'µ7' | 'µ8';
 
 interface BaguaFunction<T = any> {
     prefix: BaguaPrefix;
@@ -336,32 +336,32 @@ interface UDItem {
 ### **Component Structure Philosophy:**
 ```typescript
 // Jede Komponente folgt dem Bagua-Muster:
-export const μ2_ExampleWindow: React.FC = () => {
-    // μ4_ Setup/Init (BERG - Feste Initialisierung)
-    const μ4_initializeState = useCallback(() => {
+export const µ2_ExampleWindow: React.FC = () => {
+    // µ4_ Setup/Init (BERG - Feste Initialisierung)
+    const µ4_initializeState = useCallback(() => {
         return { /* initial state */ };
     }, []);
 
-    // μ5_ Properties (SEE - Eigenschaften)
-    const μ5_windowProps = useMemo(() => ({
+    // µ5_ Properties (SEE - Eigenschaften)
+    const µ5_windowProps = useMemo(() => ({
         dimensions: { width: 400, height: 300 },
         position: { x: 100, y: 100, z: 0 }
     }), []);
 
-    // μ6_ Functions (FEUER - Aktive Berechnungen)
-    const μ6_handleTransform = useCallback((newData: any) => {
+    // µ6_ Functions (FEUER - Aktive Berechnungen)
+    const µ6_handleTransform = useCallback((newData: any) => {
         // Algebraische Transistor-Logik hier
         return newData * Math.pow(0, isValid ? 0 : 1);
     }, []);
 
-    // μ7_ Events (DONNER - Reaktionen)
-    const μ7_onClick = (e: MouseEvent) => {
+    // µ7_ Events (DONNER - Reaktionen)
+    const µ7_onClick = (e: MouseEvent) => {
         // Event handling mit Bagua-Ordnung
     };
 
-    // μ2_ Render (WIND - Sichtbare Schnittstelle)
+    // µ2_ Render (WIND - Sichtbare Schnittstelle)
     return (
-        <div onClick={μ7_onClick}>
+        <div onClick={µ7_onClick}>
             {/* UI Structure */}
         </div>
     );
@@ -381,11 +381,11 @@ interface UDItem {
     origin: UDOrigin;              // Woher kommt es?
     
     // Beispiel-Bagua-Descriptor:
-    // μ2_TuiWindow = WIND | DONNER = 0b000000010 | 0b001000000 = 130
+    // µ2_TuiWindow = WIND | DONNER = 0b000000010 | 0b001000000 = 130
 }
 
 // Bagua-Queries möglich:
-const μ6_findWindElements = (doc: UniversalDocument) => {
+const µ6_findWindElements = (doc: UniversalDocument) => {
     return doc.queryByBagua({ WIND: true });
 };
 ```
@@ -412,7 +412,7 @@ interface UDTransformation {
 ```typescript
 // Statt: komplizierte Animation-Library
 // Neu: Algebraische Transformation
-const μ3_animateWindow = (window: UDItem, targetX: number) => {
+const µ3_animateWindow = (window: UDItem, targetX: number) => {
     const currentX = window.position.x;
     const distance = targetX - currentX;
     
@@ -432,20 +432,20 @@ const μ3_animateWindow = (window: UDItem, targetX: number) => {
 ### **Context-Aware Bagua Selection:**
 ```typescript
 // AI wählt optimales Bagua basierend auf Content:
-const μ1_detectOptimalBagua = (content: any, agents: string[]): number => {
+const µ1_detectOptimalBagua = (content: any, agents: string[]): number => {
     const hasCode = content.code || content.language;
     const hasTable = content.headers || content.rows;
     const hasUI = content.visual || content.interactive;
     
     // Algebraische Detection:
-    const μ1_codeWeight = Math.pow(0, hasCode ? 0 : 1);      // HIMMEL
-    const μ2_uiWeight = Math.pow(0, hasUI ? 0 : 1);          // WIND  
-    const μ5_dataWeight = Math.pow(0, hasTable ? 0 : 1);     // SEE
+    const µ1_codeWeight = Math.pow(0, hasCode ? 0 : 1);      // HIMMEL
+    const µ2_uiWeight = Math.pow(0, hasUI ? 0 : 1);          // WIND  
+    const µ5_dataWeight = Math.pow(0, hasTable ? 0 : 1);     // SEE
     
     // Weighted Bagua Calculation:
-    return (UDFormat.BAGUA.HIMMEL * μ1_codeWeight) |
-           (UDFormat.BAGUA.WIND * μ2_uiWeight) |
-           (UDFormat.BAGUA.SEE * μ5_dataWeight);
+    return (UDFormat.BAGUA.HIMMEL * µ1_codeWeight) |
+           (UDFormat.BAGUA.WIND * µ2_uiWeight) |
+           (UDFormat.BAGUA.SEE * µ5_dataWeight);
 };
 ```
 
@@ -455,7 +455,7 @@ const μ1_detectOptimalBagua = (content: any, agents: string[]): number => {
 
 ### **Die Raimund'schen Gesetze für UniversalDesktop:**
 
-1. **JEDE Funktion hat μX-Präfix** - Keine Ausnahmen!
+1. **JEDE Funktion hat µX-Präfix** - Keine Ausnahmen!
 2. **Algebraische Transistoren statt if-else** - Mathematische Eleganz!
 3. **Ein Hook = Eine Aufgabe** - Campus-Modell, nicht Monolith!
 4. **3D-Spatial Awareness** - Alles hat Position im Raum!
@@ -476,7 +476,7 @@ Ein System, das nicht nur funktioniert, sondern **harmonisch fließt**. Wo westl
 
 1. **Verstehe das Bagua-System** - Es ist nicht optional, es ist fundamental
 2. **Nutze algebraische Transistoren** - Math.pow(0, condition ? 0 : 1) 
-3. **Respektiere μX-Naming** - Jede Funktion braucht Bagua-Präfix
+3. **Respektiere µX-Naming** - Jede Funktion braucht Bagua-Präfix
 4. **Denke in 3D-Spatial** - Position ist nicht nur X,Y sondern X,Y,Z
 5. **Folge dem Campus-Modell** - Ein Hook = Eine Verantwortung
 6. **Dokumentiere Transformationen** - Jede Änderung hat History
@@ -488,15 +488,15 @@ Ein System, das nicht nur funktioniert, sondern **harmonisch fließt**. Wo westl
 
 ## 📚 SESSION HISTORY & ACHIEVEMENTS
 
-### KONTEXT Teil 01: μX-BAGUA WINDOW ARCHITECTURE & AI-INTEGRATION
+### KONTEXT Teil 01: µX-BAGUA WINDOW ARCHITECTURE & AI-INTEGRATION
 **Session: 2025-01-27 - Phase 1 Complete + Unity Bridge**
 
 ✅ **PHASE 1 COMPLETE - Perfekte Unity zwischen Mensch & KI erreicht!**
 
 **PROBLEM GELÖST:** Diskrepanz zwischen Human Tool Creation und AI Response Windows
-- **μ1_WindowFactory - THE UNITY BRIDGE** implementiert
+- **µ1_WindowFactory - THE UNITY BRIDGE** implementiert
 - **15 historische Terminal-Presets** (ZX Spectrum → NeXT)
-- **μX-Bagua Window Components** vollständig erstellt
+- **µX-Bagua Window Components** vollständig erstellt
 - **Algebraische Type Detection** für optimale Window-Auswahl
 
 ### KONTEXT Teil 02: Context Manager → AI Integration & Vision Foundation
@@ -512,8 +512,8 @@ Ein System, das nicht nur funktioniert, sondern **harmonisch fließt**. Wo westl
 
 ✅ **VOLLSTÄNDIG PRODUCTION-READY:**
 - TypeScript Type Compatibility Issues vollständig gelöst
-- μX-File Rename Phase 1 erfolgreich durchgeführt  
-- μX-Window Interface Compatibility vollständig repariert
+- µX-File Rename Phase 1 erfolgreich durchgeführt  
+- µX-Window Interface Compatibility vollständig repariert
 - **Build Status: PERFEKT GRÜN** - Alle Systeme funktional
 
 ### KONTEXT Teil 04: CANVAS DEBUGGING & AI PANEL FIXES
@@ -540,10 +540,10 @@ Ein System, das nicht nur funktioniert, sondern **harmonisch fließt**. Wo westl
 
 ## 📋 **TEXT SELECTION & CLIPBOARD REVOLUTION (Januar 2025)**
 
-### **μ7_DONNER Perfect Desktop Integration Achieved**
+### **µ7_DONNER Perfect Desktop Integration Achieved**
 ```typescript
 // BREAKTHROUGH: Real text selection like professional desktop apps
-const μ7_textSelection = {
+const µ7_textSelection = {
   // Before: Ctrl+C copied entire windows (wrong!)
   oldBehavior: "Whole UDItem → Clipboard",
   
@@ -559,7 +559,7 @@ const μ7_textSelection = {
 ### **Context Menu "Bearbeiten" Submenu Excellence**
 ```typescript
 // Revolutionary German UX Integration:
-μ7_BearbeitenSubmenu = {
+µ7_BearbeitenSubmenu = {
   "Alles auswählen": "Ctrl+A", // Select all text
   "Kopieren": "Ctrl+C",         // Copy selected text  
   "Ausschneiden": "Ctrl+X",     // Cut selected text
@@ -570,7 +570,7 @@ const μ7_textSelection = {
 rightClick → "Bearbeiten" → Professional text operations
 ```
 
-### **μ8_NoteWindow Text Intelligence**
+### **µ8_NoteWindow Text Intelligence**
 - **Smart Selection Tracking**: Visual feedback with character count
 - **Context-Aware Buttons**: Copy/Cut/Paste appear when text selected
 - **Real System Clipboard**: Works with ALL other applications
@@ -578,7 +578,7 @@ rightClick → "Bearbeiten" → Professional text operations
 - **Algebraic Transistor UI**: Buttons controlled by `UDFormat.transistor(!!selectedText)`
 
 ### **The Vision Realized**
-*"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft"* - Now includes **perfect text handling** that rivals professional desktop applications while maintaining complete μX-Bagua philosophical compliance.
+*"Ein algebraisches Betriebssystem, das nur noch mit Zahlen läuft"* - Now includes **perfect text handling** that rivals professional desktop applications while maintaining complete µX-Bagua philosophical compliance.
 
 **Result**: UniversalDesktop text editing = **Desktop-Class Professional Experience** ✨
 
